@@ -22,7 +22,7 @@
 <meta name="keywords" content="" />
 
 
-<meta name="description" content="" />
+<meta name="description" content="@TOC注：本教程不研究系统计时原理，只简单解决问题，不修改系统核心设置，安全快速解决问题。网络上他人的博客已近提出了专业解决方案，大家可前往查看，在此不做重复。https://blog.csd..." />
 
 
 <meta name="robots" content="all" />
@@ -33,7 +33,7 @@
 
 <title>
     
-    Archives |
+    ubuntu与windows时间同步 |
     
     yangxiaofeng的博客
 </title>
@@ -123,158 +123,116 @@
     <section class="content-wrap">
         <div class="container">
             <div class="row">
-                <main class="col-md-8 main-content ">
-                    <div id="main">
-    <div class="timebox">
-        <div class="timeline">
-            <ul>
-                
-                
-                
-                
-                
-                
-                <h2>
-                    2020
-                </h2>
-                
-                
-                <li>
-                    
-                    <h3>
-                        07<span>
-                            03月</span>
-                    </h3>
-                    <a href="/2020/03/07/ubuntu%E4%B8%8Ewindows%E5%8F%8C%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5/" title="ubuntu与windows时间同步" target="_blank">
-                        ubuntu与windows时间同步</a>
-                </li>
-                
-                
-                
-                
-                
-                
-                <li>
-                    
-                    <h3>
-                        07<span>
-                            03月</span>
-                    </h3>
-                    <a href="/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/" title="给linux终端设置代理" target="_blank">
-                        给linux终端设置代理</a>
-                </li>
-                
-                
-                
-                
-                
-                
-                <li>
-                    
-                    <h3>
-                        07<span>
-                            03月</span>
-                    </h3>
-                    <a href="/2020/03/07/hello-world/" title="Hello World" target="_blank">
-                        Hello World</a>
-                </li>
-                
-                
-            </ul>
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="ubuntu与windows时间同步">
+            
+            ubuntu与windows时间同步
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/03/07</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>@<a href="ubuntu与windows时间同步（简单易懂版）">TOC</a><br><strong>注：本教程不研究系统计时原理，只简单解决问题，不修改系统核心设置，安全快速解决问题。网络上他人的博客已近提出了专业解决方案，大家可前往查看，在此不做重复。</strong><br><a href="https://blog.csdn.net/zero_hzz/article/details/79205037" target="_blank" rel="noopener">https://blog.csdn.net/zero_hzz/article/details/79205037</a></p>
+<p>相信装了windows与ubuntu双系统的用户都会遇见一个问题，那就是两个系统的时间不同步，相差8小时。网上的修改教程复杂难懂，对于阅读困难症患者着实不易。<br>本人在实践中发现一个新的简单解决方案，在此分享给大家，即使你没有任何计算机基础，也能快速解决问题。</p>
+<p>windows与ubuntu时间相差8小时，为什么是8小时而不是其他时间？具体原因详见文章开头链接。这个时候想到我们所学地理知识，中国就处在东8区。<br><img src="https://img-blog.csdnimg.cn/20190314205321566.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>我们的电脑安装 是也默认了中国区：<br><img src="https://img-blog.csdnimg.cn/20190314210056511.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>这个时候在回看我们遇到的时间不同步问题，相信聪明的大家已经想到解决办法了，解决办法就是在时间设置中将我们的电脑设置成<strong>0时区</strong>，来抵消时间差，这样便解决了windows与ubuntu的时间问题。<br><img src="https://img-blog.csdnimg.cn/20190314205654506.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>哈哈哈，是不是非常简单呢？<br>如果你只是简单使用ubuntu这样设置就已经可以了，要是准备深入学习还是建议用专业的方法来解决这个问题。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">Snippet</a>
+            
+            
+        </div>
+        <div>
+            
         </div>
     </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+    <a href="/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/" class="next-post btn btn-default" title='给linux终端设置代理'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            给linux终端设置代理</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
 </div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+    appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: ''.toLowerCase()
+})
+</script>
+
+
+</div>
+
                 </main>
                 
-                    
-<aside class="col-md-4 sidebar">
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Search
-    </h3>
-    <div id="search-form">
-        <div id="result-mask" class="hide"></div>
-        <div class="search-area">
-            
-            <input id="search-key" type="search" autocomplete="off" placeholder="Search What？">
-            <button type="button" class="search-form-submit" id="search-local">
-                localSearch</button>
-            
-            
-        </div>
-        <div id="result-wrap" class="hide">
-            <div id="search-result"></div>
-        </div>
-        <div class="hide">
-            <template id="search-tpl">
-                <div class="item">
-                    <a href="/{path}" title="{title}">
-                        <div class="title">{title}</div>
-                        <div class="content">{content}</div>
-                    </a>
-                </div>
-            </template>
-        </div>
-    </div>
-</div>
-
-    
-    
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Social
-    </h3>
-    <div class="content social">
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
         
-        <a href="//github.com/yang-xiaofeng1101" rel="external nofollow" title="Github" target="_blank">
-            <i class="git fa fa-git"></i>
-        </a>
-        
-        <a href="mailto:yangxiaofeng.yang@outlook.com" rel="external nofollow" title="邮箱" target="_blank">
-            <i class="envelope-o fa fa-envelope-o"></i>
-        </a>
-        
-        <a href="/" rel="external nofollow" title="联系QQ" target="_blank">
-            <i class="qq fa fa-qq"></i>
-        </a>
-        
-        <a href="/" rel="external nofollow" title="微信" target="_blank">
-            <i class="weixin fa fa-weixin"></i>
-        </a>
-        
-        <a href="/" rel="external nofollow" title="QQ群" target="_blank">
-            <i class="users fa fa-users"></i>
-        </a>
-        
-        <a href="/atom.xml" rel="external nofollow" title="RSS" target="_blank">
-            <i class="feed fa fa-feed"></i>
-        </a>
+        <p>暂无目录</p>
         
     </div>
-</div>
-
-    
-    
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Archives
-    </h3>
-    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/"><i class="fa" aria-hidden="true">2020年03月</i></a><span class="archive-list-count">3</span></li></ul>
-</div>
-
-    
-    
-    
-    
-    
 </aside>
-
                 
             </div>
         </div>
@@ -311,10 +269,6 @@
         </div>
     </div>
 </div>
-
-
-<script src="/js/search.js?rev=@@hash.js"></script>
-
 
 
 
