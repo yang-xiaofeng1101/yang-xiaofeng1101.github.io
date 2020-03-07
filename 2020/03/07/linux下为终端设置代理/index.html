@@ -1,0 +1,309 @@
+<!DOCTYPE HTML>
+<html lang="">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="yangxiaofeng的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://yoursite.com">
+    <!--SEO-->
+
+<meta name="keywords" content="" />
+
+
+<meta name="description" content="给linux终端设置代理在安装showdsocks的情况下，浏览器就可以正常实现通过代理访问了，但是对于linux用户来说，终端是个常用的工具，如何给终端设置代理让终端也能通过代理进行访问呢？
+..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    linux下为终端设置代理 |
+    
+    yangxiaofeng的博客
+</title>
+
+<link rel="alternate" href="/atom.xml" title="yangxiaofeng的博客" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  style="background-image:url(
+    http://snippet.shenliyang.com/img/banner3.jpg)"
+     >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='yangxiaofeng'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                yangxiaofeng的博客
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://yoursite.com">
+                        yangxiaofeng的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                Home</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="linux下为终端设置代理">
+            
+            linux下为终端设置代理
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/03/07</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h3 id="给linux终端设置代理"><a href="#给linux终端设置代理" class="headerlink" title="给linux终端设置代理"></a>给linux终端设置代理</h3><p>在安装showdsocks的情况下，浏览器就可以正常实现通过代理访问了，但是对于linux用户来说，终端是个常用的工具，如何给终端设置代理让终端也能通过代理进行访问呢？</p>
+<h4 id="1-curl，wget"><a href="#1-curl，wget" class="headerlink" title="1. curl，wget"></a>1. curl，wget</h4><p>这俩是常用的命令，实现代理的方式是</p>
+<h6 id="（1）安装polipo"><a href="#（1）安装polipo" class="headerlink" title="（1）安装polipo"></a>（1）安装polipo</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install polipo</span><br></pre></td></tr></table></figure>
+
+<h6 id="（2）配置-polipo"><a href="#（2）配置-polipo" class="headerlink" title="（2）配置 polipo"></a>（2）配置 polipo</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;polipo&#x2F;config</span><br></pre></td></tr></table></figure>
+
+<p>在它的末尾添加以下命令，或者去掉以下命令前面的注释符号；若此文件不存在，则自己创建</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">socksParentProxy &#x3D; &quot;localhost:1080&quot;</span><br><span class="line">socksProxyType &#x3D; socks5</span><br></pre></td></tr></table></figure>
+
+<h6 id="（3）重新启动-polipo-服务"><a href="#（3）重新启动-polipo-服务" class="headerlink" title="（3）重新启动 polipo 服务"></a>（3）重新启动 polipo 服务</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart polipo.service</span><br></pre></td></tr></table></figure>
+
+<p>查看状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status polipo.service</span><br></pre></td></tr></table></figure>
+
+<p>得到类似如下结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">polipo.service - LSB: Start or stop the polipo web cache</span><br><span class="line">   Loaded: loaded (&#x2F;etc&#x2F;init.d&#x2F;polipo; generated; vendor preset: enabled)</span><br><span class="line">   Active: active (running) since Tue 2019-12-03 03:24:15 CST; 34min ago</span><br><span class="line">     Docs: man:systemd-sysv-generator(8)</span><br><span class="line">  Process: 4799 ExecStop&#x3D;&#x2F;etc&#x2F;init.d&#x2F;polipo stop (code&#x3D;exited, status&#x3D;0&#x2F;SUCCESS)</span><br><span class="line">  Process: 4806 ExecStart&#x3D;&#x2F;etc&#x2F;init.d&#x2F;polipo start (code&#x3D;exited, status&#x3D;0&#x2F;SUCCESS)</span><br><span class="line">    Tasks: 1 (limit: 4915)</span><br><span class="line">   CGroup: &#x2F;system.slice&#x2F;polipo.service</span><br><span class="line">           └─4817 &#x2F;usr&#x2F;bin&#x2F;polipo -c &#x2F;etc&#x2F;polipo&#x2F;config pidFile&#x3D;&#x2F;var&#x2F;run&#x2F;polipo&#x2F;polipo.pid daemonise&#x3D;true</span><br><span class="line"></span><br><span class="line">12月 03 03:24:15  systemd[1]: Starting LSB: Start or stop the polipo web cache...</span><br><span class="line">12月 03 03:24:15  polipo[4817]: Established listening socket on port 8123.</span><br><span class="line">12月 03 03:24:15  polipo[4806]: Starting polipo: polipo.</span><br><span class="line">12月 03 03:24:15  systemd[1]: Started LSB: Start or stop the polipo web cache.</span><br></pre></td></tr></table></figure>
+
+<h6 id="（4）终端设置代理环境，如果想长期生效的那么在-zshrc-或者-bashrc-下增加"><a href="#（4）终端设置代理环境，如果想长期生效的那么在-zshrc-或者-bashrc-下增加" class="headerlink" title="（4）终端设置代理环境，如果想长期生效的那么在 .zshrc 或者 .bashrc 下增加"></a>（4）终端设置代理环境，如果想长期生效的那么在 <code>.zshrc</code> 或者 <code>.bashrc</code> 下增加</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export http_proxy&#x3D;http:&#x2F;&#x2F;localhost:8123 </span><br><span class="line">export https_proxy&#x3D;http:&#x2F;&#x2F;localhost:8123</span><br></pre></td></tr></table></figure>
+
+<p>polipo 的默认端口时 8123</p>
+<p>这时wget和curl都可以通过代理实现访问了，但是想要通过apt安装软件却任然不行</p>
+<p><img src="https://img-blog.csdnimg.cn/2019120304242658.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="2-apt"><a href="#2-apt" class="headerlink" title="2. apt"></a>2. apt</h4><p>在apt的配置文件目录下创建代理配置文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;apt&#x2F;apt.conf.d&#x2F;10proxy   #这个文件正常不存在，会新建一个</span><br><span class="line">#编辑内容为：</span><br><span class="line">Acquire::http::Proxy &quot;http:&#x2F;&#x2F;localhost:8123&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>退出终端，重新打开。此时便可以通过代理使用apt安装软件了。<br><img src="https://img-blog.csdnimg.cn/20191203042855705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="3-git"><a href="#3-git" class="headerlink" title="3. git"></a>3. git</h4><p>git是软件从业者常用的一个软件，世界上最大的开源社区github由于服务器在国外，下载速度非常慢，常常需要使用代理服务。</p>
+<p>设置代理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global https.proxy http:&#x2F;&#x2F;localhost:8123</span><br><span class="line"></span><br><span class="line">git config --global https.proxy https:&#x2F;&#x2F;localhost:8123</span><br></pre></td></tr></table></figure>
+
+<p>取消代理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global --unset http.proxy</span><br><span class="line"></span><br><span class="line">git config --global --unset https.proxy</span><br></pre></td></tr></table></figure>
+<p>测试效果<br><img src="https://img-blog.csdnimg.cn/20191203042741286.png" alt="在这里插入图片描述"><br>参考：<br>[<a href="https://www.cnblogs.com/andrewwang/p/9293031.html]" target="_blank" rel="noopener">https://www.cnblogs.com/andrewwang/p/9293031.html]</a></p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">Snippet</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+    <a href="/2020/03/07/hello-world/" class="next-post btn btn-default" title='Hello World'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            Hello World</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+    appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: ''.toLowerCase()
+})
+</script>
+
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#给linux终端设置代理"><span class="toc-text">给linux终端设置代理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-curl，wget"><span class="toc-text">1. curl，wget</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#（1）安装polipo"><span class="toc-text">（1）安装polipo</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#（2）配置-polipo"><span class="toc-text">（2）配置 polipo</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#（3）重新启动-polipo-服务"><span class="toc-text">（3）重新启动 polipo 服务</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#（4）终端设置代理环境，如果想长期生效的那么在-zshrc-或者-bashrc-下增加"><span class="toc-text">（4）终端设置代理环境，如果想长期生效的那么在 .zshrc 或者 .bashrc 下增加</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-apt"><span class="toc-text">2. apt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-git"><span class="toc-text">3. git</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>
