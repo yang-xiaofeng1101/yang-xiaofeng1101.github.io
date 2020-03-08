@@ -19,10 +19,10 @@
     <link rel="dns-prefetch" href="http://yoursite.com">
     <!--SEO-->
 
-<meta name="keywords" content="Linux,time synchronization" />
+<meta name="keywords" content="Linux,remote" />
 
 
-<meta name="description" content="@TOC注：本教程不研究系统计时原理，只简单解决问题，不修改系统核心设置，安全快速解决问题。网络上他人的博客已近提出了专业解决方案，大家可前往查看，在此不做重复。https://blog.csd..." />
+<meta name="description" content="code-server &amp; 远程编辑1. 背景随着项目规模扩大，个人计算机已经无法满足测试需求，需要在服务器上运行项目程序。当需要对源码进行修改的时候，就非常麻烦，先下载再上传或者使用v..." />
 
 
 <meta name="robots" content="all" />
@@ -33,7 +33,7 @@
 
 <title>
     
-    ubuntu与windows时间同步 |
+    code-server &amp; 远程编辑 |
     
     yangxiaofeng的博客
 </title>
@@ -137,9 +137,9 @@
                     <p id="process"></p>
 <article class="post">
     <div class="post-head">
-        <h1 id="ubuntu与windows时间同步">
+        <h1 id="code-server &amp; 远程编辑">
             
-            ubuntu与windows时间同步
+            code-server &amp; 远程编辑
             
         </h1>
         <div class="post-meta">
@@ -154,7 +154,7 @@
         <i class="fa fa-tags"></i>
         <span class="tags-meta">
             
-            <a class="tag-link" href="/tags/Linux/" rel="tag">Linux</a> <a class="tag-link" href="/tags/time-synchronization/" rel="tag">time synchronization</a>
+            <a class="tag-link" href="/tags/Linux/" rel="tag">Linux</a> <a class="tag-link" href="/tags/remote/" rel="tag">remote</a>
             
         </span>
     </span>
@@ -164,7 +164,7 @@
     <span class="fa-wrap">
         <i class="fa fa-clock-o"></i>
         <span class="date-meta">
-            2020/03/07</span>
+            2020/03/08</span>
     </span>
     
     
@@ -174,10 +174,24 @@
     </div>
     
     <div class="post-body post-content">
-        <p>@<a href="ubuntu与windows时间同步（简单易懂版）">TOC</a><br><strong>注：本教程不研究系统计时原理，只简单解决问题，不修改系统核心设置，安全快速解决问题。网络上他人的博客已近提出了专业解决方案，大家可前往查看，在此不做重复。</strong><br><a href="https://blog.csdn.net/zero_hzz/article/details/79205037" target="_blank" rel="noopener">https://blog.csdn.net/zero_hzz/article/details/79205037</a></p>
-<p>相信装了windows与ubuntu双系统的用户都会遇见一个问题，那就是两个系统的时间不同步，相差8小时。网上的修改教程复杂难懂，对于阅读困难症患者着实不易。<br>本人在实践中发现一个新的简单解决方案，在此分享给大家，即使你没有任何计算机基础，也能快速解决问题。</p>
-<p>windows与ubuntu时间相差8小时，为什么是8小时而不是其他时间？具体原因详见文章开头链接。这个时候想到我们所学地理知识，中国就处在东8区。<br><img src="https://img-blog.csdnimg.cn/20190314205321566.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>我们的电脑安装 是也默认了中国区：<br><img src="https://img-blog.csdnimg.cn/20190314210056511.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>这个时候在回看我们遇到的时间不同步问题，相信聪明的大家已经想到解决办法了，解决办法就是在时间设置中将我们的电脑设置成<strong>0时区</strong>，来抵消时间差，这样便解决了windows与ubuntu的时间问题。<br><img src="https://img-blog.csdnimg.cn/20190314205654506.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>哈哈哈，是不是非常简单呢？<br>如果你只是简单使用ubuntu这样设置就已经可以了，要是准备深入学习还是建议用专业的方法来解决这个问题。</p>
+        <h1 id="code-server-amp-远程编辑"><a href="#code-server-amp-远程编辑" class="headerlink" title="code-server &amp; 远程编辑"></a>code-server &amp; 远程编辑</h1><h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><p>随着项目规模扩大，个人计算机已经无法满足测试需求，需要在服务器上运行项目程序。当需要对源码进行修改的时候，就非常麻烦，先下载再上传或者使用vim直接编辑，许多功能都没有。一次偶然发现了code-server这个软件，将它部署在服务器上，就可以直接在本地编辑远程文件了，而且具有vscode的所有功能。</p>
+<h2 id="2-安装"><a href="#2-安装" class="headerlink" title="2. 安装"></a>2. 安装</h2><p>常见的安装方法见链接：<br><a href="https://zhuanlan.zhihu.com/p/62570740?utm_source=ZHShareTargetIDMore&utm_medium=social&utm_oi=41299306610688" target="_blank" rel="noopener">知乎</a></p>
+<ol>
+<li>文中提到需要下载code-server二进制包，位于github上，由于买不起代理，一直下载失败。但是在之前为Windows10里的wsl配置code-server时可以直接在wsl里./code自动下载数据包，下载源位于微软的服务器，速度快。根据这一特性，但是找了半天也没找见下载地址，索性将解压后的数据一律打包上传。<br><img src="/images/2020/03/08/7aff3ba0-611b-11ea-a0f6-2761b1af4254.PNG" alt="coe.PNG"><br>安装位置位于home/.vscode-server/bin/XXXXXXX<br><a href="https://github.com/cdr/code-server/releases" target="_blank" rel="noopener">code-server github</a></li>
+</ol>
+<hr>
+<ol start="2">
+<li>为本地vscode安装remote-ssh插件，设置服务器登录ip和用户名，在连接过程中会尝试自动下载数据包，由于服务器未连接到外网，下载失败，但是服务器对应目录已经创建，进到home/.vscode-server/bin/XXXXXXX下（xxxxx表示commit码）将在个人设备上打包的数据解压在此。再次连接就能正常使用了。</li>
+</ol>
+<h2 id="3-安装过程中遇到的问题"><a href="#3-安装过程中遇到的问题" class="headerlink" title="3.安装过程中遇到的问题"></a>3.安装过程中遇到的问题</h2><ol>
+<li>由于默认生成的.ssh/config位于home下，对于windows来说，这个目录是有权限要求的，所以在选择保存目录时选到普通目录下。</li>
+</ol>
+<hr>
+<ol start="2">
+<li>在连接过程中密码反复错误，原因是登录名错误，因为默认登录名是个人电脑用户名，而不是服务器用户名。<br>解决方法：在setting中下面一项填写保存的config地址<br><img src="/images/2020/03/08/f8b050d0-611a-11ea-a0f6-2761b1af4254.PNG" alt="sshconfig.PNG"></li>
+<li>版本匹配问题，这个插件还会检测客户端(vscode)和服务端(服务器)的版本是否一致, 所以还需要在 vscode 中禁用插件的自动更新.<br>在 settings.json 添加如下行即可<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"extensions.autoUpdate"</span>: <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+或者将本地安装版本选择与服务器一致，定期同步更新</li>
+</ol>
 
     </div>
     
@@ -196,17 +210,11 @@
 </article>
 <div class="article-nav prev-next-wrap clearfix">
     
-    <a href="/2020/03/08/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" class="pre-post btn btn-default" title='code-server & 远程编辑'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            code-server & 远程编辑</span>
-    </a>
     
-    
-    <a href="/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/" class="next-post btn btn-default" title='给linux终端设置代理'>
+    <a href="/2020/03/07/ubuntu%E4%B8%8Ewindows%E5%8F%8C%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5/" class="next-post btn btn-default" title='ubuntu与windows时间同步'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
-            给linux终端设置代理</span><i class="fa fa-angle-right fa-fw"></i>
+            ubuntu与windows时间同步</span><i class="fa fa-angle-right fa-fw"></i>
     </a>
     
 </div>
@@ -247,7 +255,7 @@ new Valine({
             Table of Contents
         </h3>
         
-        <p>暂无目录</p>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#code-server-amp-远程编辑"><span class="toc-text">code-server &amp; 远程编辑</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景"><span class="toc-text">1. 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-安装"><span class="toc-text">2. 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-安装过程中遇到的问题"><span class="toc-text">3.安装过程中遇到的问题</span></a></li></ol></li></ol>
         
     </div>
 </aside>
