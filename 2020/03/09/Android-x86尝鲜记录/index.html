@@ -19,10 +19,10 @@
     <link rel="dns-prefetch" href="http://yoursite.com">
     <!--SEO-->
 
-<meta name="keywords" content="Linux,remote" />
+<meta name="keywords" content="Linux,Android" />
 
 
-<meta name="description" content="1. 背景随着项目规模扩大，个人计算机已经无法满足测试需求，需要在服务器上运行项目程序。当需要对源码进行修改的时候，就非常麻烦，先下载再上传或者使用vim直接编辑，许多功能都没有。一次偶然发现了..." />
+<meta name="description" content="1. 下载系统镜像包Androidx86_64 9.0百度搜索出的镜像站位于香港，下载速度比较慢。想到国内也有类似的镜像源——清华镜像源，就去找了找，起初并没有找见Androidx86。索性安卓..." />
 
 
 <meta name="robots" content="all" />
@@ -33,7 +33,7 @@
 
 <title>
     
-    code-server &amp; 远程编辑 |
+    Android x86尝鲜记录 |
     
     yangxiaofeng的博客
 </title>
@@ -137,9 +137,9 @@
                     <p id="process"></p>
 <article class="post">
     <div class="post-head">
-        <h1 id="code-server &amp; 远程编辑">
+        <h1 id="Android x86尝鲜记录">
             
-            code-server &amp; 远程编辑
+            Android x86尝鲜记录
             
         </h1>
         <div class="post-meta">
@@ -154,7 +154,7 @@
         <i class="fa fa-tags"></i>
         <span class="tags-meta">
             
-            <a class="tag-link" href="/tags/Linux/" rel="tag">Linux</a> <a class="tag-link" href="/tags/remote/" rel="tag">remote</a>
+            <a class="tag-link" href="/tags/Android/" rel="tag">Android</a> <a class="tag-link" href="/tags/Linux/" rel="tag">Linux</a>
             
         </span>
     </span>
@@ -164,7 +164,7 @@
     <span class="fa-wrap">
         <i class="fa fa-clock-o"></i>
         <span class="date-meta">
-            2020/03/08</span>
+            2020/03/09</span>
     </span>
     
     
@@ -174,24 +174,11 @@
     </div>
     
     <div class="post-body post-content">
-        <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><p>随着项目规模扩大，个人计算机已经无法满足测试需求，需要在服务器上运行项目程序。当需要对源码进行修改的时候，就非常麻烦，先下载再上传或者使用vim直接编辑，许多功能都没有。一次偶然发现了code-server这个软件，将它部署在服务器上，就可以直接在本地编辑远程文件了，而且具有vscode的所有功能。</p>
-<h2 id="2-安装"><a href="#2-安装" class="headerlink" title="2. 安装"></a>2. 安装</h2><p>常见的安装方法见链接：<br><a href="https://zhuanlan.zhihu.com/p/62570740?utm_source=ZHShareTargetIDMore&utm_medium=social&utm_oi=41299306610688" target="_blank" rel="noopener">知乎</a></p>
-<ol>
-<li>文中提到需要下载code-server二进制包，位于github上，由于买不起代理，一直下载失败。但是在之前为Windows10里的wsl配置code-server时可以直接在wsl里./code自动下载数据包，下载源位于微软的服务器，速度快。根据这一特性，但是找了半天也没找见下载地址，索性将解压后的数据一律打包上传。<br><img src="/images/2020/03/08/7aff3ba0-611b-11ea-a0f6-2761b1af4254.PNG" alt="coe.PNG"><br>安装位置位于home/.vscode-server/bin/XXXXXXX<br><a href="https://github.com/cdr/code-server/releases" target="_blank" rel="noopener">code-server github</a></li>
-</ol>
-<hr>
-<ol start="2">
-<li>为本地vscode安装remote-ssh插件，设置服务器登录ip和用户名，在连接过程中会尝试自动下载数据包，由于服务器未连接到外网，下载失败，但是服务器对应目录已经创建，进到home/.vscode-server/bin/XXXXXXX下（xxxxx表示commit码）将在个人设备上打包的数据解压在此。再次连接就能正常使用了。</li>
-</ol>
-<h2 id="3-安装过程中遇到的问题"><a href="#3-安装过程中遇到的问题" class="headerlink" title="3.安装过程中遇到的问题"></a>3.安装过程中遇到的问题</h2><ol>
-<li>由于默认生成的.ssh/config位于home下，对于windows来说，这个目录是有权限要求的，所以在选择保存目录时选到普通目录下。</li>
-</ol>
-<hr>
-<ol start="2">
-<li>在连接过程中密码反复错误，原因是登录名错误，因为默认登录名是个人电脑用户名，而不是服务器用户名。<br>解决方法：在setting中下面一项填写保存的config地址<br><img src="/images/2020/03/08/f8b050d0-611a-11ea-a0f6-2761b1af4254.PNG" alt="sshconfig.PNG"></li>
-<li>版本匹配问题，这个插件还会检测客户端(vscode)和服务端(服务器)的版本是否一致, 所以还需要在 vscode 中禁用插件的自动更新.<br>在 settings.json 添加如下行即可<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"extensions.autoUpdate"</span>: <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-或者将本地安装版本选择与服务器一致，定期同步更新</li>
-</ol>
+        <h2 id="1-下载系统镜像包"><a href="#1-下载系统镜像包" class="headerlink" title="1. 下载系统镜像包"></a>1. 下载系统镜像包</h2><p><a href="https://mirrors.xtom.com.hk/osdn//android-x86/71931/android-x86_64-9.0-r1.iso" target="_blank" rel="noopener">Androidx86_64 9.0</a><br>百度搜索出的镜像站位于香港，下载速度比较慢。<br>想到国内也有类似的镜像源——<a href="https://mirrors.tuna.tsinghua.edu.cn" target="_blank" rel="noopener">清华镜像源</a>，就去找了找，起初并没有找见Androidx86。索性安卓香港镜像来按图索骥，先进到osdn目录，结果跟平常页面不一样<a href="https://mirrors.tuna.tsinghua.edu.cn/osdn/" target="_blank" rel="noopener">OSDN</a>。里面的链接点击后会直接跳转到OSDN官网，跑到了国外。跟加速的理念不符。在香港的镜像站目录逐步回退，也是这个样子，毫无头绪。<br>不经意间突然想到，为何不直接把香港站的后续路径直接复制过来看是什么情况？说干就干，结果就找见了位于清华镜像站的文件<a href="https://mirrors.tuna.tsinghua.edu.cn/osdn/android-x86/" target="_blank" rel="noopener">Android x86</a>；<br><img src="/images/2020/03/09/ad9743a0-61e8-11ea-9477-c36447aa7d4d.PNG" alt="tuna.PNG"><br>根据不同的版本号选择自己需要下载的版本，下载下来就可以进行安装。<br>我选择了最新版的64位安装包<br><img src="/images/2020/03/09/d465cdd0-61e8-11ea-9477-c36447aa7d4d.PNG" alt="tuna2.PNG"></p>
+<h2 id="2-安装操作系统"><a href="#2-安装操作系统" class="headerlink" title="2. 安装操作系统"></a>2. 安装操作系统</h2><p>Android x86的安装与一般的Linux安装没有什么区别，都是那么个流程<br><img src="/images/2020/03/09/33b11920-61e9-11ea-9477-c36447aa7d4d.jfif" alt="timg.jfif"><br>选择installation，选择安装盘即可。<br>然后重启，重启画面如下：<br><img src="/images/2020/03/09/5953f490-61e9-11ea-9477-c36447aa7d4d.jfif" alt="Android.jfif"></p>
+<p>运行界面：<br><img src="/images/2020/03/09/a60ff7c0-61e9-11ea-9477-c36447aa7d4d.jpg" alt="Cache_342ffdb37a778964..jpg"><br>所有应用：<br><img src="/images/2020/03/09/b2308560-61e9-11ea-9477-c36447aa7d4d.jpg" alt="Cache_38dc1b1137f219ff..jpg"></p>
+<h2 id="3-尝试使用"><a href="#3-尝试使用" class="headerlink" title="3. 尝试使用"></a>3. 尝试使用</h2><p>(1) 在浏览器下载了QQ，安装运行无大碍<br>(2) 安装腾讯会议，卡在启动界面无法进入<br>(3) 安装和平精英游戏，无法运行<br>(4) 安装淘宝可正常运行<br>(5) 不能拨打电话发短信</p>
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>Androidx86下无法运行多数应用，跟手机在兼容性无法相提并论。但是性能要好，安装应用速度非常快。用了几个小时就卸载了，装回deepin。</p>
 
     </div>
     
@@ -210,17 +197,11 @@
 </article>
 <div class="article-nav prev-next-wrap clearfix">
     
-    <a href="/2020/03/09/Android-x86%E5%B0%9D%E9%B2%9C%E8%AE%B0%E5%BD%95/" class="pre-post btn btn-default" title='Android x86尝鲜记录'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            Android x86尝鲜记录</span>
-    </a>
     
-    
-    <a href="/2020/03/07/ubuntu%E4%B8%8Ewindows%E5%8F%8C%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5/" class="next-post btn btn-default" title='ubuntu与windows时间同步'>
+    <a href="/2020/03/08/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" class="next-post btn btn-default" title='code-server & 远程编辑'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
-            ubuntu与windows时间同步</span><i class="fa fa-angle-right fa-fw"></i>
+            code-server & 远程编辑</span><i class="fa fa-angle-right fa-fw"></i>
     </a>
     
 </div>
@@ -261,7 +242,7 @@ new Valine({
             Table of Contents
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-背景"><span class="toc-text">1. 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-安装"><span class="toc-text">2. 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-安装过程中遇到的问题"><span class="toc-text">3.安装过程中遇到的问题</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-下载系统镜像包"><span class="toc-text">1. 下载系统镜像包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-安装操作系统"><span class="toc-text">2. 安装操作系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-尝试使用"><span class="toc-text">3. 尝试使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-总结"><span class="toc-text">4. 总结</span></a></li></ol>
         
     </div>
 </aside>
