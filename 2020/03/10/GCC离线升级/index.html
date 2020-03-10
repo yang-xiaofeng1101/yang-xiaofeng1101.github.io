@@ -19,10 +19,13 @@
     <link rel="dns-prefetch" href="http://yoursite.com">
     <!--SEO-->
 
-<meta name="keywords" content="Linux,Android" />
+<meta name="keywords" content="Linux,gcc" />
 
 
-<meta name="description" content="1. 下载系统镜像包Androidx86_64 9.0百度搜索出的镜像站位于香港，下载速度比较慢。想到国内也有类似的镜像源——清华镜像源，就去找了找，起初并没有找见Androidx86。索性安卓..." />
+<meta name="description" content="1. 下载gcc安装包
+gcc选择自己想要的版本并下载我下载的是7.5.0版本.然后解压。
+
+打开contrib/download_prerequisites查看依赖)可以看到这里要求了四个依赖..." />
 
 
 <meta name="robots" content="all" />
@@ -33,7 +36,7 @@
 
 <title>
     
-    Android x86尝鲜记录 |
+    GCC离线升级 |
     
     yangxiaofeng的博客
 </title>
@@ -137,9 +140,9 @@
                     <p id="process"></p>
 <article class="post">
     <div class="post-head">
-        <h1 id="Android x86尝鲜记录">
+        <h1 id="GCC离线升级">
             
-            Android x86尝鲜记录
+            GCC离线升级
             
         </h1>
         <div class="post-meta">
@@ -154,7 +157,7 @@
         <i class="fa fa-tags"></i>
         <span class="tags-meta">
             
-            <a class="tag-link" href="/tags/Android/" rel="tag">Android</a> <a class="tag-link" href="/tags/Linux/" rel="tag">Linux</a>
+            <a class="tag-link" href="/tags/Linux/" rel="tag">Linux</a> <a class="tag-link" href="/tags/gcc/" rel="tag">gcc</a>
             
         </span>
     </span>
@@ -164,7 +167,7 @@
     <span class="fa-wrap">
         <i class="fa fa-clock-o"></i>
         <span class="date-meta">
-            2020/03/09</span>
+            2020/03/10</span>
     </span>
     
     
@@ -174,11 +177,54 @@
     </div>
     
     <div class="post-body post-content">
-        <h2 id="1-下载系统镜像包"><a href="#1-下载系统镜像包" class="headerlink" title="1. 下载系统镜像包"></a>1. 下载系统镜像包</h2><p><a href="https://mirrors.xtom.com.hk/osdn//android-x86/71931/android-x86_64-9.0-r1.iso" target="_blank" rel="noopener">Androidx86_64 9.0</a><br>百度搜索出的镜像站位于香港，下载速度比较慢。<br>想到国内也有类似的镜像源——<a href="https://mirrors.tuna.tsinghua.edu.cn" target="_blank" rel="noopener">清华镜像源</a>，就去找了找，起初并没有找见Androidx86。索性安卓香港镜像来按图索骥，先进到osdn目录，结果跟平常页面不一样<a href="https://mirrors.tuna.tsinghua.edu.cn/osdn/" target="_blank" rel="noopener">OSDN</a>。里面的链接点击后会直接跳转到OSDN官网，跑到了国外。跟加速的理念不符。在香港的镜像站目录逐步回退，也是这个样子，毫无头绪。<br>不经意间突然想到，为何不直接把香港站的后续路径直接复制过来看是什么情况？说干就干，结果就找见了位于清华镜像站的文件<a href="https://mirrors.tuna.tsinghua.edu.cn/osdn/android-x86/" target="_blank" rel="noopener">Android x86</a>；<br><img src="/images/2020/03/09/ad9743a0-61e8-11ea-9477-c36447aa7d4d.PNG" alt="tuna.PNG"><br>根据不同的版本号选择自己需要下载的版本，下载下来就可以进行安装。<br>我选择了最新版的64位安装包<br><img src="/images/2020/03/09/d465cdd0-61e8-11ea-9477-c36447aa7d4d.PNG" alt="tuna2.PNG"></p>
-<h2 id="2-安装操作系统"><a href="#2-安装操作系统" class="headerlink" title="2. 安装操作系统"></a>2. 安装操作系统</h2><p>Android x86的安装与一般的Linux安装没有什么区别，都是那么个流程<br><img src="/images/2020/03/09/33b11920-61e9-11ea-9477-c36447aa7d4d.jfif" alt="timg.jfif"><br>选择installation，选择安装盘即可。<br>然后重启，重启画面如下：<br><img src="/images/2020/03/09/5953f490-61e9-11ea-9477-c36447aa7d4d.jfif" alt="Android.jfif"></p>
-<p>运行界面：<br><img src="/images/2020/03/09/a60ff7c0-61e9-11ea-9477-c36447aa7d4d.jpg" alt="Cache_342ffdb37a778964..jpg"><br>所有应用：<br><img src="/images/2020/03/09/b2308560-61e9-11ea-9477-c36447aa7d4d.jpg" alt="Cache_38dc1b1137f219ff..jpg"></p>
-<h2 id="3-尝试使用"><a href="#3-尝试使用" class="headerlink" title="3. 尝试使用"></a>3. 尝试使用</h2><p>(1) 在浏览器下载了QQ，安装运行无大碍<br>(2) 安装腾讯会议，卡在启动界面无法进入<br>(3) 安装和平精英游戏，无法运行<br>(4) 安装淘宝可正常运行<br>(5) 不能拨打电话发短信</p>
-<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>Androidx86下无法运行多数应用，跟手机在兼容性无法相提并论。但是性能要好，安装应用速度非常快。用了几个小时就卸载了，装回deepin。</p>
+        <h2 id="1-下载gcc安装包"><a href="#1-下载gcc安装包" class="headerlink" title="1. 下载gcc安装包"></a>1. 下载gcc安装包</h2><ol>
+<li><p><a href="https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/" target="_blank" rel="noopener">gcc</a><br>选择自己想要的版本并下载<br>我下载的是<a href="https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.gz" target="_blank" rel="noopener">7.5.0</a>版本.然后解压。</p>
+</li>
+<li><p>打开contrib/download_prerequisites查看依赖<img src="https://img2018.cnblogs.com/blog/1777124/201908/1777124-20190824151244627-83438779.png" alt="">)可以看到这里要求了四个依赖包：<a href="https://mirrors.tuna.tsinghua.edu.cn/gnu/gmp/" target="_blank" rel="noopener">gmp</a>，<a href="https://mirrors.tuna.tsinghua.edu.cn/gnu/mpc/" target="_blank" rel="noopener">mpc</a>，<a href="https://mirrors.tuna.tsinghua.edu.cn/gnu/mpfr/" target="_blank" rel="noopener">mpfr</a>，<a href="http://www.mirrorservice.org/sites/sourceware.org/pub/gcc/infrastructure/" target="_blank" rel="noopener">isl</a>。下载的版本可以不是最新版，但是不能太旧，一般从现在往后退几代就可以了，具体要求gcc的configure时会说明。额外注意如果采用tree编译法要求mpc&gt;=1.0.3。</p>
+<h2 id="2-安装准备与配置"><a href="#2-安装准备与配置" class="headerlink" title="2. 安装准备与配置"></a>2. 安装准备与配置</h2></li>
+<li><p>下载完成后，将gmp、mpfr、mpc、isl安装放到cd /usr/local/gcc-7.1.0目录下并解压：</p>
+<p>   tar -xf gmp-6.1.0.tar.bz2</p>
+<p>   tar -xf mpfr-3.1.4.tar.bz2</p>
+<p>   tar -xf mpc-1.0.3.tar.gz</p>
+<p>   tar -xf isl-0.16.1.tar.bz2  </p>
+</li>
+<li><p>建立软连接：</p>
+<p>  ln -sf gmp-6.1.0 gmp</p>
+<p>  ln -sf mpfr-3.1.4 mpfr </p>
+<p>  ln -sf mpc-1.0.3 mpc</p>
+<p>  ln -sf isl-0.16.1 isl</p>
+<h2 id="3-编译安装："><a href="#3-编译安装：" class="headerlink" title="3. 编译安装："></a>3. 编译安装：</h2></li>
+<li><p>创建build目录，不要在源码root目录下直接build，否则无法进行树形编译</p>
+</li>
+<li><p>编译命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">..&#x2F;configure --prefix&#x3D;xxx -enable-checking&#x3D;release -enable-languages&#x3D;c,c++ -disable-multilib</span><br><span class="line">make -j</span><br><span class="line">make install #安装到指定的prefix目录下</span><br></pre></td></tr></table></figure>
+<h2 id="4-其他编译方式"><a href="#4-其他编译方式" class="headerlink" title="4. 其他编译方式"></a>4. 其他编译方式</h2><p>如果不采用tree编译的方式，那么需要分别编译这几个依赖包，而且顺序固定，依次编译。<br>gmp安装：</p>
+</li>
+</ol>
+<p>tar jxf gmp-4.3.2.tar.bz2</p>
+<p>cd gmp-4.3.2</p>
+<p>./configure –prefix=/usr/local/gmp-4.3.2 &amp;&amp; make</p>
+<p>make install</p>
+<p>mpfr安装：</p>
+<p>tar jxf mpfr-2.4.2.tar.bz2</p>
+<p>cd mpfr-2.4.2</p>
+<p>./configure –prefix=/usr/local/mpfr-2.4.2 –with-gmp=/usr/local/gmp-4.3.2 &amp;&amp; make</p>
+<p>make install</p>
+<p>mpc安装：</p>
+<p>tar zxvfv mpc-1.0.1.tar.gz</p>
+<p>cd mpc-1.0.1</p>
+<p>./configure –prefix=/usr/local/mpc-1.0.1 –with-gmp=/usr/local/gmp-4.3.2 –with-mpfr=/usr/local/mpfr-2.4.2 &amp;&amp; make</p>
+<p>make install</p>
+<p>第三步：添加环境变量</p>
+<p>export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/gmp-4.3.2/lib:/usr/local/mpc-1.0.1/lib:/usr/local/mpfr-2.4.2/lib</p>
+<p>第四步：安装gcc-5.4.0</p>
+<p>tar -xzvf gcc-5.4.0.tar.gz</p>
+<p>cd gcc-5.4.0</p>
+<p>mkdir gcc-build    //创建编译目录</p>
+<p>cd gcc-build</p>
+<p>../configure –prefix=/usr/local/gcc-5.4.0 –enable-threads=posix –disable-checking –disable-multilib –enable-languages=c,c++ –with-gmp=/usr/local/gmp-4.3.2 –with-mpfr=/usr/local/mpfr-2.4.2 –with-mpc=/usr/local/mpc-1.0.1           //执行配置</p>
+<p>make -j4   //多核编译，过程极其漫长～～～</p>
+<p>make install<br>这种方式我在编译gcc的时候失败了。还是tree编译方法方便</p>
 
     </div>
     
@@ -197,17 +243,11 @@
 </article>
 <div class="article-nav prev-next-wrap clearfix">
     
-    <a href="/2020/03/10/GCC%E7%A6%BB%E7%BA%BF%E5%8D%87%E7%BA%A7/" class="pre-post btn btn-default" title='GCC离线升级'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            GCC离线升级</span>
-    </a>
     
-    
-    <a href="/2020/03/08/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" class="next-post btn btn-default" title='code-server & 远程编辑'>
+    <a href="/2020/03/09/Android-x86%E5%B0%9D%E9%B2%9C%E8%AE%B0%E5%BD%95/" class="next-post btn btn-default" title='Android x86尝鲜记录'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
-            code-server & 远程编辑</span><i class="fa fa-angle-right fa-fw"></i>
+            Android x86尝鲜记录</span><i class="fa fa-angle-right fa-fw"></i>
     </a>
     
 </div>
@@ -248,7 +288,7 @@ new Valine({
             Table of Contents
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-下载系统镜像包"><span class="toc-text">1. 下载系统镜像包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-安装操作系统"><span class="toc-text">2. 安装操作系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-尝试使用"><span class="toc-text">3. 尝试使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-总结"><span class="toc-text">4. 总结</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-下载gcc安装包"><span class="toc-text">1. 下载gcc安装包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-安装准备与配置"><span class="toc-text">2. 安装准备与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-编译安装："><span class="toc-text">3. 编译安装：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-其他编译方式"><span class="toc-text">4. 其他编译方式</span></a></li></ol>
         
     </div>
 </aside>
