@@ -198,33 +198,47 @@ gcc选择自己想要的版本并下载我下载的是7.5.0版本.然后解压�
 </li>
 <li><p>编译命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">..&#x2F;configure --prefix&#x3D;xxx -enable-checking&#x3D;release -enable-languages&#x3D;c,c++ -disable-multilib</span><br><span class="line">make -j</span><br><span class="line">make install #安装到指定的prefix目录下</span><br></pre></td></tr></table></figure>
-<h2 id="4-其他编译方式"><a href="#4-其他编译方式" class="headerlink" title="4. 其他编译方式"></a>4. 其他编译方式</h2><p>如果不采用tree编译的方式，那么需要分别编译这几个依赖包，而且顺序固定，依次编译。<br>gmp安装：</p>
+<h2 id="4-其他编译方式"><a href="#4-其他编译方式" class="headerlink" title="4. 其他编译方式"></a>4. 其他编译方式</h2></li>
+<li><p>如果不采用tree编译的方式，那么需要分别编译这几个依赖包，而且顺序固定，依次编译。</p>
+<ol>
+<li><p>gmp安装：</p>
+<p> tar jxf gmp-4.3.2.tar.bz2</p>
+<p> cd gmp-4.3.2</p>
+<p> ./configure –prefix=/usr/local/gmp-4.3.2 &amp;&amp; make</p>
+<p> make install</p>
+</li>
+<li><p>mpfr安装：</p>
+<p> tar jxf mpfr-2.4.2.tar.bz2</p>
+<p> cd mpfr-2.4.2</p>
+<p> ./configure –prefix=/usr/local/mpfr-2.4.2 –with-gmp=/usr/local/gmp-4.3.2 &amp;&amp; make</p>
+<p> make install</p>
+</li>
+<li><p>mpc安装：</p>
+<p> tar zxvfv mpc-1.0.1.tar.gz</p>
+<p> cd mpc-1.0.1</p>
+<p> ./configure –prefix=/usr/local/mpc-1.0.1 –with-gmp=/usr/local/gmp-4.3.2 –with-mpfr=/usr/local/mpfr-2.4.2 &amp;&amp; make</p>
+<p> make install</p>
 </li>
 </ol>
-<p>tar jxf gmp-4.3.2.tar.bz2</p>
-<p>cd gmp-4.3.2</p>
-<p>./configure –prefix=/usr/local/gmp-4.3.2 &amp;&amp; make</p>
-<p>make install</p>
-<p>mpfr安装：</p>
-<p>tar jxf mpfr-2.4.2.tar.bz2</p>
-<p>cd mpfr-2.4.2</p>
-<p>./configure –prefix=/usr/local/mpfr-2.4.2 –with-gmp=/usr/local/gmp-4.3.2 &amp;&amp; make</p>
-<p>make install</p>
-<p>mpc安装：</p>
-<p>tar zxvfv mpc-1.0.1.tar.gz</p>
-<p>cd mpc-1.0.1</p>
-<p>./configure –prefix=/usr/local/mpc-1.0.1 –with-gmp=/usr/local/gmp-4.3.2 –with-mpfr=/usr/local/mpfr-2.4.2 &amp;&amp; make</p>
-<p>make install</p>
-<p>第三步：添加环境变量</p>
-<p>export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/gmp-4.3.2/lib:/usr/local/mpc-1.0.1/lib:/usr/local/mpfr-2.4.2/lib</p>
-<p>第四步：安装gcc-5.4.0</p>
-<p>tar -xzvf gcc-5.4.0.tar.gz</p>
-<p>cd gcc-5.4.0</p>
-<p>mkdir gcc-build    //创建编译目录</p>
-<p>cd gcc-build</p>
-<p>../configure –prefix=/usr/local/gcc-5.4.0 –enable-threads=posix –disable-checking –disable-multilib –enable-languages=c,c++ –with-gmp=/usr/local/gmp-4.3.2 –with-mpfr=/usr/local/mpfr-2.4.2 –with-mpc=/usr/local/mpc-1.0.1           //执行配置</p>
-<p>make -j4   //多核编译，过程极其漫长～～～</p>
-<p>make install<br>这种方式我在编译gcc的时候失败了。还是tree编译方法方便</p>
+</li>
+</ol>
+<ol start="2">
+<li><p>添加环境变量</p>
+<p> export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/gmp-4.3.2/lib:/usr/local/mpc-1.0.1/lib:/usr/local/mpfr-2.4.2/lib</p>
+</li>
+</ol>
+<ol start="3">
+<li><p>安装gcc-5.4.0</p>
+<p> tar -xzvf gcc-5.4.0.tar.gz</p>
+<p> cd gcc-5.4.0</p>
+<p> mkdir gcc-build    //创建编译目录</p>
+<p> cd gcc-build</p>
+<p> ../configure –prefix=/usr/local/gcc-5.4.0 –enable-threads=posix –disable-checking –disable-multilib –enable-languages=c,c++ –with-gmp=/usr/local/gmp-4.3.2 –with-mpfr=/usr/local/mpfr-2.4.2 –with-mpc=/usr/local/mpc-1.0.1           //执行配置</p>
+<p> make -j4   //多核编译，过程极其漫长～～～</p>
+<p> make install</p>
+</li>
+</ol>
+<p>这种方式我在编译gcc的时候失败了。还是tree编译方法方便</p>
 
     </div>
     
