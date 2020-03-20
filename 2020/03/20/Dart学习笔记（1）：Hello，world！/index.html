@@ -19,10 +19,11 @@
     <link rel="dns-prefetch" href="http://yoursite.com">
     <!--SEO-->
 
-<meta name="keywords" content="" />
+<meta name="keywords" content="Dart" />
 
 
-<meta name="description" content="" />
+<meta name="description" content="任何一门编程语言的第一节课基本上都会是Hello,world!估计很少有人会打破这个传统
+最初官方推荐的编辑器是Dart Editor而现在已弃用，改为推荐WebStorm、Atom编辑器本站并..." />
 
 
 <meta name="robots" content="all" />
@@ -33,7 +34,7 @@
 
 <title>
     
-    Tag: cuda |
+    Dart学习笔记（1）：Hello，world！ |
     
     yangxiaofeng的博客
 </title>
@@ -133,163 +134,126 @@
     <section class="content-wrap">
         <div class="container">
             <div class="row">
-                <main class="col-md-8 main-content ">
-                    <ol class="breadcrumb">
-    
-    <li>
-        cuda
-    </li>
-    
-    
-</ol>
-
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
 <article class="post">
+    <div class="post-head">
+        <h1 id="Dart学习笔记（1）：Hello，world！">
+            
+            Dart学习笔记（1）：Hello，world！
+            
+        </h1>
+        <div class="post-meta">
     
-    <div class="post-content">
-        <div class="post-head home-post-head">
-            <h1 class="post-title">
-                <a href="/2020/03/12/Functors/">
-                    Functors</a>
-            </h1>
-            <div class="post-meta"> &bull;
-                <time class="post-date" datetime="" title="">
-                    2020年03月12日
-                </time>
-            </div>
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Dart/" rel="tag">Dart</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/03/20</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>任何一门编程语言的第一节课基本上都会是Hello,world!<br>估计很少有人会打破这个传统</p>
+<p>最初官方推荐的编辑器是Dart Editor<br>而现在已弃用，改为推荐WebStorm、Atom<br>编辑器本站并没有提供下载链接 需要的可自行百度，查找最新版本</p>
+<p>Dart SDK的安装非常简单， 资源下载 页面提供有墙内下载地址<br>将zip文件解压到任意目录，并将bin目录添加至PATH环境变量即可</p>
+<p>在新建工程的时候，WebStorm 提供有多个工程模板<br>这里选择命令行应用<br><img src="http://www.cndartlang.com/wp-content/uploads/2017/07/6.jpg" alt=""><br>编辑bin/main.dart，同C++一样，Dart程序是从main()函数开始执行的<br>在main.dart中添加如下代码：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"Hello, world!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>添加完之后点击工具栏的绿色运行按钮，或者dart文件右键菜单中的 Run 菜单<br>便能够在命令行界面看到运行结果了<br><img src="http://www.cndartlang.com/wp-content/uploads/2017/07/7.jpg" alt=""><br>顺带一提，Dart有 两种运行模式：</p>
+<ul>
+<li>检查模式（checked）：进行类型检查，如果发现实际类型与声明或期望的类型不匹配就报错</li>
+<li>生产模式（production）：不进行类型检查，忽略声明的类型信息，忽略 assert 语句</li>
+</ul>
+<p>检查模式运行较慢，生产模式运行快<br>但检查模式可以及早地发现程序在的问题，所以建议在开发过程中使用检查模式<br>而在正式环境中使用生产模式运行</p>
+<p>Dart VM 默认在生产模式下运行，而我们用 WebStorm 开发时默认在检查模式下运行<br>通过 Run—&gt;Edit Configurations 选项可以设置使用不同的模式<br><img src="http://www.cndartlang.com/wp-content/uploads/2017/07/8.jpg" alt=""></p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">yangxf</a>
+            
+            
         </div>
-        <p class="brief">
+        <div>
             
-            1. C++ FunctorsAlright, what is a functor?A C++ functor is a “function-object”. In other words, it is an object that ...
-            
-        </p>
+        </div>
     </div>
 </article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+    <a href="/2020/03/12/Functors/" class="next-post btn btn-default" title='Functors'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            Functors</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
 
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+    appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: true,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: ''.toLowerCase()
+})
+</script>
+
+
+</div>
 
                 </main>
                 
-                    
-<aside class="col-md-4 sidebar">
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Search
-    </h3>
-    <div id="search-form">
-        <div id="result-mask" class="hide"></div>
-        <div class="search-area">
-            
-            <input id="search-key" type="search" autocomplete="off" placeholder="Search What？">
-            <button type="button" class="search-form-submit" id="search-local">
-                localSearch</button>
-            
-            
-        </div>
-        <div id="result-wrap" class="hide">
-            <div id="search-result"></div>
-        </div>
-        <div class="hide">
-            <template id="search-tpl">
-                <div class="item">
-                    <a href="/{path}" title="{title}">
-                        <div class="title">{title}</div>
-                        <div class="content">{content}</div>
-                    </a>
-                </div>
-            </template>
-        </div>
-    </div>
-</div>
-
-    
-    
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Social
-    </h3>
-    <div class="content social">
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
         
-        <a href="//github.com/yang-xiaofeng1101" rel="external nofollow" title="Github" target="_blank">
-            <i class="git fa fa-git"></i>
-        </a>
-        
-        <a href="mailto:yangxiaofeng.yang@outlook.com" rel="external nofollow" title="邮箱" target="_blank">
-            <i class="envelope-o fa fa-envelope-o"></i>
-        </a>
-        
-        <a href="http://wpa.qq.com/msgrd?v=3&uin=1649675002&site=qq&menu=yes" rel="external nofollow" title="联系QQ" target="_blank">
-            <i class="qq fa fa-qq"></i>
-        </a>
-        
-        <a href="/" rel="external nofollow" title="微信" target="_blank">
-            <i class="weixin fa fa-weixin"></i>
-        </a>
-        
-        <a href="/" rel="external nofollow" title="QQ群" target="_blank">
-            <i class="users fa fa-users"></i>
-        </a>
-        
-        <a href="/atom.xml" rel="external nofollow" title="RSS" target="_blank">
-            <i class="feed fa fa-feed"></i>
-        </a>
+        <p>暂无目录</p>
         
     </div>
-</div>
-
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Categories
-    </h3>
-    <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/"><i class="fa" aria-hidden="true">技术</i></a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/"><i class="fa" aria-hidden="true">编程</i></a><span class="category-list-count">2</span></li></ul>
-</div>
-
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Archives
-    </h3>
-    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/"><i class="fa" aria-hidden="true">2020年03月</i></a><span class="archive-list-count">8</span></li></ul>
-</div>
-
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Tag Cloud
-    </h3>
-    <div class="content tag-cloud">
-        
-        <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Dart/" style="font-size: 10px;">Dart</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 10px;">cuda</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/remote/" style="font-size: 10px;">remote</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 10px;">编程</a>
-        
-    </div>
-</div>
-
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Friends
-    </h3>
-    <div class="content friends-link">
-        
-        <a href="https://blog.csdn.net/qq_40878442" class="fa" target="_blank">
-            CSDN博客</a>
-        
-        <a href="https://me.csdn.net/qq_41858784" class="fa" target="_blank">
-            坏蛋炜</a>
-        
-    </div>
-</div>
-
-    
 </aside>
-
                 
             </div>
         </div>
@@ -326,10 +290,6 @@
         </div>
     </div>
 </div>
-
-
-<script src="/js/search.js?rev=@@hash.js"></script>
-
 
 
 
