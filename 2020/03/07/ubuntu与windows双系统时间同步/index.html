@@ -16,7 +16,7 @@
     <meta name="screen-orientation" content="portrait">
     <meta name="theme-version" content="1.2.3">
     <meta name="root" content="/">
-    <link rel="dns-prefetch" href="h">
+    <link rel="dns-prefetch" href="http:/google.com">
     <!--SEO-->
 
 <meta name="keywords" content="Linux,time synchronization" />
@@ -77,8 +77,8 @@
     /img/banner.jpg)"
      >
     <div class="main-header-box">
-        <a class="header-avatar" href="/" title='yangxiaofeng'>
-            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        <a class="header-avatar" href="/" target="_blank" rel="noopener" title='yangxiaofeng'>
+            <img src="img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
         </a>
         <div class="branding">
             <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
@@ -98,29 +98,29 @@
                         <span class="sr-only"></span>
                         <i class="fa fa-bars"></i>
                     </span>
-                    <a class="navbar-brand" href="h">
+                    <a class="navbar-brand" href="http:/google.com" target="_blank" rel="noopener">
                         yangxiaofeng的博客</a>
                 </div>
                 <div class="collapse navbar-collapse" id="main-menu">
                     <ul class="menu">
                         
                         <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
+                            <a href="/" target="_blank" rel="noopener"><i class="fa "></i>
                                 Home</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/categories/"><i class="fa "></i>
+                            <a href="/categories/" target="_blank" rel="noopener"><i class="fa "></i>
                                 分类</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/tags/"><i class="fa "></i>
+                            <a href="/tags/" target="_blank" rel="noopener"><i class="fa "></i>
                                 标签</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/archives/"><i class="fa "></i>
+                            <a href="/archives/" target="_blank" rel="noopener"><i class="fa "></i>
                                 时间轴</a>
                         </li>
                         
@@ -146,7 +146,7 @@
     
     <span class="categories-meta fa-wrap">
         <i class="fa fa-folder-open-o"></i>
-        <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+        <a class="category-link" href="categories/技术/" target="_blank" rel="noopener">技术</a>
     </span>
     
     
@@ -154,7 +154,7 @@
         <i class="fa fa-tags"></i>
         <span class="tags-meta">
             
-            <a class="tag-link" href="/tags/Linux/" rel="tag">Linux</a> <a class="tag-link" href="/tags/time-synchronization/" rel="tag">time synchronization</a>
+            <a class="tag-link" href="tags/Linux/" target="_blank" rel="tag noopener">Linux</a> <a class="tag-link" href="tags/time-synchronization/" target="_blank" rel="tag noopener">time synchronization</a>
             
         </span>
     </span>
@@ -179,7 +179,7 @@
     </div>
     
     <div class="post-body post-content">
-        <p>@<a href="ubuntu与windows时间同步（简单易懂版）">TOC</a><br><strong>注：本教程不研究系统计时原理，只简单解决问题，不修改系统核心设置，安全快速解决问题。网络上他人的博客已近提出了专业解决方案，大家可前往查看，在此不做重复。</strong><br><a href="https://blog.csdn.net/zero_hzz/article/details/79205037" target="_blank" rel="noopener">https://blog.csdn.net/zero_hzz/article/details/79205037</a></p>
+        <p>@<a href="ubuntu与windows时间同步（简单易懂版）" target="_blank" rel="noopener">TOC</a><br><strong>注：本教程不研究系统计时原理，只简单解决问题，不修改系统核心设置，安全快速解决问题。网络上他人的博客已近提出了专业解决方案，大家可前往查看，在此不做重复。</strong><br><a href="https://blog.csdn.net/zero_hzz/article/details/79205037" target="_blank" rel="noopener">https://blog.csdn.net/zero_hzz/article/details/79205037</a></p>
 <p>相信装了windows与ubuntu双系统的用户都会遇见一个问题，那就是两个系统的时间不同步，相差8小时。网上的修改教程复杂难懂，对于阅读困难症患者着实不易。<br>本人在实践中发现一个新的简单解决方案，在此分享给大家，即使你没有任何计算机基础，也能快速解决问题。</p>
 <p>windows与ubuntu时间相差8小时，为什么是8小时而不是其他时间？具体原因详见文章开头链接。这个时候想到我们所学地理知识，中国就处在东8区。<br><img src="https://img-blog.csdnimg.cn/20190314205321566.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>我们的电脑安装 是也默认了中国区：<br><img src="https://img-blog.csdnimg.cn/20190314210056511.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>这个时候在回看我们遇到的时间不同步问题，相信聪明的大家已经想到解决办法了，解决办法就是在时间设置中将我们的电脑设置成<strong>0时区</strong>，来抵消时间差，这样便解决了windows与ubuntu的时间问题。<br><img src="https://img-blog.csdnimg.cn/20190314205654506.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
 <p>哈哈哈，是不是非常简单呢？<br>如果你只是简单使用ubuntu这样设置就已经可以了，要是准备深入学习还是建议用专业的方法来解决这个问题。</p>
@@ -201,14 +201,14 @@
 </article>
 <div class="article-nav prev-next-wrap clearfix">
     
-    <a href="/2020/03/08/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" class="pre-post btn btn-default" title='code-server & 远程编辑'>
+    <a href="2020/03/08/code-server-远程编辑/" target="_blank" rel="noopener" class="pre-post btn btn-default" title='code-server & 远程编辑'>
         <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
         <span class="hidden-xs">
             code-server & 远程编辑</span>
     </a>
     
     
-    <a href="/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/" class="next-post btn btn-default" title='给linux终端设置代理'>
+    <a href="2020/03/07/linux下为终端设置代理/" target="_blank" rel="noopener" class="next-post btn btn-default" title='给linux终端设置代理'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
             给linux终端设置代理</span><i class="fa fa-angle-right fa-fw"></i>
@@ -222,7 +222,7 @@
 <div id="vcomments" class="valine"></div>
 
 <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src="/assets/valine.min.js"></script>
+<script src="assets/valine.min.js"></script>
 
 <script>
 new Valine({
@@ -308,7 +308,7 @@ new Valine({
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
-<script src="/js/app.js?rev=@@hash.js"></script>
+<script src="js/app.js?rev=@@hash.js"></script>
 
 </body>
 </html>

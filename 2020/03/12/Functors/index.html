@@ -16,7 +16,7 @@
     <meta name="screen-orientation" content="portrait">
     <meta name="theme-version" content="1.2.3">
     <meta name="root" content="/">
-    <link rel="dns-prefetch" href="h">
+    <link rel="dns-prefetch" href="http:/google.com">
     <!--SEO-->
 
 <meta name="keywords" content="C++,thrust,cuda" />
@@ -77,8 +77,8 @@
     /img/banner.jpg)"
      >
     <div class="main-header-box">
-        <a class="header-avatar" href="/" title='yangxiaofeng'>
-            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        <a class="header-avatar" href="/" target="_blank" rel="noopener" title='yangxiaofeng'>
+            <img src="img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
         </a>
         <div class="branding">
             <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
@@ -98,29 +98,29 @@
                         <span class="sr-only"></span>
                         <i class="fa fa-bars"></i>
                     </span>
-                    <a class="navbar-brand" href="h">
+                    <a class="navbar-brand" href="http:/google.com" target="_blank" rel="noopener">
                         yangxiaofeng的博客</a>
                 </div>
                 <div class="collapse navbar-collapse" id="main-menu">
                     <ul class="menu">
                         
                         <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
+                            <a href="/" target="_blank" rel="noopener"><i class="fa "></i>
                                 Home</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/categories/"><i class="fa "></i>
+                            <a href="/categories/" target="_blank" rel="noopener"><i class="fa "></i>
                                 分类</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/tags/"><i class="fa "></i>
+                            <a href="/tags/" target="_blank" rel="noopener"><i class="fa "></i>
                                 标签</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/archives/"><i class="fa "></i>
+                            <a href="/archives/" target="_blank" rel="noopener"><i class="fa "></i>
                                 时间轴</a>
                         </li>
                         
@@ -146,7 +146,7 @@
     
     <span class="categories-meta fa-wrap">
         <i class="fa fa-folder-open-o"></i>
-        <a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+        <a class="category-link" href="categories/编程/" target="_blank" rel="noopener">编程</a>
     </span>
     
     
@@ -154,7 +154,7 @@
         <i class="fa fa-tags"></i>
         <span class="tags-meta">
             
-            <a class="tag-link" href="/tags/C/" rel="tag">C++</a> <a class="tag-link" href="/tags/cuda/" rel="tag">cuda</a> <a class="tag-link" href="/tags/thrust/" rel="tag">thrust</a>
+            <a class="tag-link" href="tags/C/" target="_blank" rel="tag noopener">C++</a> <a class="tag-link" href="tags/cuda/" target="_blank" rel="tag noopener">cuda</a> <a class="tag-link" href="tags/thrust/" target="_blank" rel="tag noopener">thrust</a>
             
         </span>
     </span>
@@ -179,14 +179,14 @@
     </div>
     
     <div class="post-body post-content">
-        <h1 id="1-C-Functors"><a href="#1-C-Functors" class="headerlink" title="1. C++ Functors"></a>1. C++ Functors</h1><h3 id="Alright-what-is-a-functor"><a href="#Alright-what-is-a-functor" class="headerlink" title="Alright, what is a functor?"></a>Alright, what is a functor?</h3><p>A C++ functor is a “function-object”. In other words, it is an object that can be called and treated just like a regular function. Let’s see an example.</p>
+        <h1 id="1-C-Functors"><a href="#1-C-Functors" target="_blank" rel="noopener" class="headerlink" title="1. C++ Functors"></a>1. C++ Functors</h1><h3 id="Alright-what-is-a-functor"><a href="#Alright-what-is-a-functor" target="_blank" rel="noopener" class="headerlink" title="Alright, what is a functor?"></a>Alright, what is a functor?</h3><p>A C++ functor is a “function-object”. In other words, it is an object that can be called and treated just like a regular function. Let’s see an example.</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Doubler</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">int</span> &amp;val)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        val *= <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Doubler d1, d2; <span class="comment">// two instances of the Doubler class</span></span><br><span class="line"><span class="keyword">int</span> i = <span class="number">20</span>, j = <span class="number">30</span>;</span><br><span class="line"></span><br><span class="line">d1(i); <span class="comment">// both instances can be called as</span></span><br><span class="line">d2(j); <span class="comment">//   if they were regular functions</span></span><br><span class="line"><span class="comment">// now i=40 and j=60</span></span><br></pre></td></tr></table></figure>
-<h3 id="OK-so-what-do-functors-give-us-LOTS"><a href="#OK-so-what-do-functors-give-us-LOTS" class="headerlink" title="OK, so what do functors give us? LOTS!"></a>OK, so what do functors give us? <strong>LOTS</strong>!</h3><ul>
+<h3 id="OK-so-what-do-functors-give-us-LOTS"><a href="#OK-so-what-do-functors-give-us-LOTS" target="_blank" rel="noopener" class="headerlink" title="OK, so what do functors give us? LOTS!"></a>OK, so what do functors give us? <strong>LOTS</strong>!</h3><ul>
 <li>We can <em>maintain per-instance state</em>.</li>
 <li>We can <em>pass functors around just like variables</em>.</li>
 <li>Compiler optimizations (vs. function pointers)<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AddX</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    AddX(<span class="keyword">int</span> x) : _x(x) &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> &amp;val)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> val + _x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> _x;</span><br><span class="line">&#125;;</span><br><span class="line">AddX add5(5), add10(10);            // two instances</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; add5(<span class="number">3</span>) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;  <span class="comment">// prints 8</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; add10(<span class="number">3</span>) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; <span class="comment">// prints 13</span></span><br></pre></td></tr></table></figure>
-<h3 id="We-can-also-pass-functor-instances-into-the-STL-algorithms"><a href="#We-can-also-pass-functor-instances-into-the-STL-algorithms" class="headerlink" title="We can also pass functor instances into the STL algorithms."></a>We can also pass functor instances into the STL algorithms.</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doubleIt</span><span class="params">(<span class="keyword">int</span> &amp;val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    val *= <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Doubler</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">int</span> &amp;val)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        val *= <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">myset</span><span class="params">(<span class="number">10</span>)</span></span>;</span><br><span class="line">Doubler myDoubler;</span><br><span class="line"></span><br><span class="line"><span class="comment">// the next two lines are functionally equivalent</span></span><br><span class="line"><span class="built_in">std</span>::for_each(myset.<span class="built_in">begin</span>(), myset.<span class="built_in">end</span>(), doubleIt);</span><br><span class="line"><span class="built_in">std</span>::for_each(myset.<span class="built_in">begin</span>(), myset.<span class="built_in">end</span>(), myDoubler);</span><br></pre></td></tr></table></figure>
-<h1 id="2-Thrust-Functors"><a href="#2-Thrust-Functors" class="headerlink" title="2. Thrust - Functors"></a>2. Thrust - Functors</h1>OK, so Thrust provides some vectors and generic algorithms for me. But what if I want to do more than just sort, count, and sum my data?</li>
+<h3 id="We-can-also-pass-functor-instances-into-the-STL-algorithms"><a href="#We-can-also-pass-functor-instances-into-the-STL-algorithms" target="_blank" rel="noopener" class="headerlink" title="We can also pass functor instances into the STL algorithms."></a>We can also pass functor instances into the STL algorithms.</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doubleIt</span><span class="params">(<span class="keyword">int</span> &amp;val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    val *= <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Doubler</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">int</span> &amp;val)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        val *= <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">myset</span><span class="params">(<span class="number">10</span>)</span></span>;</span><br><span class="line">Doubler myDoubler;</span><br><span class="line"></span><br><span class="line"><span class="comment">// the next two lines are functionally equivalent</span></span><br><span class="line"><span class="built_in">std</span>::for_each(myset.<span class="built_in">begin</span>(), myset.<span class="built_in">end</span>(), doubleIt);</span><br><span class="line"><span class="built_in">std</span>::for_each(myset.<span class="built_in">begin</span>(), myset.<span class="built_in">end</span>(), myDoubler);</span><br></pre></td></tr></table></figure>
+<h1 id="2-Thrust-Functors"><a href="#2-Thrust-Functors" target="_blank" rel="noopener" class="headerlink" title="2. Thrust - Functors"></a>2. Thrust - Functors</h1>OK, so Thrust provides some vectors and generic algorithms for me. But what if I want to do more than just sort, count, and sum my data?</li>
 </ul>
 <p>Well, look at the title of the slide! - You can make your own functors and pass these into Thrust’s generic algorithms.</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// the next two lines are functionally equivalent</span></span><br><span class="line"><span class="built_in">std</span>::for_each(myset.<span class="built_in">begin</span>(), myset.<span class="built_in">end</span>(), doubleIt);</span><br><span class="line"><span class="built_in">std</span>::for_each(myset.<span class="built_in">begin</span>(), myset.<span class="built_in">end</span>(), myDoubler);</span><br><span class="line"></span><br><span class="line"><span class="comment">// calculate result[] = (a * x[]) + y[]</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">saxpy</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">float</span> _a;</span><br><span class="line">    saxpy(<span class="keyword">int</span> a) : _a(a) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">__host__ __device__ <span class="keyword">float</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">const</span> <span class="keyword">float</span> &amp;x, <span class="keyword">const</span> <span class="keyword">float</span> &amp;y)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a * x + y;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">thrust::device_vector&lt;<span class="keyword">float</span>&gt; x, y, result;</span><br><span class="line"><span class="comment">// ... fill up x &amp; y vectors ...</span></span><br><span class="line">thrust::transform(x.<span class="built_in">begin</span>(), x.<span class="built_in">end</span>(), y.<span class="built_in">begin</span>(),</span><br><span class="line">                  result.<span class="built_in">begin</span>(), saxpy(a));</span><br></pre></td></tr></table></figure>
@@ -213,14 +213,14 @@
 </article>
 <div class="article-nav prev-next-wrap clearfix">
     
-    <a href="/2020/03/20/Dart%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89%EF%BC%9AHello%EF%BC%8Cworld%EF%BC%81/" class="pre-post btn btn-default" title='Dart学习笔记（1）：Hello，world！'>
+    <a href="2020/03/20/Dart学习笔记（1）：Hello，world！/" target="_blank" rel="noopener" class="pre-post btn btn-default" title='Dart学习笔记（1）：Hello，world！'>
         <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
         <span class="hidden-xs">
             Dart学习笔记（1）：Hello，world！</span>
     </a>
     
     
-    <a href="/2020/03/10/GCC%E7%A6%BB%E7%BA%BF%E5%8D%87%E7%BA%A7/" class="next-post btn btn-default" title='GCC离线升级'>
+    <a href="2020/03/10/GCC离线升级/" target="_blank" rel="noopener" class="next-post btn btn-default" title='GCC离线升级'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
             GCC离线升级</span><i class="fa fa-angle-right fa-fw"></i>
@@ -234,7 +234,7 @@
 <div id="vcomments" class="valine"></div>
 
 <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src="/assets/valine.min.js"></script>
+<script src="assets/valine.min.js"></script>
 
 <script>
 new Valine({
@@ -264,7 +264,7 @@ new Valine({
             Table of Contents
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-C-Functors"><span class="toc-text">1. C++ Functors</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Alright-what-is-a-functor"><span class="toc-text">Alright, what is a functor?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OK-so-what-do-functors-give-us-LOTS"><span class="toc-text">OK, so what do functors give us? LOTS!</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#We-can-also-pass-functor-instances-into-the-STL-algorithms"><span class="toc-text">We can also pass functor instances into the STL algorithms.</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Thrust-Functors"><span class="toc-text">2. Thrust - Functors</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-C-Functors" target="_blank" rel="noopener"><span class="toc-text">1. C++ Functors</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Alright-what-is-a-functor" target="_blank" rel="noopener"><span class="toc-text">Alright, what is a functor?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OK-so-what-do-functors-give-us-LOTS" target="_blank" rel="noopener"><span class="toc-text">OK, so what do functors give us? LOTS!</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#We-can-also-pass-functor-instances-into-the-STL-algorithms" target="_blank" rel="noopener"><span class="toc-text">We can also pass functor instances into the STL algorithms.</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Thrust-Functors" target="_blank" rel="noopener"><span class="toc-text">2. Thrust - Functors</span></a></li></ol>
         
     </div>
 </aside>
@@ -320,7 +320,7 @@ new Valine({
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
-<script src="/js/app.js?rev=@@hash.js"></script>
+<script src="js/app.js?rev=@@hash.js"></script>
 
 </body>
 </html>
