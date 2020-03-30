@@ -16,10 +16,10 @@
     <meta name="screen-orientation" content="portrait">
     <meta name="theme-version" content="1.2.3">
     <meta name="root" content="/">
-    <link rel="dns-prefetch" href="http:/google.com">
+    <link rel="dns-prefetch" href="http://yoursite.com">
     <!--SEO-->
 
-<meta name="keywords" content="Linux,cuda" />
+<meta name="keywords" content="cuda,Linux" />
 
 
 <meta name="description" content="openMPI 1.7之后的版本才支持CUDA
@@ -78,8 +78,8 @@
     /img/banner.jpg)"
      >
     <div class="main-header-box">
-        <a class="header-avatar" href="/" target="_blank" rel="noopener" title='yangxiaofeng'>
-            <img src="img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        <a class="header-avatar" href="/" title='yangxiaofeng'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
         </a>
         <div class="branding">
             <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
@@ -99,29 +99,29 @@
                         <span class="sr-only"></span>
                         <i class="fa fa-bars"></i>
                     </span>
-                    <a class="navbar-brand" href="http:/google.com" target="_blank" rel="noopener">
+                    <a class="navbar-brand" href="http://yoursite.com">
                         yangxiaofeng的博客</a>
                 </div>
                 <div class="collapse navbar-collapse" id="main-menu">
                     <ul class="menu">
                         
                         <li role="presentation" class="text-center">
-                            <a href="/" target="_blank" rel="noopener"><i class="fa "></i>
+                            <a href="/"><i class="fa "></i>
                                 Home</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/categories/" target="_blank" rel="noopener"><i class="fa "></i>
+                            <a href="/categories/"><i class="fa "></i>
                                 分类</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/tags/" target="_blank" rel="noopener"><i class="fa "></i>
+                            <a href="/tags/"><i class="fa "></i>
                                 标签</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/archives/" target="_blank" rel="noopener"><i class="fa "></i>
+                            <a href="/archives/"><i class="fa "></i>
                                 时间轴</a>
                         </li>
                         
@@ -147,7 +147,7 @@
     
     <span class="categories-meta fa-wrap">
         <i class="fa fa-folder-open-o"></i>
-        <a class="category-link" href="categories/技术/" target="_blank" rel="noopener">技术</a>
+        <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
     </span>
     
     
@@ -155,7 +155,7 @@
         <i class="fa fa-tags"></i>
         <span class="tags-meta">
             
-            <a class="tag-link" href="tags/Linux/" target="_blank" rel="tag noopener">Linux</a> <a class="tag-link" href="tags/cuda/" target="_blank" rel="tag noopener">cuda</a>
+            <a class="tag-link" href="/tags/Linux/" rel="tag">Linux</a> <a class="tag-link" href="/tags/cuda/" rel="tag">cuda</a>
             
         </span>
     </span>
@@ -181,9 +181,9 @@
     
     <div class="post-body post-content">
         <p>openMPI 1.7之后的版本才支持CUDA</p>
-<h3 id="1-对于1-7-2-0的版本，-配置和编译、安装如下："><a href="#1-对于1-7-2-0的版本，-配置和编译、安装如下：" target="_blank" rel="noopener" class="headerlink" title="1.对于1.7~2.0的版本， 配置和编译、安装如下："></a>1.对于1.7~2.0的版本， 配置和编译、安装如下：</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo ./configure --prefix=&lt;用户指定的openMPI的安装目录&gt;  --with-cuda=&lt;cuda的include目录&gt; --with-cuda-libdir=&lt;cuda的lib64目录&gt;</span><br><span class="line"></span><br><span class="line">sudo make all install</span><br></pre></td></tr></table></figure>
+<h3 id="1-对于1-7-2-0的版本，-配置和编译、安装如下："><a href="#1-对于1-7-2-0的版本，-配置和编译、安装如下：" class="headerlink" title="1.对于1.7~2.0的版本， 配置和编译、安装如下："></a>1.对于1.7~2.0的版本， 配置和编译、安装如下：</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo ./configure --prefix=&lt;用户指定的openMPI的安装目录&gt;  --with-cuda=&lt;cuda的include目录&gt; --with-cuda-libdir=&lt;cuda的lib64目录&gt;</span><br><span class="line"></span><br><span class="line">sudo make all install</span><br></pre></td></tr></table></figure>
 
-<h3 id="2-openmpi-2-0以及以上版本"><a href="#2-openmpi-2-0以及以上版本" target="_blank" rel="noopener" class="headerlink" title="2.openmpi-2.0以及以上版本"></a>2.openmpi-2.0以及以上版本</h3><p>建议安装ucx+gdrcopy来获取新的mpi功能和更好的性能</p>
+<h3 id="2-openmpi-2-0以及以上版本"><a href="#2-openmpi-2-0以及以上版本" class="headerlink" title="2.openmpi-2.0以及以上版本"></a>2.openmpi-2.0以及以上版本</h3><p>建议安装ucx+gdrcopy来获取新的mpi功能和更好的性能</p>
 <p>首先安装gdrcopy，这里建议安装gdrcopy-1.3版本。因为2.0版本会出现如下错误：<br><img src="/images/2020/03/30/ada163c0-7265-11ea-8037-8139a2a0fbbb.png" alt="TIM图片20200330170544.png"><br>安装gdrcopy需要四个依赖：check，check-devel，subunit，subunit-devel，注意下载可执行文件，而不是源码；下载源——<a href="http://rpmfind.net/" target="_blank" rel="noopener">RPM</a>，遇到的问题见博客 《linux rpm 错误》</p>
 <ol>
 <li>编译gdrcopy<br>执行如下命令<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make PREFIX=/public/home/asc02/yangxf/<span class="built_in">local</span>/gdrcopy-1.3  all install</span><br><span class="line">./insmod.sh <span class="comment">#root</span></span><br></pre></td></tr></table></figure>
@@ -213,7 +213,7 @@
 <div class="article-nav prev-next-wrap clearfix">
     
     
-    <a href="2020/03/29/linux-rpm-错误/" target="_blank" rel="noopener" class="next-post btn btn-default" title='linux rpm 错误'>
+    <a href="/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/" class="next-post btn btn-default" title='linux rpm 错误'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
             linux rpm 错误</span><i class="fa fa-angle-right fa-fw"></i>
@@ -227,7 +227,7 @@
 <div id="vcomments" class="valine"></div>
 
 <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src="assets/valine.min.js"></script>
+<script src="/assets/valine.min.js"></script>
 
 <script>
 new Valine({
@@ -237,7 +237,7 @@ new Valine({
     appKey: 'S3K8gXivNTeO1vNz4lvdCxW0',
     placeholder: '说点什么吧',
     notify: false,
-    verify: true,
+    verify: false,
     avatar: 'mm',
     meta: 'nick,mail'.split(','),
     pageSize: '10',
@@ -257,7 +257,7 @@ new Valine({
             Table of Contents
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-对于1-7-2-0的版本，-配置和编译、安装如下：" target="_blank" rel="noopener"><span class="toc-text">1.对于1.7~2.0的版本， 配置和编译、安装如下：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-openmpi-2-0以及以上版本" target="_blank" rel="noopener"><span class="toc-text">2.openmpi-2.0以及以上版本</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-对于1-7-2-0的版本，-配置和编译、安装如下："><span class="toc-text">1.对于1.7~2.0的版本， 配置和编译、安装如下：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-openmpi-2-0以及以上版本"><span class="toc-text">2.openmpi-2.0以及以上版本</span></a></li></ol>
         
     </div>
 </aside>
@@ -313,7 +313,7 @@ new Valine({
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
-<script src="js/app.js?rev=@@hash.js"></script>
+<script src="/js/app.js?rev=@@hash.js"></script>
 
 </body>
 </html>

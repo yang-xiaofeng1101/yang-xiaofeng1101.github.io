@@ -16,7 +16,7 @@
     <meta name="screen-orientation" content="portrait">
     <meta name="theme-version" content="1.2.3">
     <meta name="root" content="/">
-    <link rel="dns-prefetch" href="http:/google.com">
+    <link rel="dns-prefetch" href="http://yoursite.com">
     <!--SEO-->
 
 <meta name="keywords" content="Linux,proxy" />
@@ -78,8 +78,8 @@
     /img/banner.jpg)"
      >
     <div class="main-header-box">
-        <a class="header-avatar" href="/" target="_blank" rel="noopener" title='yangxiaofeng'>
-            <img src="img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        <a class="header-avatar" href="/" title='yangxiaofeng'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
         </a>
         <div class="branding">
             <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
@@ -99,29 +99,29 @@
                         <span class="sr-only"></span>
                         <i class="fa fa-bars"></i>
                     </span>
-                    <a class="navbar-brand" href="http:/google.com" target="_blank" rel="noopener">
+                    <a class="navbar-brand" href="http://yoursite.com">
                         yangxiaofeng的博客</a>
                 </div>
                 <div class="collapse navbar-collapse" id="main-menu">
                     <ul class="menu">
                         
                         <li role="presentation" class="text-center">
-                            <a href="/" target="_blank" rel="noopener"><i class="fa "></i>
+                            <a href="/"><i class="fa "></i>
                                 Home</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/categories/" target="_blank" rel="noopener"><i class="fa "></i>
+                            <a href="/categories/"><i class="fa "></i>
                                 分类</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/tags/" target="_blank" rel="noopener"><i class="fa "></i>
+                            <a href="/tags/"><i class="fa "></i>
                                 标签</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/archives/" target="_blank" rel="noopener"><i class="fa "></i>
+                            <a href="/archives/"><i class="fa "></i>
                                 时间轴</a>
                         </li>
                         
@@ -147,7 +147,7 @@
     
     <span class="categories-meta fa-wrap">
         <i class="fa fa-folder-open-o"></i>
-        <a class="category-link" href="categories/技术/" target="_blank" rel="noopener">技术</a>
+        <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
     </span>
     
     
@@ -155,7 +155,7 @@
         <i class="fa fa-tags"></i>
         <span class="tags-meta">
             
-            <a class="tag-link" href="tags/Linux/" target="_blank" rel="tag noopener">Linux</a> <a class="tag-link" href="tags/proxy/" target="_blank" rel="tag noopener">proxy</a>
+            <a class="tag-link" href="/tags/Linux/" rel="tag">Linux</a> <a class="tag-link" href="/tags/proxy/" rel="tag">proxy</a>
             
         </span>
     </span>
@@ -181,15 +181,15 @@
     
     <div class="post-body post-content">
         <p>在安装showdsocks的情况下，浏览器就可以正常实现通过代理访问了，但是对于linux用户来说，终端是个常用的工具，如何给终端设置代理让终端也能通过代理进行访问呢？</p>
-<h4 id="1-curl，wget"><a href="#1-curl，wget" target="_blank" rel="noopener" class="headerlink" title="1. curl，wget"></a>1. curl，wget</h4><p>这俩是常用的命令，实现代理的方式是</p>
-<h6 id="（1）安装polipo"><a href="#（1）安装polipo" target="_blank" rel="noopener" class="headerlink" title="（1）安装polipo"></a>（1）安装polipo</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install polipo</span><br></pre></td></tr></table></figure>
+<h4 id="1-curl，wget"><a href="#1-curl，wget" class="headerlink" title="1. curl，wget"></a>1. curl，wget</h4><p>这俩是常用的命令，实现代理的方式是</p>
+<h6 id="（1）安装polipo"><a href="#（1）安装polipo" class="headerlink" title="（1）安装polipo"></a>（1）安装polipo</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install polipo</span><br></pre></td></tr></table></figure>
 
-<h6 id="（2）配置-polipo"><a href="#（2）配置-polipo" target="_blank" rel="noopener" class="headerlink" title="（2）配置 polipo"></a>（2）配置 polipo</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;polipo&#x2F;config</span><br></pre></td></tr></table></figure>
+<h6 id="（2）配置-polipo"><a href="#（2）配置-polipo" class="headerlink" title="（2）配置 polipo"></a>（2）配置 polipo</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;polipo&#x2F;config</span><br></pre></td></tr></table></figure>
 
 <p>在它的末尾添加以下命令，或者去掉以下命令前面的注释符号；若此文件不存在，则自己创建</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">socksParentProxy &#x3D; &quot;localhost:1080&quot;</span><br><span class="line">socksProxyType &#x3D; socks5</span><br></pre></td></tr></table></figure>
 
-<h6 id="（3）重新启动-polipo-服务"><a href="#（3）重新启动-polipo-服务" target="_blank" rel="noopener" class="headerlink" title="（3）重新启动 polipo 服务"></a>（3）重新启动 polipo 服务</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart polipo.service</span><br></pre></td></tr></table></figure>
+<h6 id="（3）重新启动-polipo-服务"><a href="#（3）重新启动-polipo-服务" class="headerlink" title="（3）重新启动 polipo 服务"></a>（3）重新启动 polipo 服务</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart polipo.service</span><br></pre></td></tr></table></figure>
 
 <p>查看状态</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status polipo.service</span><br></pre></td></tr></table></figure>
@@ -197,16 +197,16 @@
 <p>得到类似如下结果</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">polipo.service - LSB: Start or stop the polipo web cache</span><br><span class="line">   Loaded: loaded (&#x2F;etc&#x2F;init.d&#x2F;polipo; generated; vendor preset: enabled)</span><br><span class="line">   Active: active (running) since Tue 2019-12-03 03:24:15 CST; 34min ago</span><br><span class="line">     Docs: man:systemd-sysv-generator(8)</span><br><span class="line">  Process: 4799 ExecStop&#x3D;&#x2F;etc&#x2F;init.d&#x2F;polipo stop (code&#x3D;exited, status&#x3D;0&#x2F;SUCCESS)</span><br><span class="line">  Process: 4806 ExecStart&#x3D;&#x2F;etc&#x2F;init.d&#x2F;polipo start (code&#x3D;exited, status&#x3D;0&#x2F;SUCCESS)</span><br><span class="line">    Tasks: 1 (limit: 4915)</span><br><span class="line">   CGroup: &#x2F;system.slice&#x2F;polipo.service</span><br><span class="line">           └─4817 &#x2F;usr&#x2F;bin&#x2F;polipo -c &#x2F;etc&#x2F;polipo&#x2F;config pidFile&#x3D;&#x2F;var&#x2F;run&#x2F;polipo&#x2F;polipo.pid daemonise&#x3D;true</span><br><span class="line"></span><br><span class="line">12月 03 03:24:15  systemd[1]: Starting LSB: Start or stop the polipo web cache...</span><br><span class="line">12月 03 03:24:15  polipo[4817]: Established listening socket on port 8123.</span><br><span class="line">12月 03 03:24:15  polipo[4806]: Starting polipo: polipo.</span><br><span class="line">12月 03 03:24:15  systemd[1]: Started LSB: Start or stop the polipo web cache.</span><br></pre></td></tr></table></figure>
 
-<h6 id="（4）终端设置代理环境，如果想长期生效的那么在-zshrc-或者-bashrc-下增加"><a href="#（4）终端设置代理环境，如果想长期生效的那么在-zshrc-或者-bashrc-下增加" target="_blank" rel="noopener" class="headerlink" title="（4）终端设置代理环境，如果想长期生效的那么在 .zshrc 或者 .bashrc 下增加"></a>（4）终端设置代理环境，如果想长期生效的那么在 <code>.zshrc</code> 或者 <code>.bashrc</code> 下增加</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export http_proxy&#x3D;http:&#x2F;&#x2F;localhost:8123 </span><br><span class="line">export https_proxy&#x3D;http:&#x2F;&#x2F;localhost:8123</span><br></pre></td></tr></table></figure>
+<h6 id="（4）终端设置代理环境，如果想长期生效的那么在-zshrc-或者-bashrc-下增加"><a href="#（4）终端设置代理环境，如果想长期生效的那么在-zshrc-或者-bashrc-下增加" class="headerlink" title="（4）终端设置代理环境，如果想长期生效的那么在 .zshrc 或者 .bashrc 下增加"></a>（4）终端设置代理环境，如果想长期生效的那么在 <code>.zshrc</code> 或者 <code>.bashrc</code> 下增加</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export http_proxy&#x3D;http:&#x2F;&#x2F;localhost:8123 </span><br><span class="line">export https_proxy&#x3D;http:&#x2F;&#x2F;localhost:8123</span><br></pre></td></tr></table></figure>
 
 <p>polipo 的默认端口时 8123</p>
 <p>这时wget和curl都可以通过代理实现访问了，但是想要通过apt安装软件却任然不行</p>
 <p><img src="https://img-blog.csdnimg.cn/2019120304242658.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h4 id="2-apt"><a href="#2-apt" target="_blank" rel="noopener" class="headerlink" title="2. apt"></a>2. apt</h4><p>在apt的配置文件目录下创建代理配置文件：</p>
+<h4 id="2-apt"><a href="#2-apt" class="headerlink" title="2. apt"></a>2. apt</h4><p>在apt的配置文件目录下创建代理配置文件：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;apt&#x2F;apt.conf.d&#x2F;10proxy   #这个文件正常不存在，会新建一个</span><br><span class="line">#编辑内容为：</span><br><span class="line">Acquire::http::Proxy &quot;http:&#x2F;&#x2F;localhost:8123&quot;;</span><br></pre></td></tr></table></figure>
 
 <p>退出终端，重新打开。此时便可以通过代理使用apt安装软件了。<br><img src="https://img-blog.csdnimg.cn/20191203042855705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h4 id="3-git"><a href="#3-git" target="_blank" rel="noopener" class="headerlink" title="3. git"></a>3. git</h4><p>git是软件从业者常用的一个软件，世界上最大的开源社区github由于服务器在国外，下载速度非常慢，常常需要使用代理服务。</p>
+<h4 id="3-git"><a href="#3-git" class="headerlink" title="3. git"></a>3. git</h4><p>git是软件从业者常用的一个软件，世界上最大的开源社区github由于服务器在国外，下载速度非常慢，常常需要使用代理服务。</p>
 <p>设置代理</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global https.proxy http:&#x2F;&#x2F;localhost:8123</span><br><span class="line"></span><br><span class="line">git config --global https.proxy https:&#x2F;&#x2F;localhost:8123</span><br></pre></td></tr></table></figure>
 
@@ -231,14 +231,14 @@
 </article>
 <div class="article-nav prev-next-wrap clearfix">
     
-    <a href="2020/03/07/ubuntu与windows双系统时间同步/" target="_blank" rel="noopener" class="pre-post btn btn-default" title='ubuntu与windows时间同步'>
+    <a href="/2020/03/07/ubuntu%E4%B8%8Ewindows%E5%8F%8C%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5/" class="pre-post btn btn-default" title='ubuntu与windows时间同步'>
         <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
         <span class="hidden-xs">
             ubuntu与windows时间同步</span>
     </a>
     
     
-    <a href="2020/03/07/hello-world/" target="_blank" rel="noopener" class="next-post btn btn-default" title='Hello World'>
+    <a href="/2020/03/07/hello-world/" class="next-post btn btn-default" title='Hello World'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
             Hello World</span><i class="fa fa-angle-right fa-fw"></i>
@@ -252,7 +252,7 @@
 <div id="vcomments" class="valine"></div>
 
 <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src="assets/valine.min.js"></script>
+<script src="/assets/valine.min.js"></script>
 
 <script>
 new Valine({
@@ -262,7 +262,7 @@ new Valine({
     appKey: 'S3K8gXivNTeO1vNz4lvdCxW0',
     placeholder: '说点什么吧',
     notify: false,
-    verify: true,
+    verify: false,
     avatar: 'mm',
     meta: 'nick,mail'.split(','),
     pageSize: '10',
@@ -282,7 +282,7 @@ new Valine({
             Table of Contents
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-curl，wget" target="_blank" rel="noopener"><span class="toc-text">1. curl，wget</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#（1）安装polipo" target="_blank" rel="noopener"><span class="toc-text">（1）安装polipo</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#（2）配置-polipo" target="_blank" rel="noopener"><span class="toc-text">（2）配置 polipo</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#（3）重新启动-polipo-服务" target="_blank" rel="noopener"><span class="toc-text">（3）重新启动 polipo 服务</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#（4）终端设置代理环境，如果想长期生效的那么在-zshrc-或者-bashrc-下增加" target="_blank" rel="noopener"><span class="toc-text">（4）终端设置代理环境，如果想长期生效的那么在 .zshrc 或者 .bashrc 下增加</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-apt" target="_blank" rel="noopener"><span class="toc-text">2. apt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-git" target="_blank" rel="noopener"><span class="toc-text">3. git</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-curl，wget"><span class="toc-text">1. curl，wget</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#（1）安装polipo"><span class="toc-text">（1）安装polipo</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#（2）配置-polipo"><span class="toc-text">（2）配置 polipo</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#（3）重新启动-polipo-服务"><span class="toc-text">（3）重新启动 polipo 服务</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#（4）终端设置代理环境，如果想长期生效的那么在-zshrc-或者-bashrc-下增加"><span class="toc-text">（4）终端设置代理环境，如果想长期生效的那么在 .zshrc 或者 .bashrc 下增加</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-apt"><span class="toc-text">2. apt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-git"><span class="toc-text">3. git</span></a></li></ol>
         
     </div>
 </aside>
@@ -338,7 +338,7 @@ new Valine({
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
-<script src="js/app.js?rev=@@hash.js"></script>
+<script src="/js/app.js?rev=@@hash.js"></script>
 
 </body>
 </html>

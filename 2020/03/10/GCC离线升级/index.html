@@ -16,7 +16,7 @@
     <meta name="screen-orientation" content="portrait">
     <meta name="theme-version" content="1.2.3">
     <meta name="root" content="/">
-    <link rel="dns-prefetch" href="http:/google.com">
+    <link rel="dns-prefetch" href="http://yoursite.com">
     <!--SEO-->
 
 <meta name="keywords" content="Linux,gcc" />
@@ -80,8 +80,8 @@ gcc选择自己想要的版本并下载我下载的是7.5.0版本.然后解压�
     /img/banner.jpg)"
      >
     <div class="main-header-box">
-        <a class="header-avatar" href="/" target="_blank" rel="noopener" title='yangxiaofeng'>
-            <img src="img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        <a class="header-avatar" href="/" title='yangxiaofeng'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
         </a>
         <div class="branding">
             <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
@@ -101,29 +101,29 @@ gcc选择自己想要的版本并下载我下载的是7.5.0版本.然后解压�
                         <span class="sr-only"></span>
                         <i class="fa fa-bars"></i>
                     </span>
-                    <a class="navbar-brand" href="http:/google.com" target="_blank" rel="noopener">
+                    <a class="navbar-brand" href="http://yoursite.com">
                         yangxiaofeng的博客</a>
                 </div>
                 <div class="collapse navbar-collapse" id="main-menu">
                     <ul class="menu">
                         
                         <li role="presentation" class="text-center">
-                            <a href="/" target="_blank" rel="noopener"><i class="fa "></i>
+                            <a href="/"><i class="fa "></i>
                                 Home</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/categories/" target="_blank" rel="noopener"><i class="fa "></i>
+                            <a href="/categories/"><i class="fa "></i>
                                 分类</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/tags/" target="_blank" rel="noopener"><i class="fa "></i>
+                            <a href="/tags/"><i class="fa "></i>
                                 标签</a>
                         </li>
                         
                         <li role="presentation" class="text-center">
-                            <a href="/archives/" target="_blank" rel="noopener"><i class="fa "></i>
+                            <a href="/archives/"><i class="fa "></i>
                                 时间轴</a>
                         </li>
                         
@@ -149,7 +149,7 @@ gcc选择自己想要的版本并下载我下载的是7.5.0版本.然后解压�
     
     <span class="categories-meta fa-wrap">
         <i class="fa fa-folder-open-o"></i>
-        <a class="category-link" href="categories/技术/" target="_blank" rel="noopener">技术</a>
+        <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
     </span>
     
     
@@ -157,7 +157,7 @@ gcc选择自己想要的版本并下载我下载的是7.5.0版本.然后解压�
         <i class="fa fa-tags"></i>
         <span class="tags-meta">
             
-            <a class="tag-link" href="tags/Linux/" target="_blank" rel="tag noopener">Linux</a> <a class="tag-link" href="tags/gcc/" target="_blank" rel="tag noopener">gcc</a>
+            <a class="tag-link" href="/tags/Linux/" rel="tag">Linux</a> <a class="tag-link" href="/tags/gcc/" rel="tag">gcc</a>
             
         </span>
     </span>
@@ -182,11 +182,11 @@ gcc选择自己想要的版本并下载我下载的是7.5.0版本.然后解压�
     </div>
     
     <div class="post-body post-content">
-        <h2 id="1-下载gcc安装包"><a href="#1-下载gcc安装包" target="_blank" rel="noopener" class="headerlink" title="1. 下载gcc安装包"></a>1. 下载gcc安装包</h2><ol>
+        <h2 id="1-下载gcc安装包"><a href="#1-下载gcc安装包" class="headerlink" title="1. 下载gcc安装包"></a>1. 下载gcc安装包</h2><ol>
 <li><p><a href="https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/" target="_blank" rel="noopener">gcc</a><br>选择自己想要的版本并下载<br>我下载的是<a href="https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.gz" target="_blank" rel="noopener">7.5.0</a>版本.然后解压。</p>
 </li>
 <li><p>打开contrib/download_prerequisites查看依赖<img src="/images/2020/03/10/3ecf4650-62b7-11ea-adaa-3dbf80c3d354.PNG" alt="yilai.PNG"><br>可以看到这里要求了四个依赖包：<a href="https://mirrors.tuna.tsinghua.edu.cn/gnu/gmp/" target="_blank" rel="noopener">gmp</a>，<a href="https://mirrors.tuna.tsinghua.edu.cn/gnu/mpc/" target="_blank" rel="noopener">mpc</a>，<a href="https://mirrors.tuna.tsinghua.edu.cn/gnu/mpfr/" target="_blank" rel="noopener">mpfr</a>，<a href="http://www.mirrorservice.org/sites/sourceware.org/pub/gcc/infrastructure/" target="_blank" rel="noopener">isl</a>。下载的版本可以不是最新版，但是不能太旧，一般从现在往后退几代就可以了，具体要求gcc的configure时会说明。额外注意如果采用tree编译法要求mpc&gt;=1.0.3。</p>
-<h2 id="2-安装准备与配置"><a href="#2-安装准备与配置" target="_blank" rel="noopener" class="headerlink" title="2. 安装准备与配置"></a>2. 安装准备与配置</h2></li>
+<h2 id="2-安装准备与配置"><a href="#2-安装准备与配置" class="headerlink" title="2. 安装准备与配置"></a>2. 安装准备与配置</h2></li>
 <li><p>下载完成后，将gmp、mpfr、mpc、isl安装放到cd /usr/local/gcc-7.1.0目录下并解压：</p>
 <p>   tar -xf gmp-6.1.0.tar.bz2</p>
 <p>   tar -xf mpfr-3.1.4.tar.bz2</p>
@@ -198,12 +198,12 @@ gcc选择自己想要的版本并下载我下载的是7.5.0版本.然后解压�
 <p>  ln -sf mpfr-3.1.4 mpfr </p>
 <p>  ln -sf mpc-1.0.3 mpc</p>
 <p>  ln -sf isl-0.16.1 isl</p>
-<h2 id="3-编译安装："><a href="#3-编译安装：" target="_blank" rel="noopener" class="headerlink" title="3. 编译安装："></a>3. 编译安装：</h2></li>
+<h2 id="3-编译安装："><a href="#3-编译安装：" class="headerlink" title="3. 编译安装："></a>3. 编译安装：</h2></li>
 <li><p>创建build目录，不要在源码root目录下直接build，否则无法进行树形编译</p>
 </li>
 <li><p>编译命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">..&#x2F;configure --prefix&#x3D;xxx -enable-checking&#x3D;release -enable-languages&#x3D;c,c++ -disable-multilib</span><br><span class="line">make -j</span><br><span class="line">make install #安装到指定的prefix目录下</span><br></pre></td></tr></table></figure>
-<h2 id="4-其他编译方式"><a href="#4-其他编译方式" target="_blank" rel="noopener" class="headerlink" title="4. 其他编译方式"></a>4. 其他编译方式</h2></li>
+<h2 id="4-其他编译方式"><a href="#4-其他编译方式" class="headerlink" title="4. 其他编译方式"></a>4. 其他编译方式</h2></li>
 <li><p>如果不采用tree编译的方式，那么需要分别编译这几个依赖包，而且顺序固定，依次编译。</p>
 <ol>
 <li><p>gmp安装：</p>
@@ -262,14 +262,14 @@ gcc选择自己想要的版本并下载我下载的是7.5.0版本.然后解压�
 </article>
 <div class="article-nav prev-next-wrap clearfix">
     
-    <a href="2020/03/12/Functors/" target="_blank" rel="noopener" class="pre-post btn btn-default" title='Functors'>
+    <a href="/2020/03/12/Functors/" class="pre-post btn btn-default" title='Functors'>
         <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
         <span class="hidden-xs">
             Functors</span>
     </a>
     
     
-    <a href="2020/03/09/Android-x86尝鲜记录/" target="_blank" rel="noopener" class="next-post btn btn-default" title='Android x86尝鲜记录'>
+    <a href="/2020/03/09/Android-x86%E5%B0%9D%E9%B2%9C%E8%AE%B0%E5%BD%95/" class="next-post btn btn-default" title='Android x86尝鲜记录'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
             Android x86尝鲜记录</span><i class="fa fa-angle-right fa-fw"></i>
@@ -283,7 +283,7 @@ gcc选择自己想要的版本并下载我下载的是7.5.0版本.然后解压�
 <div id="vcomments" class="valine"></div>
 
 <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src="assets/valine.min.js"></script>
+<script src="/assets/valine.min.js"></script>
 
 <script>
 new Valine({
@@ -293,7 +293,7 @@ new Valine({
     appKey: 'S3K8gXivNTeO1vNz4lvdCxW0',
     placeholder: '说点什么吧',
     notify: false,
-    verify: true,
+    verify: false,
     avatar: 'mm',
     meta: 'nick,mail'.split(','),
     pageSize: '10',
@@ -313,7 +313,7 @@ new Valine({
             Table of Contents
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-下载gcc安装包" target="_blank" rel="noopener"><span class="toc-text">1. 下载gcc安装包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-安装准备与配置" target="_blank" rel="noopener"><span class="toc-text">2. 安装准备与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-编译安装：" target="_blank" rel="noopener"><span class="toc-text">3. 编译安装：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-其他编译方式" target="_blank" rel="noopener"><span class="toc-text">4. 其他编译方式</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-下载gcc安装包"><span class="toc-text">1. 下载gcc安装包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-安装准备与配置"><span class="toc-text">2. 安装准备与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-编译安装："><span class="toc-text">3. 编译安装：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-其他编译方式"><span class="toc-text">4. 其他编译方式</span></a></li></ol>
         
     </div>
 </aside>
@@ -369,7 +369,7 @@ new Valine({
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
-<script src="js/app.js?rev=@@hash.js"></script>
+<script src="/js/app.js?rev=@@hash.js"></script>
 
 </body>
 </html>
