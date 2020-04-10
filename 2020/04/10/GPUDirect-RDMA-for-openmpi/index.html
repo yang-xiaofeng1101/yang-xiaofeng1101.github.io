@@ -22,8 +22,7 @@
 <meta name="keywords" content="Linux,cuda" />
 
 
-<meta name="description" content="openMPI 1.7之后的版本才支持CUDA
-1.对于1.7~2.0的版本， 配置和编译、安装如下：123sudo ./configure --prefix=&lt;用户指定的openMPI的..." />
+<meta name="description" content="背景对于MPI跨节点项目，对GPU上的数据一般需要先cudaMemcopy到Host，再通过mpi_send出去，另一设备通过mpi_Recv到Host内存，再cudamemcopy到GPU显存..." />
 
 
 <meta name="robots" content="all" />
@@ -34,7 +33,7 @@
 
 <title>
     
-    openmpi with cuda |
+    GPUDirect RDMA for openmpi |
     
     yangxiaofeng的博客
 </title>
@@ -138,9 +137,9 @@
                     <p id="process"></p>
 <article class="post">
     <div class="post-head">
-        <h1 id="openmpi with cuda">
+        <h1 id="GPUDirect RDMA for openmpi">
             
-            openmpi with cuda
+            GPUDirect RDMA for openmpi
             
         </h1>
         <div class="post-meta">
@@ -165,7 +164,7 @@
     <span class="fa-wrap">
         <i class="fa fa-clock-o"></i>
         <span class="date-meta">
-            2020/03/30</span>
+            2020/04/10</span>
     </span>
     
     <span class="fa-wrap">
@@ -180,20 +179,19 @@
     </div>
     
     <div class="post-body post-content">
-        <p>openMPI 1.7之后的版本才支持CUDA</p>
-<h3 id="1-对于1-7-2-0的版本，-配置和编译、安装如下："><a href="#1-对于1-7-2-0的版本，-配置和编译、安装如下：" class="headerlink" title="1.对于1.7~2.0的版本， 配置和编译、安装如下："></a>1.对于1.7~2.0的版本， 配置和编译、安装如下：</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo ./configure --prefix=&lt;用户指定的openMPI的安装目录&gt;  --with-cuda=&lt;cuda的include目录&gt; --with-cuda-libdir=&lt;cuda的lib64目录&gt;</span><br><span class="line"></span><br><span class="line">sudo make all install</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-openmpi-2-0以及以上版本"><a href="#2-openmpi-2-0以及以上版本" class="headerlink" title="2.openmpi-2.0以及以上版本"></a>2.openmpi-2.0以及以上版本</h3><p>建议安装ucx+gdrcopy来获取新的mpi功能和更好的性能</p>
-<p>首先安装gdrcopy，这里建议安装gdrcopy-1.3版本。因为2.0版本会出现如下错误：<br><img src="/images/2020/03/30/ada163c0-7265-11ea-8037-8139a2a0fbbb.png" alt="TIM图片20200330170544.png"><br>安装gdrcopy需要四个依赖：check，check-devel，subunit，subunit-devel，注意下载可执行文件，而不是源码；下载源——<a href="http://rpmfind.net/" target="_blank" rel="noopener">RPM</a>，遇到的问题见博客 《<a href="https://xiao_feng_yang993.gitee.io/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/" target="_blank" rel="noopener">linux rpm 错误</a>》</p>
-<ol>
-<li>编译gdrcopy<br>执行如下命令<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make PREFIX=/public/home/asc02/yangxf/<span class="built_in">local</span>/gdrcopy-1.3  all install</span><br><span class="line">./insmod.sh <span class="comment">#root</span></span><br></pre></td></tr></table></figure>
-这里不需要指定CUDA=XXX，因为makefile里的路径本身是正确的，指定了反而出现找不见cuda.h的错误。<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">PREFIX ?= /usr/local</span><br><span class="line">DESTLIB ?= <span class="variable">$(PREFIX)</span>/lib64</span><br><span class="line">CUDA ?= /usr/local/cuda</span><br><span class="line"></span><br><span class="line">GDRAPI_ARCH := <span class="variable">$(<span class="built_in">shell</span> ./config_arch)</span></span><br><span class="line"></span><br><span class="line">CUDA_LIB := -L <span class="variable">$(CUDA)</span>/lib64 -L <span class="variable">$(CUDA)</span>/lib -L /usr/lib64/nvidia -L /usr/lib/nvidia</span><br><span class="line">CUDA_INC += -I <span class="variable">$(CUDA)</span>/<span class="keyword">include</span></span><br><span class="line"></span><br><span class="line">CPPFLAGS := <span class="variable">$(CUDA_INC)</span> -I gdrdrv/ -I <span class="variable">$(CUDA)</span>/<span class="keyword">include</span> -D GDRAPI_ARCH=<span class="variable">$(GDRAPI_ARCH)</span></span><br><span class="line">LDFLAGS  := <span class="variable">$(CUDA_LIB)</span> -L <span class="variable">$(CUDA)</span>/lib64</span><br><span class="line">COMMONCFLAGS := -O2</span><br><span class="line">CFLAGS   += <span class="variable">$(COMMONCFLAGS)</span></span><br><span class="line">CXXFLAGS += <span class="variable">$(COMMONCFLAGS)</span></span><br><span class="line">LIBS     := -lcudart -lcuda -lpthread -ldl</span><br></pre></td></tr></table></figure>
-参考<a href="https://www.kutu66.com//GitHub/article_119493" target="_blank" rel="noopener">gdrcopy</a></li>
-<li>编译ucx <a href="https://www.openucx.org/" target="_blank" rel="noopener">ucx</a><br>执行命令<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./autogen.sh</span><br><span class="line">./configure --prefix=/public/home/asc02/yangxf/<span class="built_in">local</span>/ucx --with-cuda=/usr/<span class="built_in">local</span>/cuda --with-gdrcopy=/public/home/asc02/yangxf/<span class="built_in">local</span>/gdrcopy-1.3 --with-mlx5-dv --with-avx --with-sse41 --with-sse42</span><br><span class="line">make -j8</span><br><span class="line">make install</span><br></pre></td></tr></table></figure></li>
-<li>编译openmpi<br>这里用的是openmpi-3.0<br>执行命令<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/public/home/asc02/yangxf/<span class="built_in">local</span>/openmpi-3.0.0 --with-cuda=/usr/<span class="built_in">local</span>/cuda --with-ucx=/public/home/asc02/yangxf/<span class="built_in">local</span>/ucx --<span class="built_in">enable</span>-mpi-cxx</span><br><span class="line">make -j8</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-编译安装完成，在生成的lib目录下可以看到多了关于cuda的库<br><img src="/images/2020/03/30/bb12de90-7269-11ea-8ac6-2dde3af873f9.PNG" alt="cudalib.PNG"><br>把相关路径添加到环境变量就可。</li>
+        <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>对于MPI跨节点项目，对GPU上的数据一般需要先cudaMemcopy到Host，再通过mpi_send出去，另一设备通过mpi_Recv到Host内存，再cudamemcopy到GPU显存，这一过程明显要费时。</p>
+<h2 id="1-compile-openmpi-with-–with-cuda"><a href="#1-compile-openmpi-with-–with-cuda" class="headerlink" title="1. compile openmpi with –with-cuda"></a>1. compile openmpi with –with-cuda</h2><p>这一编译方法可以让openmpi对显存的数据操作，但是它只是减少了代码的书写量，从GPU到Host的数据传输在背后任然在执行。时间甚至比手写cudaMemcopy还要长。为了解决这一问题，就采用了GPUDirect RDMA 技术。<br><a href="https://www.open-mpi.org/faq/?category=runcuda" target="_blank" rel="noopener">openmpi run with cuda</a><br>Open MPI v1.7.4 and later have added some support to take advantage of GPUDirect RDMA on Mellanox cards. All the details about Mellanox hardware as well as software needed to get things to work can be found at the Mellanox web site. Note that to get GPUDirect RDMA support, you also need to configure your Open MPI library with CUDA 6.0.<br>可以看到要想使用GPUDirect RDMA，任然需要对openmpi 加上cuda参数编译。</p>
+<h2 id="2-查看GPUDirect-RDMA-信息"><a href="#2-查看GPUDirect-RDMA-信息" class="headerlink" title="2. 查看GPUDirect RDMA 信息"></a>2. 查看GPUDirect RDMA 信息</h2><ol>
+<li>To see if you have GPUDirect RDMA compiled into your library, you can check like this:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shell$ ompi_info --all | grep btl_openib_have_cuda_gdr</span><br><span class="line">   MCA btl: informational <span class="string">"btl_openib_have_cuda_gdr"</span> (current value: <span class="string">"true"</span>, data <span class="built_in">source</span>: default, level: 4 tuner/basic, <span class="built_in">type</span>: bool)</span><br></pre></td></tr></table></figure></li>
+<li>To see if your OFED stack has GPUDirect RDMA support, you can check like this:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shell$ ompi_info --all | grep btl_openib_have_driver_gdr</span><br><span class="line">   MCA btl: informational <span class="string">"btl_openib_have_driver_gdr"</span> (current value: <span class="string">"true"</span>, data <span class="built_in">source</span>: default, level: 4 tuner/basic, <span class="built_in">type</span>: bool)</span><br></pre></td></tr></table></figure></li>
+<li>To run with GPUDirect RDMA support, you have to enable it as it is off by default:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun --mca btl_openib_want_cuda_gdr 1 ...</span><br></pre></td></tr></table></figure>
+官网的主要介绍就是这样，但是在自己设备上测试就没这么容易了，问题出现在btl_openib_have_driver_gdr这一步，结果如下：<br><img src="/images/2020/04/10/e8a1c790-7b2e-11ea-acfc-35c1710d51fd.PNG" alt="gdr.PNG">它显示的值是false，初步判断是缺少驱动所致，问题解决过程如下：<h2 id="3-安装-nv-peer-mem"><a href="#3-安装-nv-peer-mem" class="headerlink" title="3. 安装 nv_peer_mem"></a>3. 安装 nv_peer_mem</h2>安装过程参考曙光公司的专利内容：<br><a href="https://patentimages.storage.googleapis.com/c7/56/c9/9bba52318b9458/CN105550085A.pdf" target="_blank" rel="noopener">一种基于GPUDerict RDMA测试方法</a><br>具体步骤如下图所示：<br><img src="/images/2020/04/10/afa1d740-7b2f-11ea-acfc-35c1710d51fd.PNG" alt="nv.PNG"></li>
 </ol>
-<p><strong>注：</strong> 对于多机运行的程序，需要将mpi环境变量添加到.bashrc中，否则在其他机器上确实mpi的环境变量。</p>
+<p>运行lsmod |grep nv_peer_mem检查是否安装成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsmod | grep nv_peer_mem</span><br></pre></td></tr></table></figure>
+
+<p>安装后再查看btl_openib_have_driver_gdr信息就正常了<br><img src="/images/2020/04/10/e176a570-7b2f-11ea-acfc-35c1710d51fd.PNG" alt="gdr2.PNG"><br>这时我通过测试节点间的显存数据mpi传输，发现速度有明显提升，其中Host-to-other_GPU的速度跟从Host到Host速度相差无几，由于避免了在Host内存的中转，速度提高至少50%。</p>
+<p><em>其中的原理是：</em><br>直接访问GPU内存，避免访问固定(pinned) CUDA主机内存时不必要的系统内存拷贝和CPU的开销，加速了与网络和存储设备之间的通信可以在同一系统中的一个GPU直接访问另一个GPU使用直接的高速DMA传输，增加了 P2P的内存访问，真正释放了主机CPU资源，消除主机了CPU中不必要的频繁数据传输，完全不参与输入的RDMA操作；包括HCA卡、GI3U卡、GI3U必备的Nvidia Driver^Nvidia CUDA toolkit，及infiniband必备的MLNX_0FED驱动外，以及一个GPU与IB卡通信的nv_peer_mem包。</p>
 
     </div>
     
@@ -212,17 +210,11 @@
 </article>
 <div class="article-nav prev-next-wrap clearfix">
     
-    <a href="/2020/04/10/GPUDirect-RDMA-for-openmpi/" class="pre-post btn btn-default" title='GPUDirect RDMA for openmpi'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            GPUDirect RDMA for openmpi</span>
-    </a>
     
-    
-    <a href="/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/" class="next-post btn btn-default" title='linux rpm 错误'>
+    <a href="/2020/03/30/openmpi-with-cuda/" class="next-post btn btn-default" title='openmpi with cuda'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
-            linux rpm 错误</span><i class="fa fa-angle-right fa-fw"></i>
+            openmpi with cuda</span><i class="fa fa-angle-right fa-fw"></i>
     </a>
     
 </div>
@@ -263,7 +255,7 @@ new Valine({
             Table of Contents
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-对于1-7-2-0的版本，-配置和编译、安装如下："><span class="toc-text">1.对于1.7~2.0的版本， 配置和编译、安装如下：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-openmpi-2-0以及以上版本"><span class="toc-text">2.openmpi-2.0以及以上版本</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#背景"><span class="toc-text">背景</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-compile-openmpi-with-–with-cuda"><span class="toc-text">1. compile openmpi with –with-cuda</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-查看GPUDirect-RDMA-信息"><span class="toc-text">2. 查看GPUDirect RDMA 信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-安装-nv-peer-mem"><span class="toc-text">3. 安装 nv_peer_mem</span></a>
         
     </div>
 </aside>
