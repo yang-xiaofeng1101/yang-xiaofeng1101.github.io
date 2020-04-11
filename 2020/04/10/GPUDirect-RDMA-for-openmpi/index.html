@@ -190,7 +190,7 @@
 <p>运行lsmod |grep nv_peer_mem检查是否安装成功</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsmod | grep nv_peer_mem</span><br></pre></td></tr></table></figure>
 
-<p>安装后再查看btl_openib_have_driver_gdr信息就正常了<br><img src="/images/2020/04/10/e176a570-7b2f-11ea-acfc-35c1710d51fd.PNG" alt="gdr2.PNG"><br>这时我通过测试节点间的显存数据mpi传输，发现速度有明显提升，其中Host-to-other_GPU的速度跟从Host到Host速度相差无几，由于避免了在Host内存的中转，速度提高至少50%。</p>
+<p>安装后再查看btl_openib_have_driver_gdr信息就正常了<br><img src="/images/2020/04/10/e176a570-7b2f-11ea-acfc-35c1710d51fd.PNG" alt="gdr2.PNG"><br>这时我通过测试节点间的显存数据mpi传输，发现速度有明显提升，其中GPU-to-GPU的速度跟从Host到Host速度相差无几，测得GPU-to-GPU速度超过8GB/s，与节点内的速度处在相同数量级。由于避免了在Host内存的中转，速度提高至少50%。</p>
 <p><em>其中的原理是：</em><br>直接访问GPU内存，避免访问固定(pinned) CUDA主机内存时不必要的系统内存拷贝和CPU的开销，加速了与网络和存储设备之间的通信可以在同一系统中的一个GPU直接访问另一个GPU使用直接的高速DMA传输，增加了 P2P的内存访问，真正释放了主机CPU资源，消除主机了CPU中不必要的频繁数据传输，完全不参与输入的RDMA操作；包括HCA卡、GI3U卡、GI3U必备的Nvidia Driver^Nvidia CUDA toolkit，及infiniband必备的MLNX_0FED驱动外，以及一个GPU与IB卡通信的nv_peer_mem包。</p>
 
     </div>
