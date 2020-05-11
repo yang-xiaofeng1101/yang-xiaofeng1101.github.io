@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>给linux终端设置代理 | yangxiaofeng的博客</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="yangxiaofeng的博客">
+  <meta name="description" content="在安装showdsocks的情况下，浏览器就可以正常实现通过代理访问了，但是对于linux用户来说，终端是个常用的工具，如何给终端设置代理让终端也能通过代理进行访问呢？ 1. curl，wget这俩是常用的命令，实现代理的方式是 （1）安装polipo1sudo apt-get install polipo  （2）配置 polipo1sudo vim &#x2F;etc&#x2F;polipo&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给linux终端设置代理">
+<meta property="og:url" content="http://yoursite.com/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/index.html">
+<meta property="og:site_name" content="yangxiaofeng的博客">
+<meta property="og:description" content="在安装showdsocks的情况下，浏览器就可以正常实现通过代理访问了，但是对于linux用户来说，终端是个常用的工具，如何给终端设置代理让终端也能通过代理进行访问呢？ 1. curl，wget这俩是常用的命令，实现代理的方式是 （1）安装polipo1sudo apt-get install polipo  （2）配置 polipo1sudo vim &#x2F;etc&#x2F;polipo&amp;">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2019120304242658.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191203042855705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191203042741286.png">
+<meta property="article:published_time" content="2020-03-07T09:35:36.000Z">
+<meta property="article:modified_time" content="2020-05-03T14:05:50.831Z">
+<meta property="article:author" content="yangxiaofeng">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="proxy">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/2019120304242658.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70">
+
+  <meta name="keywords" content=",Linux,proxy">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="yangxiaofeng的博客">
+  <meta name="msapplication-starturl" content="http://yoursite.com/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="yangxiaofeng的博客">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://yoursite.com/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">yangxiaofeng的博客</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: 'Search'}"><i class="mdui-icon material-icons">search</i></a>
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="请输入关键字"><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+    <div class="search-result"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/yxf.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">yangxiaofeng</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i></div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:mailto:yangxiaofeng.yang@outlook.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'mailto:yangxiaofeng.yang@outlook.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">Home</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">Archive</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2020/04/">April 2020<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">March 2020<span class="mdui-ripple sidebar_archives-count">12</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">Category</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程<span class="mdui-ripple sidebar_archives-count">3</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">Tag</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Android/" rel="tag">Android<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/C/" rel="tag">C++<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Dart/" rel="tag">Dart<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/Linux/" rel="tag">Linux<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/cuda/" rel="tag">cuda<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/gcc/" rel="tag">gcc<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/" rel="tag">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/news/" rel="tag">news<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/proxy/" rel="tag">proxy<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/remote/" rel="tag">remote<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/thrust/" rel="tag">thrust<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/time-synchronization/" rel="tag">time synchronization<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">About</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/tagcloud" class="mdui-list-item mdui-ripple">标签云</a>
+    
+      <a href="/gallery" class="mdui-list-item mdui-ripple">画廊</a>
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">Links</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">No Links</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-19.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">给linux终端设置代理</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2020-03-07 / <i class="iconfont">&#xe601;</i> yangxiaofeng</div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="https://chart.googleapis.com/chart?cht=qr&chs=246x246&chl=http://yoursite.com/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/&chld=M|2">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="http://service.weibo.com/share/share.php?appkey=&title=给linux终端设置代理&url=http://yoursite.com/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/&pic=http://yoursite.com/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">Share to Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=给linux终端设置代理&url=http://yoursite.com/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/&via=yangxiaofeng" target="_blank" class="mdui-ripple">Share to Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/" target="_blank" class="mdui-ripple">Share to Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://yoursite.com/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/" target="_blank" class="mdui-ripple">Share to Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://yoursite.com/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/&title=给linux终端设置代理" target="_blank" class="mdui-ripple">Share to LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="http://connect.qq.com/widget/shareqq/index.html?site=yangxiaofeng的博客&title=给linux终端设置代理&pics=http://yoursite.com/images/favicon.png&url=http://yoursite.com/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/" target="_blank" class="mdui-ripple">Share to QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://yoursite.com/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/&text=给linux终端设置代理" target="_blank" class="mdui-ripple">Share to Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <p>在安装showdsocks的情况下，浏览器就可以正常实现通过代理访问了，但是对于linux用户来说，终端是个常用的工具，如何给终端设置代理让终端也能通过代理进行访问呢？</p>
+<h4 id="1-curl，wget"><a href="#1-curl，wget" class="headerlink" title="1. curl，wget"></a>1. curl，wget</h4><p>这俩是常用的命令，实现代理的方式是</p>
+<h6 id="（1）安装polipo"><a href="#（1）安装polipo" class="headerlink" title="（1）安装polipo"></a>（1）安装polipo</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install polipo</span><br></pre></td></tr></table></figure>
+
+<h6 id="（2）配置-polipo"><a href="#（2）配置-polipo" class="headerlink" title="（2）配置 polipo"></a>（2）配置 polipo</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;polipo&#x2F;config</span><br></pre></td></tr></table></figure>
+
+<p>在它的末尾添加以下命令，或者去掉以下命令前面的注释符号；若此文件不存在，则自己创建</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">socksParentProxy &#x3D; &quot;localhost:1080&quot;</span><br><span class="line">socksProxyType &#x3D; socks5</span><br></pre></td></tr></table></figure>
+
+<h6 id="（3）重新启动-polipo-服务"><a href="#（3）重新启动-polipo-服务" class="headerlink" title="（3）重新启动 polipo 服务"></a>（3）重新启动 polipo 服务</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart polipo.service</span><br></pre></td></tr></table></figure>
+
+<p>查看状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status polipo.service</span><br></pre></td></tr></table></figure>
+
+<p>得到类似如下结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">polipo.service - LSB: Start or stop the polipo web cache</span><br><span class="line">   Loaded: loaded (&#x2F;etc&#x2F;init.d&#x2F;polipo; generated; vendor preset: enabled)</span><br><span class="line">   Active: active (running) since Tue 2019-12-03 03:24:15 CST; 34min ago</span><br><span class="line">     Docs: man:systemd-sysv-generator(8)</span><br><span class="line">  Process: 4799 ExecStop&#x3D;&#x2F;etc&#x2F;init.d&#x2F;polipo stop (code&#x3D;exited, status&#x3D;0&#x2F;SUCCESS)</span><br><span class="line">  Process: 4806 ExecStart&#x3D;&#x2F;etc&#x2F;init.d&#x2F;polipo start (code&#x3D;exited, status&#x3D;0&#x2F;SUCCESS)</span><br><span class="line">    Tasks: 1 (limit: 4915)</span><br><span class="line">   CGroup: &#x2F;system.slice&#x2F;polipo.service</span><br><span class="line">           └─4817 &#x2F;usr&#x2F;bin&#x2F;polipo -c &#x2F;etc&#x2F;polipo&#x2F;config pidFile&#x3D;&#x2F;var&#x2F;run&#x2F;polipo&#x2F;polipo.pid daemonise&#x3D;true</span><br><span class="line"></span><br><span class="line">12月 03 03:24:15  systemd[1]: Starting LSB: Start or stop the polipo web cache...</span><br><span class="line">12月 03 03:24:15  polipo[4817]: Established listening socket on port 8123.</span><br><span class="line">12月 03 03:24:15  polipo[4806]: Starting polipo: polipo.</span><br><span class="line">12月 03 03:24:15  systemd[1]: Started LSB: Start or stop the polipo web cache.</span><br></pre></td></tr></table></figure>
+
+<h6 id="（4）终端设置代理环境，如果想长期生效的那么在-zshrc-或者-bashrc-下增加"><a href="#（4）终端设置代理环境，如果想长期生效的那么在-zshrc-或者-bashrc-下增加" class="headerlink" title="（4）终端设置代理环境，如果想长期生效的那么在 .zshrc 或者 .bashrc 下增加"></a>（4）终端设置代理环境，如果想长期生效的那么在 <code>.zshrc</code> 或者 <code>.bashrc</code> 下增加</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export http_proxy&#x3D;http:&#x2F;&#x2F;localhost:8123 </span><br><span class="line">export https_proxy&#x3D;http:&#x2F;&#x2F;localhost:8123</span><br></pre></td></tr></table></figure>
+
+<p>polipo 的默认端口时 8123</p>
+<p>这时wget和curl都可以通过代理实现访问了，但是想要通过apt安装软件却任然不行</p>
+<p><img src="https://img-blog.csdnimg.cn/2019120304242658.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="2-apt"><a href="#2-apt" class="headerlink" title="2. apt"></a>2. apt</h4><p>在apt的配置文件目录下创建代理配置文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;apt&#x2F;apt.conf.d&#x2F;10proxy   #这个文件正常不存在，会新建一个</span><br><span class="line">#编辑内容为：</span><br><span class="line">Acquire::http::Proxy &quot;http:&#x2F;&#x2F;localhost:8123&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>退出终端，重新打开。此时便可以通过代理使用apt安装软件了。<br><img src="https://img-blog.csdnimg.cn/20191203042855705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODc4NDQy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="3-git"><a href="#3-git" class="headerlink" title="3. git"></a>3. git</h4><p>git是软件从业者常用的一个软件，世界上最大的开源社区github由于服务器在国外，下载速度非常慢，常常需要使用代理服务。</p>
+<p>设置代理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global https.proxy http:&#x2F;&#x2F;localhost:8123</span><br><span class="line"></span><br><span class="line">git config --global https.proxy https:&#x2F;&#x2F;localhost:8123</span><br></pre></td></tr></table></figure>
+
+<p>取消代理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global --unset http.proxy</span><br><span class="line"></span><br><span class="line">git config --global --unset https.proxy</span><br></pre></td></tr></table></figure>
+<p>测试效果<br><img src="https://img-blog.csdnimg.cn/20191203042741286.png" alt="在这里插入图片描述"><br>参考：<br>[<a href="https://www.cnblogs.com/andrewwang/p/9293031.html]" target="_blank" rel="noopener">https://www.cnblogs.com/andrewwang/p/9293031.html]</a></p>
+
+      <blockquote class="mdui-m-t-5">
+        
+        <strong>PermaLink: </strong><br><a href="http://yoursite.com/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/">http://yoursite.com/2020/03/07/linux%E4%B8%8B%E4%B8%BA%E7%BB%88%E7%AB%AF%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Linux/" rel="tag">Linux</a><a class="mdui-ripple article_tags-link" href="/tags/proxy/" rel="tag">proxy</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2020/03/07/ubuntu%E4%B8%8Ewindows%E5%8F%8C%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prev
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2020/03/07/hello-world/">
+        Next&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="//github.com/yang-xiaofeng1101" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="http://wpa.qq.com/msgrd?v=3&uin=1649675002&site=qq&menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2020 yangxiaofeng<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>
