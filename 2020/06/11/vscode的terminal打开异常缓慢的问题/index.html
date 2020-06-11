@@ -19,10 +19,12 @@
     <link rel="dns-prefetch" href="https://xiao_feng_yang993.gitee.io">
     <!--SEO-->
 
-<meta name="keywords" content="" />
+<meta name="keywords" content="Linux,vscode" />
 
 
-<meta name="description" content="" />
+<meta name="description" content="1.问题频现在使用了Linux的vscode后就经常发生内置terminal无法打开的问题：
+2.解决无门在百度更换多个关键词查找后没有有价值的信息
+3.出现转机在无边无际的搜索结果中一次偶然看..." />
 
 
 <meta name="robots" content="all" />
@@ -33,7 +35,7 @@
 
 <title>
     
-    Tag: time synchronization |
+    vscode的terminal打开异常缓慢的问题 |
     
     yangxiaofeng的博客
 </title>
@@ -133,148 +135,122 @@
     <section class="content-wrap">
         <div class="container">
             <div class="row">
-                <main class="col-md-8 main-content ">
-                    <ol class="breadcrumb">
-    
-    <li>
-        time synchronization
-    </li>
-    
-    
-</ol>
-
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
 <article class="post">
+    <div class="post-head">
+        <h1 id="vscode的terminal打开异常缓慢的问题">
+            
+            vscode的terminal打开异常缓慢的问题
+            
+        </h1>
+        <div class="post-meta">
     
-    <div class="post-content">
-        <div class="post-head home-post-head">
-            <h1 class="post-title">
-                <a href="/2020/03/07/ubuntu%E4%B8%8Ewindows%E5%8F%8C%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5/">
-                    ubuntu与windows时间同步</a>
-            </h1>
-            <div class="post-meta"> &bull;
-                <time class="post-date" datetime="" title="">
-                    2020年03月07日
-                </time>
-            </div>
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Linux/" rel="tag">Linux</a> <a class="tag-link" href="/tags/vscode/" rel="tag">vscode</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/06/11</span>
+    </span>
+    
+    <span class="fa-wrap">
+        <i class="fa fa-eye"></i>
+        <span id="busuanzi_value_page_pv"></span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="1-问题频现"><a href="#1-问题频现" class="headerlink" title="1.问题频现"></a>1.问题频现</h2><p>在使用了Linux的vscode后就经常发生内置terminal无法打开的问题：<br><img src="/images/2020/06/11/2fba40ed-4769-4a27-b529-60d4fcb56835.png" alt="批注 20200611 233258.png"></p>
+<h2 id="2-解决无门"><a href="#2-解决无门" class="headerlink" title="2.解决无门"></a>2.解决无门</h2><p>在百度更换多个关键词查找后没有有价值的信息<br><img src="/images/2020/06/11/72b03f4b-4a69-4ad8-9baa-3c91ab4b53e6.png" alt="批注 20200611 233544.png"></p>
+<h2 id="3-出现转机"><a href="#3-出现转机" class="headerlink" title="3.出现转机"></a>3.出现转机</h2><p>在无边无际的搜索结果中一次偶然看到了解决方法：<br><img src="/images/2020/06/11/f724c8e6-a7f4-4f74-bf9b-6a755e2576bf.png" alt="批注 20200611 233322.png"><br>只要打开这项设置，就能解决问题<br><img src="/images/2020/06/11/33d3a53b-70e5-4b5a-92c0-35b723c299b8.png" alt="批注 20200611 233343.png"><br>关掉设置后，又会出现之前的问题<br>设置信息可知：新的shells是否从vscode继承继承环境变量</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">yangxf</a>
+            
+            
         </div>
-        <p class="brief">
+        <div>
             
-            @TOC注：本教程不研究系统计时原理，只简单解决问题，不修改系统核心设置，安全快速解决问题。网络上他人的博客已近提出了专业解决方案，大家可前往查看，在此不做重复。https://blog.csdn.net/zero_hzz/artic...
-            
-        </p>
+        </div>
     </div>
 </article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+    <a href="/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" class="next-post btn btn-default" title='code-server 远程编辑'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            code-server 远程编辑</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
 
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'TDrUtAfuNHhPo8MszsQkc1a5-gzGzoHsz',
+    appKey: 'S3K8gXivNTeO1vNz4lvdCxW0',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: false,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: ''.toLowerCase()
+})
+</script>
+
+
+</div>
 
                 </main>
                 
-                    
-<aside class="col-md-4 sidebar">
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Search
-    </h3>
-    <div id="search-form">
-        <div id="result-mask" class="hide"></div>
-        <div class="search-area">
-            
-            <input id="search-key" type="search" autocomplete="off" placeholder="Search What？">
-            <button type="button" class="search-form-submit" id="search-local">
-                localSearch</button>
-            
-            
-        </div>
-        <div id="result-wrap" class="hide">
-            <div id="search-result"></div>
-        </div>
-        <div class="hide">
-            <template id="search-tpl">
-                <div class="item">
-                    <a href="/{path}" title="{title}">
-                        <div class="title">{title}</div>
-                        <div class="content">{content}</div>
-                    </a>
-                </div>
-            </template>
-        </div>
-    </div>
-</div>
-
-    
-    
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Social
-    </h3>
-    <div class="content social">
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
         
-        <a href="//github.com/yang-xiaofeng1101" rel="external nofollow" title="Github" target="_blank">
-            <i class="git fa fa-git"></i>
-        </a>
-        
-        <a href="mailto:yangxiaofeng.yang@outlook.com" rel="external nofollow" title="邮箱" target="_blank">
-            <i class="envelope-o fa fa-envelope-o"></i>
-        </a>
-        
-        <a href="http://wpa.qq.com/msgrd?v=3&uin=1649675002&site=qq&menu=yes" rel="external nofollow" title="联系QQ" target="_blank">
-            <i class="qq fa fa-qq"></i>
-        </a>
-        
-        <a href="/" rel="external nofollow" title="微信" target="_blank">
-            <i class="weixin fa fa-weixin"></i>
-        </a>
-        
-        <a href="/" rel="external nofollow" title="QQ群" target="_blank">
-            <i class="users fa fa-users"></i>
-        </a>
-        
-        <a href="/atom.xml" rel="external nofollow" title="RSS" target="_blank">
-            <i class="feed fa fa-feed"></i>
-        </a>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-问题频现"><span class="toc-text">1.问题频现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-解决无门"><span class="toc-text">2.解决无门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-出现转机"><span class="toc-text">3.出现转机</span></a></li></ol>
         
     </div>
-</div>
-
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Categories
-    </h3>
-    <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/"><i class="fa" aria-hidden="true">技术</i></a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%94%9F%E6%B4%BB/"><i class="fa" aria-hidden="true">生活</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/"><i class="fa" aria-hidden="true">编程</i></a><span class="category-list-count">3</span></li></ul>
-</div>
-
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Archives
-    </h3>
-    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/"><i class="fa" aria-hidden="true">2020年06月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/"><i class="fa" aria-hidden="true">2020年05月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/"><i class="fa" aria-hidden="true">2020年04月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/"><i class="fa" aria-hidden="true">2020年03月</i></a><span class="archive-list-count">11</span></li></ul>
-</div>
-
-    
-    
-<div class="widget">
-    <h3 class="title">
-        Tag Cloud
-    </h3>
-    <div class="content tag-cloud">
-        
-        <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Dart/" style="font-size: 13.33px;">Dart</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 16.67px;">cuda</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/news/" style="font-size: 10px;">news</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a>
-        
-    </div>
-</div>
-
-    
-    
-    
 </aside>
-
                 
             </div>
         </div>
@@ -321,10 +297,6 @@
         </div>
     </div>
 </div>
-
-
-<script src="/js/search.js?rev=@@hash.js"></script>
-
 
 
 
