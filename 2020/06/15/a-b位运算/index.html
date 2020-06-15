@@ -19,11 +19,11 @@
     <link rel="dns-prefetch" href="https://xiao_feng_yang993.gitee.io">
     <!--SEO-->
 
-<meta name="keywords" content="编程" />
+<meta name="keywords" content="位运算,算法" />
 
 
-<meta name="description" content="
-" />
+<meta name="description" content="a+b位运算核心思想a^b(不进位加法)(a&amp;b)&lt;&lt;1(用于表示进位的位置)
+具体步骤将上面2结果再次进行按位异或^运算，再求新的异或加法的进位表示，直到没有进位产生也就是..." />
 
 
 <meta name="robots" content="all" />
@@ -34,7 +34,7 @@
 
 <title>
     
-    AVX和AVX2学习笔记 |
+    a+b位运算 |
     
     yangxiaofeng的博客
 </title>
@@ -138,9 +138,9 @@
                     <p id="process"></p>
 <article class="post">
     <div class="post-head">
-        <h1 id="AVX和AVX2学习笔记">
+        <h1 id="a+b位运算">
             
-            AVX和AVX2学习笔记
+            a+b位运算
             
         </h1>
         <div class="post-meta">
@@ -155,7 +155,7 @@
         <i class="fa fa-tags"></i>
         <span class="tags-meta">
             
-            <a class="tag-link" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a>
+            <a class="tag-link" href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" rel="tag">位运算</a> <a class="tag-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a>
             
         </span>
     </span>
@@ -180,8 +180,9 @@
     </div>
     
     <div class="post-body post-content">
-        <p><img src="/images/2020/06/15/dc37220d-6d4c-4dae-9edb-8d2a58f78744.png" alt="blog.nowcoder.net_n_ae906ef4435b43a99c290f66ac408d83.png"></p>
-
+        <h2 id="a-b位运算"><a href="#a-b位运算" class="headerlink" title="a+b位运算"></a>a+b位运算</h2><h4 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h4><p>a^b(不进位加法)<br>(a&amp;b)&lt;&lt;1(用于表示进位的位置)</p>
+<h4 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h4><p>将上面2结果再次进行按位异或^运算，再求新的异或加法的进位表示，直到没有进位产生也就是(a&amp;b)&lt;&lt;1==0时a^b的结果即为a+b的最终结果</p>
+<h4 id="源码实现"><a href="#源码实现" class="headerlink" title="源码实现"></a>源码实现</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * @param a: An integer</span></span><br><span class="line"><span class="comment">     * @param b: An integer</span></span><br><span class="line"><span class="comment">     * @return: The sum of a and b </span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">aplusb</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> c= a^b;</span><br><span class="line">        <span class="keyword">int</span> d = (a&amp;b)&lt;&lt;<span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span>(d!=<span class="number">0</span>)&#123;</span><br><span class="line">            a=c;</span><br><span class="line">            b=d;</span><br><span class="line">            c=a^b;</span><br><span class="line">            d=(a&amp;b)&lt;&lt;<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
     </div>
     
     <div class="post-footer">
@@ -199,17 +200,11 @@
 </article>
 <div class="article-nav prev-next-wrap clearfix">
     
-    <a href="/2020/06/15/a-b%E4%BD%8D%E8%BF%90%E7%AE%97/" class="pre-post btn btn-default" title='a+b位运算'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            a+b位运算</span>
-    </a>
     
-    
-    <a href="/2020/06/14/%E5%AF%BB%E6%89%BE%E7%BC%BA%E5%A4%B1%E7%9A%84%E6%95%B4%E6%95%B0/" class="next-post btn btn-default" title='寻找缺失的整数'>
+    <a href="/2020/06/15/AVX%E5%92%8CAVX2%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="next-post btn btn-default" title='AVX和AVX2学习笔记'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
-            寻找缺失的整数</span><i class="fa fa-angle-right fa-fw"></i>
+            AVX和AVX2学习笔记</span><i class="fa fa-angle-right fa-fw"></i>
     </a>
     
 </div>
@@ -250,7 +245,7 @@ new Valine({
             Table of Contents
         </h3>
         
-        <p>暂无目录</p>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#a-b位运算"><span class="toc-text">a+b位运算</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#核心思想"><span class="toc-text">核心思想</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#具体步骤"><span class="toc-text">具体步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#源码实现"><span class="toc-text">源码实现</span></a></li></ol></li></ol></li></ol>
         
     </div>
 </aside>
