@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>断点调试 | yangxiaofeng的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="yangxiaofeng,yangxiaofeng's Blog" />
+  
+  <meta name="description" content="1.  Visual studio断点调试测试代码： 123456789101112131415161718192021int add(int a, int b)&amp;#123;	int c &#x3D; a + b;	return c;&amp;#125;int main()&amp;#123;	int i &#x3D; 0;	int val,t;	int* ans;	ans &#x3D; (int*)malloc(sizeof(int) *">
+<meta property="og:type" content="article">
+<meta property="og:title" content="断点调试">
+<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/index.html">
+<meta property="og:site_name" content="yangxiaofeng的博客">
+<meta property="og:description" content="1.  Visual studio断点调试测试代码： 123456789101112131415161718192021int add(int a, int b)&amp;#123;	int c &#x3D; a + b;	return c;&amp;#125;int main()&amp;#123;	int i &#x3D; 0;	int val,t;	int* ans;	ans &#x3D; (int*)malloc(sizeof(int) *">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/a5a4153dfe5021241f36a17f50325309.wmf">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/c3e900d95115dc1e12a5f01f3ef252e9.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/66b1f54ec37bf63c8e46c77fc99cd949.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/cbf2c040bdd2c2adfe0514233311a70c.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/06bdc88fb4d1dd5f65ad6c1358354094.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/27e87e6a3f92ed2390dd28fc06b49211.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/792098556eb1ad8b12313947cb5cbba1.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/cc547ddcc4faaad8465036e520ee49d6.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/88e00ec97328cf982c0e5539f8350949.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/fd8982c65b30442d404d8f6707d20dbf.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/a6232e5f5c5af620437f341df2dbf9b9.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/d0f6b391511cb513367f72df6ba29cc5.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/639d724c77535412168e246df5a4a822.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/30781dfd3b1924f7aad74d0941d4fa47.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/c9c216a42bf0376b88e460792e4a41cc.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/cadfbf150fa42895b4d9cada930d0c55.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/f48795377b7e98c21cd6222b9e5e031e.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/6ffb18dfdd829cba8f1d8742de5c73a6.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/3c889ec61b9ceb508a04f9c29574e648.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/76053608c2833f1cd9fef8af0e807980.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/2642f8e116cbcadaba3073af4172ea3d.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/240d5f439412402446a711cbe107daa8.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/1ad55a9cb511614003d644d0a5a89379.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/6f23093925c4e8ba20d5d9085054f995.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/2f08a538f804dca43aabeb4304af2909.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/a026201d83dd3e08818ba43650713947.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/dd3e61da255ea2195a3b44201e9a7029.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/60ca155bafa07610e6a733b29991797e.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/549304c1ffaf97857b99cf40e6fc2a96.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/defb162acc53e442247893938baa1b3b.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/526f06672116b33bb10ee539fe06ee41.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/c06c0c5bd5fda536883702cff30842fd.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/df18cd26f515332b43ee15b17235d1d1.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/d55092788271e2950fdee68d0cbe60ba.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/174aec3bcae02326a44894a58f174f21.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/1506790877966949f6b920dc0f7a46bc.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/d59e1cfd1738903e2c16b4a3c036b304.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/ff8dbd76581ee62d40290c64445ca177.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/3fea893ef8cabdf99eae7dca401a38c6.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/773039efc68d08a20070c7bfa7d9d83a.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/f09f159bd961c656cc974ffb78bfbd3d.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/188e972b75853a0441d54edaf4e42688.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/a0556574d146371d3ec87aed72d51cfb.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/437e92f9544f98e30bdb12f1a5d5c745.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/99364d9ecff7eeff25ccf37af03eeb48.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/f01b63d0e251bdcd85ba27c7410173e9.png">
+<meta property="article:published_time" content="2020-06-16T15:17:25.000Z">
+<meta property="article:modified_time" content="2020-06-16T15:17:25.820Z">
+<meta property="article:author" content="yangxiaofeng">
+<meta property="article:tag" content="调试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/media/a5a4153dfe5021241f36a17f50325309.wmf">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">yangxiaofeng&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.jpg" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        yangxiaofeng&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注 后端 开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="yangxiaofeng" target="_blank" href="//xiao_feng_yang993.gitee.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/yang-xiaofeng1101">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/FKZx1UZnXdTYBP7">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                        <a title="QQ" target="_blank" href="//wpa.qq.com/msgrd?v=3&uin=1649675002&site=qq&menu=yes">
+                            <i class="fa fa-qq fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-断点调试" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      断点调试
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/技术/">技术</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-06-16
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h2 id="1-Visual-studio断点调试"><a href="#1-Visual-studio断点调试" class="headerlink" title="1.  Visual studio断点调试"></a>1.  Visual studio断点调试</h2><p>测试代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> c = a + b;</span><br><span class="line">	<span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> val,t;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span>* ans;</span><br><span class="line">	ans = (<span class="keyword">int</span>*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>) * <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">		t = i * i;</span><br><span class="line">		val = add(t,i);</span><br><span class="line">		ans[i] = val;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>上面代码的功能是分别计算i从0到9时，计算</p>
+<p><img src="media/a5a4153dfe5021241f36a17f50325309.wmf" alt=""></p>
+<p>的值并存到ans数组里。</p>
+<p>断点类型：</p>
+<ol>
+<li>指定变量条件</li>
+</ol>
+<p>在t=i*i语句处设置条件断点——i&gt;7</p>
+<p><img src="media/c3e900d95115dc1e12a5f01f3ef252e9.png" alt=""></p>
+<p><img src="media/66b1f54ec37bf63c8e46c77fc99cd949.png" alt=""></p>
+<p>运行调试程序，程序在i=8时停了下来</p>
+<p><img src="media/cbf2c040bdd2c2adfe0514233311a70c.png" alt=""></p>
+<p>t是上一轮计算的7*7=49，调试程序直接停在了i=8的情况下。</p>
+<ol start="2">
+<li>指定忽略次数</li>
+</ol>
+<p><img src="media/06bdc88fb4d1dd5f65ad6c1358354094.png" alt=""></p>
+<p>将刚才的断点设置为命中8次时调试程序暂停</p>
+<p><img src="media/27e87e6a3f92ed2390dd28fc06b49211.png" alt=""></p>
+<p>程序暂停时i=7（因为i=0，1，2，3，4，5，6，7）刚好时第8次命中断点，便暂停了程序</p>
+<ol start="3">
+<li>数据断点</li>
+</ol>
+<p><img src="media/792098556eb1ad8b12313947cb5cbba1.png" alt=""></p>
+<p><img src="media/cc547ddcc4faaad8465036e520ee49d6.png" alt=""></p>
+<p>当&amp;ans[5]处的值发生修改时触发断点</p>
+<p><img src="media/88e00ec97328cf982c0e5539f8350949.png" alt=""></p>
+<p>运行程序，程序断点被触发,指令指针指向ans[i]=val一句的下一句。</p>
+<p><img src="media/fd8982c65b30442d404d8f6707d20dbf.png" alt=""></p>
+<p>此时i=5，ans[5]的值被赋值为30.</p>
+<ol start="4">
+<li>查看堆栈信息</li>
+</ol>
+<p>在add函数内设置断点</p>
+<p><img src="media/a6232e5f5c5af620437f341df2dbf9b9.png" alt=""></p>
+<p>查看堆栈，看到有两个栈信息，分别时main（）和add（）。当前位于add（）</p>
+<p><img src="media/d0f6b391511cb513367f72df6ba29cc5.png" alt=""></p>
+<p>局部变量信息，只有add函数里的a，b，c</p>
+<p><img src="media/639d724c77535412168e246df5a4a822.png" alt=""></p>
+<p>点击main函数的栈，切换栈帧</p>
+<p><img src="media/30781dfd3b1924f7aad74d0941d4fa47.png" alt=""></p>
+<p>再看局部变量，可以看到main函数里的局部变量。</p>
+<p><img src="media/c9c216a42bf0376b88e460792e4a41cc.png" alt=""></p>
+<h2 id="2-Eclipse"><a href="#2-Eclipse" class="headerlink" title="2.  Eclipse"></a>2.  Eclipse</h2><ol>
+<li>指定变量条件</li>
+</ol>
+<p><img src="media/cadfbf150fa42895b4d9cada930d0c55.png" alt=""></p>
+<p>在t = i*i处设置条件断点，条件为i&gt;7.</p>
+<p>运行程序，程序在断点处暂停</p>
+<p><img src="media/f48795377b7e98c21cd6222b9e5e031e.png" alt=""></p>
+<p><img src="media/6ffb18dfdd829cba8f1d8742de5c73a6.png" alt=""></p>
+<p>其局部变量i的值为8，第一次满足i&gt;7的条件。</p>
+<ol start="2">
+<li>忽略次数</li>
+</ol>
+<p><img src="media/3c889ec61b9ceb508a04f9c29574e648.png" alt=""></p>
+<p>设置断点属性的ignore count为8，意思时忽略8次断点命中，第九次暂停</p>
+<p>运行程序，在断点处暂停</p>
+<p><img src="media/76053608c2833f1cd9fef8af0e807980.png" alt=""></p>
+<p>此时变量i的值为8，忽略了前8次（i=0，1，2，3，4，5，6，7）的情况。</p>
+<ol start="3">
+<li>堆栈信息与局部变量</li>
+</ol>
+<p><img src="media/2642f8e116cbcadaba3073af4172ea3d.png" alt=""></p>
+<p>有add函数和main函数。</p>
+<p>此时的局部变量信息</p>
+<p><img src="media/240d5f439412402446a711cbe107daa8.png" alt=""></p>
+<p>切换栈帧，双击main栈帧</p>
+<p><img src="media/1ad55a9cb511614003d644d0a5a89379.png" alt=""></p>
+<p>再看局部变量</p>
+<p><img src="media/6f23093925c4e8ba20d5d9085054f995.png" alt=""></p>
+<p>此时显示的是main里的局部变量</p>
+<h2 id="3-Gdb"><a href="#3-Gdb" class="headerlink" title="3.  Gdb"></a>3.  Gdb</h2><ol>
+<li>指定变量条件</li>
+</ol>
+<p>在26行也就是t=i*i处设置条件断点，条件为i&gt;7;继续运行程序</p>
+<p><img src="media/2f08a538f804dca43aabeb4304af2909.png" alt=""></p>
+<p>程序暂停在断点处，查看此时的变量i的值，发现i=8，刚满足i&gt;7的断点条件</p>
+<ol start="2">
+<li>指定忽略次数</li>
+</ol>
+<p><img src="media/a026201d83dd3e08818ba43650713947.png" alt=""></p>
+<p>在26行设置断点，查看断点信息，此时有一个位于main.c的26行的断点；设置断点忽略次数为8；运行程序。程序在t=i*i处暂停下来，查看变量i的值为8,意味这忽略了8次断点（分别为i=0,1,2,3,4,5,6,7）</p>
+<ol start="3">
+<li>数据断点</li>
+</ol>
+<p>在&amp;ans[5]数据处设置数据断点</p>
+<p><img src="media/dd3e61da255ea2195a3b44201e9a7029.png" alt=""></p>
+<p>程序暂停在ans[i]=val语句的下一行，</p>
+<p><img src="media/60ca155bafa07610e6a733b29991797e.png" alt=""></p>
+<p>此时ans[5]的值已经被修改</p>
+<ol start="4">
+<li>堆栈信息及局部变量</li>
+</ol>
+<p>当函数执行到add函数里时，采用bt命令查看栈信息，有2个栈分别是main和add</p>
+<p><img src="media/549304c1ffaf97857b99cf40e6fc2a96.png" alt=""></p>
+<p>此时查看局部变量信息看到，c = 42.</p>
+<p>切换栈帧frame 1.查看main的局部变量。</p>
+<p><img src="media/defb162acc53e442247893938baa1b3b.png" alt=""></p>
+<h2 id="4-Windgb"><a href="#4-Windgb" class="headerlink" title="4.  Windgb"></a>4.  Windgb</h2><ol>
+<li>指定变量条件</li>
+</ol>
+<p><img src="media/526f06672116b33bb10ee539fe06ee41.png" alt=""></p>
+<p>在t=i*i语句处设置断点，当i==8时触发断点</p>
+<p><img src="media/c06c0c5bd5fda536883702cff30842fd.png" alt=""></p>
+<p><img src="media/df18cd26f515332b43ee15b17235d1d1.png" alt=""></p>
+<p>运行程序</p>
+<p><img src="media/d55092788271e2950fdee68d0cbe60ba.png" alt=""></p>
+<p>可以看到在debug程序的main函数的首地址+0x5e处暂停。</p>
+<p>从局部变量信息里看到此时i=8.</p>
+<p><img src="media/174aec3bcae02326a44894a58f174f21.png" alt=""></p>
+<ol start="2">
+<li>设置忽略次数</li>
+</ol>
+<p>bp debug!main+0x5e 7 表示忽略前6次，在第七次过断点时触发断点</p>
+<p><img src="media/1506790877966949f6b920dc0f7a46bc.png" alt=""></p>
+<p>运行程序，停于断点处。</p>
+<p><img src="media/d59e1cfd1738903e2c16b4a3c036b304.png" alt=""></p>
+<p>查看局部变量信息</p>
+<p><img src="media/ff8dbd76581ee62d40290c64445ca177.png" alt=""></p>
+<p>变量i = 6, 意思是前6次全部忽略（i=0，1，2，3，4，5），第七次过断点才触发。</p>
+<ol start="3">
+<li>数据断点</li>
+</ol>
+<p>在ans[1]处设置数据断点，需要先运行程序知道ans[1]的地址。</p>
+<p>第一次断点，发现ans指向地址0x0000000000e46fb0处，所以32程序的ans[1]的地址为0x0000000000e46fb0</p>
+<ul>
+<li>0x4, 在此设置数据断点</li>
+</ul>
+<p>ba r4 0x0000000000e46fb0+0x4</p>
+<p><img src="media/3fea893ef8cabdf99eae7dca401a38c6.png" alt=""></p>
+<p><img src="media/773039efc68d08a20070c7bfa7d9d83a.png" alt=""></p>
+<p>执行ans[i]=val前的监视变量</p>
+<p><img src="media/f09f159bd961c656cc974ffb78bfbd3d.png" alt=""></p>
+<p>Next step</p>
+<p><img src="media/188e972b75853a0441d54edaf4e42688.png" alt=""></p>
+<p>Ans[1]的值被更新。</p>
+<ol start="4">
+<li>堆栈信息及局部变量</li>
+</ol>
+<p>在add函数内设置断点，程序执行至add函数内断点处</p>
+<p><img src="media/a0556574d146371d3ec87aed72d51cfb.png" alt=""></p>
+<p>查看堆栈信息</p>
+<p><img src="media/437e92f9544f98e30bdb12f1a5d5c745.png" alt=""></p>
+<p>查看局部变量，仅有add函数内的变量</p>
+<p><img src="media/99364d9ecff7eeff25ccf37af03eeb48.png" alt=""></p>
+<p>.frame切换栈帧，查看局部变量，可以看到main内的函数，且当前栈帧为main</p>
+<p><img src="media/f01b63d0e251bdcd85ba27c7410173e9.png" alt=""></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2020年06月16日 23:17</p>
+        <p>原始链接： <a class="post-url" href="/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/" title="断点调试">https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/</a></p>
+        <footer>
+            <a href="https://xiao_feng_yang993.gitee.io">
+                <img src="/images/logo.jpg" alt="yangxiaofeng">
+                yangxiaofeng
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/&title=《断点调试》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/&title=《断点调试》 — yangxiaofeng的博客&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《断点调试》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2020/06/16/%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/调试/" class="color3">调试</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-Visual-studio断点调试"><span class="post-toc-text">1.  Visual studio断点调试</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-Eclipse"><span class="post-toc-text">2.  Eclipse</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-Gdb"><span class="post-toc-text">3.  Gdb</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#4-Windgb"><span class="post-toc-text">4.  Windgb</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2020/06/16/%E6%9C%89%E7%8E%AF%E9%93%BE%E8%A1%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">有环链表</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2020 yangxiaofeng<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://xiao_feng_yang993.gitee.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a><a class="category-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Dart/" style="font-size: 13.33px;">Dart</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 16.67px;">cuda</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/news/" style="font-size: 10px;">news</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 13.33px;">位运算</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 16.67px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 10px;">编程</a> <a href="/tags/%E8%B0%83%E8%AF%95/" style="font-size: 10px;">调试</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Dart/" style="font-size: 13.33px;">Dart</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 16.67px;">cuda</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/news/" style="font-size: 10px;">news</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 13.33px;">位运算</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 16.67px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 10px;">编程</a> <a href="/tags/%E8%B0%83%E8%AF%95/" style="font-size: 10px;">调试</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
