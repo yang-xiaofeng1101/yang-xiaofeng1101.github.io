@@ -1,185 +1,155 @@
-<!DOCTYPE HTML>
-<html lang="">
-
+<!DOCTYPE html>
+<html>
 <head>
-    <!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="yangxiaofeng的博客">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.2.3">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://xiao_feng_yang993.gitee.io">
-    <!--SEO-->
+  <meta charset="utf-8">
+  
+  <title>linux rpm 错误 | yangxiaofeng的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="yangxiaofeng,yangxiaofeng's Blog" />
+  
+  <meta name="description" content="linux 使用rpm安装软件时,遇到”warning: rpmts_HdrFromFdno: Header V3 RSA&#x2F;SHA256 Signature, key ID fd431d51: NOKEY” 错误建议的做法：warning: rpmts_HdrFromFdno: Header V3 RSA&#x2F;SHA256 Signature, key ID fd431d51: NOKEY  网上资料">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux rpm 错误">
+<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/index.html">
+<meta property="og:site_name" content="yangxiaofeng的博客">
+<meta property="og:description" content="linux 使用rpm安装软件时,遇到”warning: rpmts_HdrFromFdno: Header V3 RSA&#x2F;SHA256 Signature, key ID fd431d51: NOKEY” 错误建议的做法：warning: rpmts_HdrFromFdno: Header V3 RSA&#x2F;SHA256 Signature, key ID fd431d51: NOKEY  网上资料">
+<meta property="article:published_time" content="2020-03-29T13:27:59.000Z">
+<meta property="article:modified_time" content="2020-05-03T14:05:50.831Z">
+<meta property="article:author" content="yangxiaofeng">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
 
-<meta name="keywords" content="Linux" />
+  
+<script src="/js/pace.min.js"></script>
 
+  
 
-<meta name="description" content="linux 使用rpm安装软件时,遇到”warning: rpmts_HdrFromFdno: Header V3 RSA/SHA256 Signature, key ID fd431d51: ..." />
-
-
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
-
-<title>
-    
-    linux rpm 错误 |
-    
-    yangxiaofeng的博客
-</title>
-
-<link rel="alternate" href="/atom.xml" title="yangxiaofeng的博客" type="application/atom+xml">
-
-
-<link rel="icon" href="/favicon.ico">
-
-    
-
-
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
-
-    
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
-</div>
-
-
-
-
-    
+  
+  
 
 <meta name="generator" content="Hexo 4.2.0"></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
+
 <body>
-    <header class="main-header"  style="background-image:url(
-    /img/banner.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='yangxiaofeng'>
-            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
-        </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
-            
-            <h2>
-                yangxiaofeng的博客
-            </h2>
-            
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">yangxiaofeng&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        yangxiaofeng&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注 WEB 开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="MinHow" target="_blank" href="//minhow.com">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/yang-xiaofeng1101">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com/WongMinHo">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/huangminhow">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
         </div>
     </div>
 </header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://xiao_feng_yang993.gitee.io">
-                        yangxiaofeng的博客</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                Home</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/categories/"><i class="fa "></i>
-                                分类</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/tags/"><i class="fa "></i>
-                                标签</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives/"><i class="fa "></i>
-                                时间轴</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="linux rpm 错误">
-            
-            linux rpm 错误
-            
-        </h1>
-        <div class="post-meta">
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-linux-rpm-错误" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-    </span>
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-link" href="/tags/Linux/" rel="tag">Linux</a>
-            
-        </span>
-    </span>
-    
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-clock-o"></i>
-        <span class="date-meta">
-            2020/03/29</span>
-    </span>
-    
-    <span class="fa-wrap">
-        <i class="fa fa-eye"></i>
-        <span id="busuanzi_value_page_pv"></span>
-    </span>
-    
-    
-</div>
+      <header class="article-header">
         
-        
+  
+    <h1 class="post-title" itemprop="name">
+      linux rpm 错误
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/技术/">技术</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-03-29
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
     </div>
+  
+
+          
+      </header>
     
-    <div class="post-body post-content">
-        <h2 id="linux-使用rpm安装软件时-遇到”warning-rpmts-HdrFromFdno-Header-V3-RSA-SHA256-Signature-key-ID-fd431d51-NOKEY”-错误"><a href="#linux-使用rpm安装软件时-遇到”warning-rpmts-HdrFromFdno-Header-V3-RSA-SHA256-Signature-key-ID-fd431d51-NOKEY”-错误" class="headerlink" title="linux 使用rpm安装软件时,遇到”warning: rpmts_HdrFromFdno: Header V3 RSA/SHA256 Signature, key ID fd431d51: NOKEY” 错误"></a>linux 使用rpm安装软件时,遇到”warning: rpmts_HdrFromFdno: Header V3 RSA/SHA256 Signature, key ID fd431d51: NOKEY” 错误</h2><h4 id="建议的做法："><a href="#建议的做法：" class="headerlink" title="建议的做法："></a>建议的做法：</h4><p>warning: rpmts_HdrFromFdno: Header V3 RSA/SHA256 Signature, key ID fd431d51: NOKEY </p>
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h2 id="linux-使用rpm安装软件时-遇到”warning-rpmts-HdrFromFdno-Header-V3-RSA-SHA256-Signature-key-ID-fd431d51-NOKEY”-错误"><a href="#linux-使用rpm安装软件时-遇到”warning-rpmts-HdrFromFdno-Header-V3-RSA-SHA256-Signature-key-ID-fd431d51-NOKEY”-错误" class="headerlink" title="linux 使用rpm安装软件时,遇到”warning: rpmts_HdrFromFdno: Header V3 RSA/SHA256 Signature, key ID fd431d51: NOKEY” 错误"></a>linux 使用rpm安装软件时,遇到”warning: rpmts_HdrFromFdno: Header V3 RSA/SHA256 Signature, key ID fd431d51: NOKEY” 错误</h2><h4 id="建议的做法："><a href="#建议的做法：" class="headerlink" title="建议的做法："></a>建议的做法：</h4><p>warning: rpmts_HdrFromFdno: Header V3 RSA/SHA256 Signature, key ID fd431d51: NOKEY </p>
 <p>网上资料说这是由于yum安装了旧版本的GPG keys造成的<br> <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm --import /etc/pki/rpm-gpg/RPM*</span><br></pre></td></tr></table></figure></p>
 <h4 id="不建议的方法如下："><a href="#不建议的方法如下：" class="headerlink" title="不建议的方法如下："></a>不建议的方法如下：</h4><p>1、安装时提示：warning: *.rpm: Header V3 RSA/SHA256 Signature, keykey ID c105b9de: NOKEY</p>
 <p>解决的方法就是在rpm 语句后面加上 –force –nodeps 即原本为 rpm -ivh *.rpm 现在改成 rpm -ivh *.rpm –force –nodeps就可以了。 nodeps的意思是忽视依赖关系。因为各个软件之间会有多多少少的联系。有了这两个设置选项就忽略了这些依赖关系，强制安装或者卸载</p>
@@ -191,131 +161,305 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su - root</span><br></pre></td></tr></table></figure>
 <p>这样子进入ROOT权限，执行groupadd或者useradd命令就不会有问题了。</p>
 
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2020年05月03日 22:05</p>
+        <p>原始链接： <a class="post-url" href="/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/" title="linux rpm 错误">https://xiao_feng_yang993.gitee.io/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/</a></p>
+        <footer>
+            <a href="https://xiao_feng_yang993.gitee.io">
+                <img src="/images/logo.png" alt="yangxiaofeng">
+                yangxiaofeng
+            </a>
+        </footer>
     </div>
-    
-    <div class="post-footer">
-        <div>
+</div>
+
+      
+        
             
-            转载声明：
-            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">yangxf</a>
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
             
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
             
         </div>
-        <div>
-            
-        </div>
     </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/&title=《linux rpm 错误》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/&title=《linux rpm 错误》 — yangxiaofeng的博客&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《linux rpm 错误》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Linux/" class="color1">Linux</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
 </article>
-<div class="article-nav prev-next-wrap clearfix">
-    
-    <a href="/2020/03/30/openmpi-with-cuda/" class="pre-post btn btn-default" title='openmpi with cuda'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            openmpi with cuda</span>
-    </a>
-    
-    
-    <a href="/2020/03/21/%E5%BE%B7%E5%9B%BD%E6%B5%B7%E5%85%B3%E6%89%A3%E6%8A%BC%E7%BE%8E%E5%9B%BD3M%E5%85%AC%E5%8F%B8%E5%8F%A3%E7%BD%A9%E5%92%8C%E9%98%B2%E6%8A%A4%E6%9C%8D/" class="next-post btn btn-default" title='德国海关扣押美国3M公司口罩和防护服'>
-        <span class="hidden-lg">下一篇</span>
-        <span class="hidden-xs">
-            德国海关扣押美国3M公司口罩和防护服</span><i class="fa fa-angle-right fa-fw"></i>
-    </a>
-    
-</div>
 
-<div id="comments">
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#linux-使用rpm安装软件时-遇到”warning-rpmts-HdrFromFdno-Header-V3-RSA-SHA256-Signature-key-ID-fd431d51-NOKEY”-错误"><span class="post-toc-text">linux 使用rpm安装软件时,遇到”warning: rpmts_HdrFromFdno: Header V3 RSA&#x2F;SHA256 Signature, key ID fd431d51: NOKEY” 错误</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#建议的做法："><span class="post-toc-text">建议的做法：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#不建议的方法如下："><span class="post-toc-text">不建议的方法如下：</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CentOS系统bash-groupadd-command-not-found问题"><span class="post-toc-text">CentOS系统bash: groupadd: command not found问题</span></a></li></ol>
+        </nav>
+    </aside>
     
 
-<div id="vcomments" class="valine"></div>
+<nav id="article-nav">
+  
+    <a href="/2020/03/30/openmpi-with-cuda/" id="article-nav-newer" class="article-nav-link-wrap">
 
-<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src="/assets/valine.min.js"></script>
-
-<script>
-new Valine({
-    av: AV,
-    el: '#vcomments',
-    appId: 'TDrUtAfuNHhPo8MszsQkc1a5-gzGzoHsz',
-    appKey: 'S3K8gXivNTeO1vNz4lvdCxW0',
-    placeholder: '说点什么吧',
-    notify: false,
-    verify: false,
-    avatar: 'mm',
-    meta: 'nick,mail'.split(','),
-    pageSize: '10',
-    path: window.location.pathname,
-    lang: ''.toLowerCase()
-})
-</script>
-
-
-</div>
-
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">
-            Table of Contents
-        </h3>
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#linux-使用rpm安装软件时-遇到”warning-rpmts-HdrFromFdno-Header-V3-RSA-SHA256-Signature-key-ID-fd431d51-NOKEY”-错误"><span class="toc-text">linux 使用rpm安装软件时,遇到”warning: rpmts_HdrFromFdno: Header V3 RSA&#x2F;SHA256 Signature, key ID fd431d51: NOKEY” 错误</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#建议的做法："><span class="toc-text">建议的做法：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#不建议的方法如下："><span class="toc-text">不建议的方法如下：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CentOS系统bash-groupadd-command-not-found问题"><span class="toc-text">CentOS系统bash: groupadd: command not found问题</span></a></li></ol>
+          openmpi with cuda
         
+      </span>
+    </a>
+  
+  
+    <a href="/2020/03/21/%E5%BE%B7%E5%9B%BD%E6%B5%B7%E5%85%B3%E6%89%A3%E6%8A%BC%E7%BE%8E%E5%9B%BD3M%E5%85%AC%E5%8F%B8%E5%8F%A3%E7%BD%A9%E5%92%8C%E9%98%B2%E6%8A%A4%E6%9C%8D/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">德国海关扣押美国3M公司口罩和防护服</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2020 yangxiaofeng<br>
+      </p>
     </div>
-</aside>
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
-    </div>
+  </div>
 </footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="busuanzi">
-    
-    Total:
-    <strong id="busuanzi_value_site_pv">
-        <i class="fa fa-spinner fa-spin"></i>
-    </strong>
-    &nbsp; | &nbsp;
-    Visitors:
-    <strong id="busuanzi_value_site_uv">
-        <i class="fa fa-spinner fa-spin"></i>
-    </strong>
-    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://xiao_feng_yang993.gitee.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
 </div>
-            </div>
-            <div class="col-sm-12">
-                <span>Copyright &copy;
-                    2020
-                    
-                </span> |
-                <span>
-                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
-                </span> |
-                <span>
-                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
-                </span>
-            </div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a><a class="category-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Dart/" style="font-size: 13.33px;">Dart</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 16.67px;">cuda</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/news/" style="font-size: 10px;">news</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 13.33px;">位运算</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 16.67px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 10px;">编程</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Dart/" style="font-size: 13.33px;">Dart</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 16.67px;">cuda</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/news/" style="font-size: 10px;">news</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 13.33px;">位运算</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 16.67px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 10px;">编程</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a>
         </div>
     </div>
 </div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
 
 
 
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
 
 
-<script src="/js/app.js?rev=@@hash.js"></script>
 
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
 </body>
 </html>
