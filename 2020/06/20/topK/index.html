@@ -3,22 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>a+b位运算 | yangxiaofeng的博客</title>
+  <title>topK | yangxiaofeng的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="yangxiaofeng,yangxiaofeng's Blog" />
   
-  <meta name="description" content="a+b位运算核心思想a^b(不进位加法)。(a&amp;b)&lt;&lt;1(用于表示进位的位置)。 具体步骤将上面2结果再次进行按位异或^运算，再求新的异或加法的进位表示，直到没有进位产生也就是(a&amp;b)&lt;&lt;1&#x3D;&#x3D;0时a^b的结果即为a+b的最终结果 源码实现123456789101112131415161718192021class Solution &amp;#123;publ">
+  <meta name="description" content="描述在数组中找到第 k 大的元素。 你可以交换数组中的元素的位置 样例样例 1： 输入：n &#x3D; 1, nums &#x3D; [1,3,4,2]输出：4样例 2： 输入：n &#x3D; 3, nums &#x3D; [9,3,2,4,8]输出：4 挑战要求时间复杂度为O(n)，空间复杂度为O(1)。 源码1234567891011121314151617181920212223242526272829303132333435">
 <meta property="og:type" content="article">
-<meta property="og:title" content="a+b位运算">
-<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2020/06/15/a-b%E4%BD%8D%E8%BF%90%E7%AE%97/index.html">
+<meta property="og:title" content="topK">
+<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2020/06/20/topK/index.html">
 <meta property="og:site_name" content="yangxiaofeng的博客">
-<meta property="og:description" content="a+b位运算核心思想a^b(不进位加法)。(a&amp;b)&lt;&lt;1(用于表示进位的位置)。 具体步骤将上面2结果再次进行按位异或^运算，再求新的异或加法的进位表示，直到没有进位产生也就是(a&amp;b)&lt;&lt;1&#x3D;&#x3D;0时a^b的结果即为a+b的最终结果 源码实现123456789101112131415161718192021class Solution &amp;#123;publ">
-<meta property="article:published_time" content="2020-06-15T03:21:12.000Z">
-<meta property="article:modified_time" content="2020-06-15T07:41:48.492Z">
+<meta property="og:description" content="描述在数组中找到第 k 大的元素。 你可以交换数组中的元素的位置 样例样例 1： 输入：n &#x3D; 1, nums &#x3D; [1,3,4,2]输出：4样例 2： 输入：n &#x3D; 3, nums &#x3D; [9,3,2,4,8]输出：4 挑战要求时间复杂度为O(n)，空间复杂度为O(1)。 源码1234567891011121314151617181920212223242526272829303132333435">
+<meta property="article:published_time" content="2020-06-20T13:42:09.000Z">
+<meta property="article:modified_time" content="2020-06-20T13:42:09.429Z">
 <meta property="article:author" content="yangxiaofeng">
-<meta property="article:tag" content="位运算">
-<meta property="article:tag" content="算法">
+<meta property="article:tag" content="排序">
 <meta name="twitter:card" content="summary">
   
   
@@ -114,14 +113,14 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="post-a-b位运算" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="post-topK" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="post-title" itemprop="name">
-      a+b位运算
+      topK
     </h1>
     <div class="post-title-bar">
       <ul>
@@ -134,7 +133,7 @@
               </li>
           
         <li>
-          <i class="fa fa-calendar"></i>  2020-06-15
+          <i class="fa fa-calendar"></i>  2020-06-20
         </li>
         <li>
           <i class="fa fa-eye"></i>
@@ -150,13 +149,18 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <h2 id="a-b位运算"><a href="#a-b位运算" class="headerlink" title="a+b位运算"></a>a+b位运算</h2><h4 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h4><p>a^b(不进位加法)。<br>(a&amp;b)&lt;&lt;1(用于表示进位的位置)。</p>
-<h4 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h4><p>将上面2结果再次进行按位异或^运算，再求新的异或加法的进位表示，直到没有进位产生也就是(a&amp;b)&lt;&lt;1==0时a^b的结果即为a+b的最终结果</p>
-<h4 id="源码实现"><a href="#源码实现" class="headerlink" title="源码实现"></a>源码实现</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * @param a: An integer</span></span><br><span class="line"><span class="comment">     * @param b: An integer</span></span><br><span class="line"><span class="comment">     * @return: The sum of a and b </span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">aplusb</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> c= a^b;</span><br><span class="line">        <span class="keyword">int</span> d = (a&amp;b)&lt;&lt;<span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span>(d!=<span class="number">0</span>)&#123;</span><br><span class="line">            a=c;</span><br><span class="line">            b=d;</span><br><span class="line">            c=a^b;</span><br><span class="line">            d=(a&amp;b)&lt;&lt;<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+            <h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><p>在数组中找到第 k 大的元素。</p>
+<p>你可以交换数组中的元素的位置</p>
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><p>样例 1：</p>
+<p>输入：<br>n = 1, nums = [1,3,4,2]<br>输出：<br>4<br>样例 2：</p>
+<p>输入：<br>n = 3, nums = [9,3,2,4,8]<br>输出：<br>4</p>
+<h3 id="挑战"><a href="#挑战" class="headerlink" title="挑战"></a>挑战</h3><p>要求时间复杂度为O(n)，空间复杂度为O(1)。</p>
+<h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * @param n: An integer</span></span><br><span class="line"><span class="comment">     * @param nums: An array</span></span><br><span class="line"><span class="comment">     * @return: the Kth largest element</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">     <span class="function"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">	        <span class="keyword">return</span> a &gt; b;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">quicksort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; a, <span class="keyword">int</span> left, <span class="keyword">int</span> right, <span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> temp = a[left];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> i, j;</span><br><span class="line">	i = left;</span><br><span class="line">	j = right;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span> (i &lt; j)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span> (i &lt; j &amp;&amp; a[j] &lt;= temp)</span><br><span class="line">			j--;</span><br><span class="line">		a[i] = a[j];</span><br><span class="line">		<span class="keyword">while</span> (i &lt; j &amp;&amp; a[i] &gt;= temp)</span><br><span class="line">			i++;</span><br><span class="line">		a[j] = a[i];</span><br><span class="line"></span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	a[i] = temp;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (i &lt; n)</span><br><span class="line">	&#123;</span><br><span class="line">		quicksort(a, i+<span class="number">1</span>, right, n);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (i &gt; n)</span><br><span class="line">	&#123;</span><br><span class="line">		quicksort(a, left, i - <span class="number">1</span>, n);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line"></span><br><span class="line">		sort(a.begin()+left, a.begin()+i+<span class="number">1</span>, cmp);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">kthLargestElement</span><span class="params">(<span class="keyword">int</span> n, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> l, r;</span><br><span class="line"></span><br><span class="line">	l = <span class="number">0</span>;</span><br><span class="line">	r = nums.size() - <span class="number">1</span>;</span><br><span class="line">    n--;</span><br><span class="line">	quicksort(nums, l, r, n);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> nums[n];</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2020年06月15日 15:41</p>
-        <p>原始链接： <a class="post-url" href="/2020/06/15/a-b%E4%BD%8D%E8%BF%90%E7%AE%97/" title="a+b位运算">https://xiao_feng_yang993.gitee.io/2020/06/15/a-b%E4%BD%8D%E8%BF%90%E7%AE%97/</a></p>
+        <p>最后更新： 2020年06月20日 21:42</p>
+        <p>原始链接： <a class="post-url" href="/2020/06/20/topK/" title="topK">https://xiao_feng_yang993.gitee.io/2020/06/20/topK/</a></p>
         <footer>
             <a href="https://xiao_feng_yang993.gitee.io">
                 <img src="/images/logo.jpg" alt="yangxiaofeng">
@@ -213,7 +217,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2020/06/15/a-b%E4%BD%8D%E8%BF%90%E7%AE%97/&title=《a+b位运算》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2020/06/20/topK/&title=《topK》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -223,22 +227,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2020/06/15/a-b%E4%BD%8D%E8%BF%90%E7%AE%97/&title=《a+b位运算》 — yangxiaofeng的博客&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2020/06/20/topK/&title=《topK》 — yangxiaofeng的博客&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2020/06/15/a-b%E4%BD%8D%E8%BF%90%E7%AE%97/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2020/06/20/topK/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《a+b位运算》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2020/06/15/a-b%E4%BD%8D%E8%BF%90%E7%AE%97/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《topK》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2020/06/20/topK/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2020/06/15/a-b%E4%BD%8D%E8%BF%90%E7%AE%97/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2020/06/20/topK/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -248,7 +252,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2020/06/15/a-b%E4%BD%8D%E8%BF%90%E7%AE%97/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2020/06/20/topK/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -260,9 +264,7 @@
   <li class="article-footer-tags">
     <i class="fa fa-tags"></i>
       
-    <a href="/tags/位运算/" class="color4">位运算</a>
-      
-    <a href="/tags/算法/" class="color3">算法</a>
+    <a href="/tags/排序/" class="color3">排序</a>
       
   </li>
 
@@ -275,26 +277,16 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#a-b位运算"><span class="post-toc-text">a+b位运算</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#核心思想"><span class="post-toc-text">核心思想</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#具体步骤"><span class="post-toc-text">具体步骤</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#源码实现"><span class="post-toc-text">源码实现</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#描述"><span class="post-toc-text">描述</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#样例"><span class="post-toc-text">样例</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#挑战"><span class="post-toc-text">挑战</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#源码"><span class="post-toc-text">源码</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
   
-    <a href="/2020/06/16/%E6%9C%89%E7%8E%AF%E9%93%BE%E8%A1%A8/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <span class="article-nav-title">
-        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
-        
-          有环链表
-        
-      </span>
-    </a>
   
-  
-    <a href="/2020/06/15/AVX%E5%92%8CAVX2%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">AVX和AVX2学习笔记</span>
+    <a href="/2020/06/18/%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">翻转链表</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
