@@ -3,27 +3,23 @@
 <head>
   <meta charset="utf-8">
   
-  <title>GPUDirect RDMA for openmpi | yangxiaofeng的博客</title>
+  <title>石子合并 | yangxiaofeng的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="yangxiaofeng,yangxiaofeng's Blog" />
   
-  <meta name="description" content="背景对于MPI跨节点项目，对GPU上的数据一般需要先cudaMemcopy到Host，再通过mpi_send出去，另一设备通过mpi_Recv到Host内存，再cudamemcopy到GPU显存，这一过程明显要费时。 1. compile openmpi with –with-cuda这一编译方法可以让openmpi对显存的数据操作，但是它只是减少了代码的书写量，从GPU到Host的数据传输在背后">
+  <meta name="description" content="题目有一个石子归并的游戏。最开始的时候，有n堆石子排成一列，目标是要将所有的石子合并成一堆。合并规则如下： 每一次可以合并相邻位置的两堆石子每次合并的代价为所合并的两堆石子的重量之和求出最小的合并代价。 样例样例 1: 输入: [3, 4, 3]输出: 17样例 2: 输入: [4, 1, 1, 4]输出: 18解释:   合并第二堆和第三堆 &#x3D;&gt; [4, 2, 4], score &#x3D; 2">
 <meta property="og:type" content="article">
-<meta property="og:title" content="GPUDirect RDMA for openmpi">
-<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2020/04/10/GPUDirect-RDMA-for-openmpi/index.html">
+<meta property="og:title" content="石子合并">
+<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2020/07/17/%E7%9F%B3%E5%AD%90%E5%90%88%E5%B9%B6/index.html">
 <meta property="og:site_name" content="yangxiaofeng的博客">
-<meta property="og:description" content="背景对于MPI跨节点项目，对GPU上的数据一般需要先cudaMemcopy到Host，再通过mpi_send出去，另一设备通过mpi_Recv到Host内存，再cudamemcopy到GPU显存，这一过程明显要费时。 1. compile openmpi with –with-cuda这一编译方法可以让openmpi对显存的数据操作，但是它只是减少了代码的书写量，从GPU到Host的数据传输在背后">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2020/04/10/e8a1c790-7b2e-11ea-acfc-35c1710d51fd.PNG">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2020/04/10/afa1d740-7b2f-11ea-acfc-35c1710d51fd.PNG">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2020/04/10/e176a570-7b2f-11ea-acfc-35c1710d51fd.PNG">
-<meta property="article:published_time" content="2020-04-10T13:41:37.000Z">
-<meta property="article:modified_time" content="2020-05-03T14:05:50.831Z">
+<meta property="og:description" content="题目有一个石子归并的游戏。最开始的时候，有n堆石子排成一列，目标是要将所有的石子合并成一堆。合并规则如下： 每一次可以合并相邻位置的两堆石子每次合并的代价为所合并的两堆石子的重量之和求出最小的合并代价。 样例样例 1: 输入: [3, 4, 3]输出: 17样例 2: 输入: [4, 1, 1, 4]输出: 18解释:   合并第二堆和第三堆 &#x3D;&gt; [4, 2, 4], score &#x3D; 2">
+<meta property="article:published_time" content="2020-07-16T16:31:59.000Z">
+<meta property="article:modified_time" content="2020-07-16T16:32:01.820Z">
 <meta property="article:author" content="yangxiaofeng">
-<meta property="article:tag" content="cuda">
-<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="dp">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://xiao_feng_yang993.gitee.io/images/2020/04/10/e8a1c790-7b2e-11ea-acfc-35c1710d51fd.PNG">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -118,14 +114,14 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="post-GPUDirect-RDMA-for-openmpi" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="post-石子合并" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="post-title" itemprop="name">
-      GPUDirect RDMA for openmpi
+      石子合并
     </h1>
     <div class="post-title-bar">
       <ul>
@@ -133,12 +129,12 @@
               <li>
                   <i class="fa fa-book"></i>
                   
-                      <a href="/categories/技术/">技术</a>
+                      <a href="/categories/编程/">编程</a>
                   
               </li>
           
         <li>
-          <i class="fa fa-calendar"></i>  2020-04-10
+          <i class="fa fa-calendar"></i>  2020-07-17
         </li>
         <li>
           <i class="fa fa-eye"></i>
@@ -154,24 +150,23 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>对于MPI跨节点项目，对GPU上的数据一般需要先cudaMemcopy到Host，再通过mpi_send出去，另一设备通过mpi_Recv到Host内存，再cudamemcopy到GPU显存，这一过程明显要费时。</p>
-<h2 id="1-compile-openmpi-with-–with-cuda"><a href="#1-compile-openmpi-with-–with-cuda" class="headerlink" title="1. compile openmpi with –with-cuda"></a>1. compile openmpi with –with-cuda</h2><p>这一编译方法可以让openmpi对显存的数据操作，但是它只是减少了代码的书写量，从GPU到Host的数据传输在背后任然在执行。时间甚至比手写cudaMemcopy还要长。为了解决这一问题，就采用了GPUDirect RDMA 技术。<br><a href="https://www.open-mpi.org/faq/?category=runcuda" target="_blank" rel="noopener">openmpi run with cuda</a><br><a href="https://www.open-mpi.org/faq/?category=buildcuda" target="_blank" rel="noopener">Building CUDA-aware Open MPI</a><br>Open MPI v1.7.4 and later have added some support to take advantage of GPUDirect RDMA on Mellanox cards. All the details about Mellanox hardware as well as software needed to get things to work can be found at the Mellanox web site. Note that to get GPUDirect RDMA support, you also need to configure your Open MPI library with CUDA 6.0.<br>可以看到要想使用GPUDirect RDMA，任然需要对openmpi 加上cuda参数编译。</p>
-<h2 id="2-查看GPUDirect-RDMA-信息"><a href="#2-查看GPUDirect-RDMA-信息" class="headerlink" title="2. 查看GPUDirect RDMA 信息"></a>2. 查看GPUDirect RDMA 信息</h2><ol>
-<li>To see if you have GPUDirect RDMA compiled into your library, you can check like this:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shell$ ompi_info --all | grep btl_openib_have_cuda_gdr</span><br><span class="line">   MCA btl: informational <span class="string">"btl_openib_have_cuda_gdr"</span> (current value: <span class="string">"true"</span>, data <span class="built_in">source</span>: default, level: 4 tuner/basic, <span class="built_in">type</span>: bool)</span><br></pre></td></tr></table></figure></li>
-<li>To see if your OFED stack has GPUDirect RDMA support, you can check like this:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shell$ ompi_info --all | grep btl_openib_have_driver_gdr</span><br><span class="line">   MCA btl: informational <span class="string">"btl_openib_have_driver_gdr"</span> (current value: <span class="string">"true"</span>, data <span class="built_in">source</span>: default, level: 4 tuner/basic, <span class="built_in">type</span>: bool)</span><br></pre></td></tr></table></figure></li>
-<li>To run with GPUDirect RDMA support, you have to enable it as it is off by default:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpirun --mca btl_openib_want_cuda_gdr 1 ...</span><br></pre></td></tr></table></figure>
-官网的主要介绍就是这样，但是在自己设备上测试就没这么容易了，问题出现在btl_openib_have_driver_gdr这一步，结果如下：<br><img src="/images/2020/04/10/e8a1c790-7b2e-11ea-acfc-35c1710d51fd.PNG" alt="gdr.PNG">它显示的值是false，初步判断是缺少驱动所致，问题解决过程如下：<h2 id="3-安装-nv-peer-mem"><a href="#3-安装-nv-peer-mem" class="headerlink" title="3. 安装 nv_peer_mem"></a>3. 安装 nv_peer_mem</h2>安装过程参考浪潮公司的专利内容：<br><a href="https://patentimages.storage.googleapis.com/c7/56/c9/9bba52318b9458/CN105550085A.pdf" target="_blank" rel="noopener">一种基于GPUDerict RDMA测试方法</a><br>具体步骤如下图所示：<br><img src="/images/2020/04/10/afa1d740-7b2f-11ea-acfc-35c1710d51fd.PNG" alt="nv.PNG"></li>
+            <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>有一个石子归并的游戏。最开始的时候，有n堆石子排成一列，目标是要将所有的石子合并成一堆。合并规则如下：</p>
+<p>每一次可以合并相邻位置的两堆石子<br>每次合并的代价为所合并的两堆石子的重量之和<br>求出最小的合并代价。</p>
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><p>样例 1:</p>
+<p>输入: [3, 4, 3]<br>输出: 17<br>样例 2:</p>
+<p>输入: [4, 1, 1, 4]<br>输出: 18<br>解释: </p>
+<ol>
+<li>合并第二堆和第三堆 =&gt; [4, 2, 4], score = 2</li>
+<li>合并前两堆 =&gt; [6, 4]，score = 8</li>
+<li>合并剩余的两堆 =&gt; [10], score = 18<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3>用DP[i][j]来表示把A[i…j]搬到一起需要的score。DP[left][right]可以表示成DP[left][j] + DP[j+1][right] + sum(i,j) 元素i到j求和，可以前缀和求得；即首先形成这两团需要的score，和把这两团加在一起的score（前缀和）。</li>
 </ol>
-<p>运行lsmod |grep nv_peer_mem检查是否安装成功</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsmod | grep nv_peer_mem</span><br></pre></td></tr></table></figure>
-
-<p>安装后再查看btl_openib_have_driver_gdr信息就正常了<br><img src="/images/2020/04/10/e176a570-7b2f-11ea-acfc-35c1710d51fd.PNG" alt="gdr2.PNG"><br>这时我通过测试节点间的显存数据mpi传输，发现速度有明显提升，其中GPU-to-GPU的速度跟从Host到Host速度相差无几，测得GPU-to-GPU速度超过8GB/s，与节点内的速度处在相同数量级。由于避免了在Host内存的中转，速度提高至少50%。</p>
-<p><em>其中的原理是：</em><br>直接访问GPU内存，避免访问固定(pinned) CUDA主机内存时不必要的系统内存拷贝和CPU的开销，加速了与网络和存储设备之间的通信可以在同一系统中的一个GPU直接访问另一个GPU使用直接的高速DMA传输，增加了 P2P的内存访问，真正释放了主机CPU资源，消除主机了CPU中不必要的频繁数据传输，完全不参与输入的RDMA操作；包括HCA卡、GI3U卡、GI3U必备的Nvidia Driver^Nvidia CUDA toolkit，及infiniband必备的MLNX_0FED驱动外，以及一个GPU与IB卡通信的nv_peer_mem包。</p>
+<p>len要大于等于2才有意义，因为要长度至少为2才能累加。枚举的区间长度，左边是i，右边是i + len - 1。</p>
+<h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * @param A: An integer array</span></span><br><span class="line"><span class="comment">     * @return: An integer</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">stoneGame</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;A)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// write your code here</span></span><br><span class="line">        <span class="keyword">int</span> n = A.size();</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">0</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> *sum = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>)*n+<span class="number">1</span>);</span><br><span class="line">        </span><br><span class="line">        sum[<span class="number">0</span>]=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)sum[i]=sum[i<span class="number">-1</span>]+A[i<span class="number">-1</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// int dp[][]=new int[n][n];</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> **dp;</span><br><span class="line">        dp=(<span class="keyword">int</span> **)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span> *)*n);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">            dp[i]=(<span class="keyword">int</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>)*n);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            dp[i][i]=<span class="number">0</span>;</span><br><span class="line">            dp[i][i+<span class="number">1</span>]=A[i]+A[i+<span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        dp[n<span class="number">-1</span>][n<span class="number">-1</span>]=<span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> len = <span class="number">3</span>;len&lt;=n;len++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;=n-len;i++)&#123;</span><br><span class="line">                <span class="keyword">int</span> j=i+len<span class="number">-1</span>;</span><br><span class="line">                dp[i][j]=<span class="number">999999</span>;</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> k=i;k&lt;j;k++)&#123;</span><br><span class="line">                    dp[i][j]=(dp[i][k]+dp[k+<span class="number">1</span>][j]+sum[j+<span class="number">1</span>]-sum[i]) &lt; dp[i][j]?(dp[i][k]+dp[k+<span class="number">1</span>][j]+sum[j+<span class="number">1</span>]-sum[i]):dp[i][j];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> dp[<span class="number">0</span>][n<span class="number">-1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2020年05月03日 22:05</p>
-        <p>原始链接： <a class="post-url" href="/2020/04/10/GPUDirect-RDMA-for-openmpi/" title="GPUDirect RDMA for openmpi">https://xiao_feng_yang993.gitee.io/2020/04/10/GPUDirect-RDMA-for-openmpi/</a></p>
+        <p>最后更新： 2020年07月17日 00:32</p>
+        <p>原始链接： <a class="post-url" href="/2020/07/17/%E7%9F%B3%E5%AD%90%E5%90%88%E5%B9%B6/" title="石子合并">https://xiao_feng_yang993.gitee.io/2020/07/17/%E7%9F%B3%E5%AD%90%E5%90%88%E5%B9%B6/</a></p>
         <footer>
             <a href="https://xiao_feng_yang993.gitee.io">
                 <img src="/images/logo.jpg" alt="yangxiaofeng">
@@ -228,7 +223,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2020/04/10/GPUDirect-RDMA-for-openmpi/&title=《GPUDirect RDMA for openmpi》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2020/07/17/%E7%9F%B3%E5%AD%90%E5%90%88%E5%B9%B6/&title=《石子合并》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -238,22 +233,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2020/04/10/GPUDirect-RDMA-for-openmpi/&title=《GPUDirect RDMA for openmpi》 — yangxiaofeng的博客&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2020/07/17/%E7%9F%B3%E5%AD%90%E5%90%88%E5%B9%B6/&title=《石子合并》 — yangxiaofeng的博客&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2020/04/10/GPUDirect-RDMA-for-openmpi/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2020/07/17/%E7%9F%B3%E5%AD%90%E5%90%88%E5%B9%B6/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《GPUDirect RDMA for openmpi》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2020/04/10/GPUDirect-RDMA-for-openmpi/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《石子合并》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2020/07/17/%E7%9F%B3%E5%AD%90%E5%90%88%E5%B9%B6/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2020/04/10/GPUDirect-RDMA-for-openmpi/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2020/07/17/%E7%9F%B3%E5%AD%90%E5%90%88%E5%B9%B6/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -263,7 +258,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2020/04/10/GPUDirect-RDMA-for-openmpi/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2020/07/17/%E7%9F%B3%E5%AD%90%E5%90%88%E5%B9%B6/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -275,9 +270,9 @@
   <li class="article-footer-tags">
     <i class="fa fa-tags"></i>
       
-    <a href="/tags/cuda/" class="color5">cuda</a>
+    <a href="/tags/算法/" class="color3">算法</a>
       
-    <a href="/tags/Linux/" class="color1">Linux</a>
+    <a href="/tags/dp/" class="color3">dp</a>
       
   </li>
 
@@ -290,26 +285,16 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#背景"><span class="post-toc-text">背景</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-compile-openmpi-with-–with-cuda"><span class="post-toc-text">1. compile openmpi with –with-cuda</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-查看GPUDirect-RDMA-信息"><span class="post-toc-text">2. 查看GPUDirect RDMA 信息</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-安装-nv-peer-mem"><span class="post-toc-text">3. 安装 nv_peer_mem</span></a>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#题目"><span class="post-toc-text">题目</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#样例"><span class="post-toc-text">样例</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#解题思路"><span class="post-toc-text">解题思路</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#源码"><span class="post-toc-text">源码</span></a></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
   
-    <a href="/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <span class="article-nav-title">
-        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
-        
-          code-server 远程编辑
-        
-      </span>
-    </a>
   
-  
-    <a href="/2020/03/30/openmpi-with-cuda/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">openmpi with cuda</span>
+    <a href="/2020/07/03/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B-%E5%A4%8D%E4%B9%A0%E6%80%BB%E7%BB%93/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">软件工程-复习总结</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
