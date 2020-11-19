@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>内嵌汇编 | yangxiaofeng的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="yangxiaofeng,yangxiaofeng's Blog" />
+  
+  <meta name="description" content="内嵌汇编学习操作系统高级教程上面需要阅读Linux内核0.11的源码，其中在书《Linux内核设计的一书》第2.5节异常处理类中段服务程序挂接的部分，遇到了嵌入在C语言中的汇编代码，之前从来没有学习过汇编，因此记录下。 AT&amp;T基础知识内嵌汇编使用的是AT&amp;T汇编，所以首先稍微讲解下AT&amp;T的汇编指令的基础知识。 1234### 操作数前缀movl   $8,%eax mo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内嵌汇编">
+<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2020/11/19/%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96/index.html">
+<meta property="og:site_name" content="yangxiaofeng的博客">
+<meta property="og:description" content="内嵌汇编学习操作系统高级教程上面需要阅读Linux内核0.11的源码，其中在书《Linux内核设计的一书》第2.5节异常处理类中段服务程序挂接的部分，遇到了嵌入在C语言中的汇编代码，之前从来没有学习过汇编，因此记录下。 AT&amp;T基础知识内嵌汇编使用的是AT&amp;T汇编，所以首先稍微讲解下AT&amp;T的汇编指令的基础知识。 1234### 操作数前缀movl   $8,%eax mo">
+<meta property="article:published_time" content="2020-11-19T15:38:26.000Z">
+<meta property="article:modified_time" content="2020-11-19T15:38:26.354Z">
+<meta property="article:author" content="yangxiaofeng">
+<meta property="article:tag" content="编程">
+<meta property="article:tag" content="汇编">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">yangxiaofeng&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.jpg" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        yangxiaofeng&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注 后端 开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="yangxiaofeng" target="_blank" href="/">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/yang-xiaofeng1101">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/FKZx1UZnXdTYBP7">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                        <a title="QQ" target="_blank" href="//wpa.qq.com/msgrd?v=3&uin=1649675002&site=qq&menu=yes">
+                            <i class="fa fa-qq fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-内嵌汇编" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      内嵌汇编
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/编程/">编程</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-11-19
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h2 id="内嵌汇编学习"><a href="#内嵌汇编学习" class="headerlink" title="内嵌汇编学习"></a>内嵌汇编学习</h2><p>操作系统高级教程上面需要阅读Linux内核0.11的源码，其中在书《Linux内核设计的一书》第2.5节异常处理类中段服务程序挂接的部分，遇到了嵌入在C语言中的汇编代码，之前从来没有学习过汇编，因此记录下。</p>
+<h2 id="AT-amp-T基础知识"><a href="#AT-amp-T基础知识" class="headerlink" title="AT&amp;T基础知识"></a>AT&amp;T基础知识</h2><p>内嵌汇编使用的是AT&amp;T汇编，所以首先稍微讲解下AT&amp;T的汇编指令的基础知识。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">### 操作数前缀</span><br><span class="line">movl   $8,%eax </span><br><span class="line">movl   $0xffff,%ebx </span><br><span class="line">int     $0x80</span><br></pre></td></tr></table></figure>
+<p>看到在AT%T汇编中诸如”%eax”、”%ebx”之类的寄存器名字前都要加上”%”；”$8”、”$0xffff”这样的立即数之前都要加上”$”。</p>
+<h3 id="源-目的操作数顺序"><a href="#源-目的操作数顺序" class="headerlink" title="源/目的操作数顺序"></a>源/目的操作数顺序</h3><p>在Intel语法中，第一个操作数是目的操作数，第二个操作数源操作数。而在AT&amp;T中，第一个数是源操作数，第二个数是目的操作数。</p>
+<p>// INTEL语法<br>MOV EAX,8 //EAX是目的操作数， 8是源操作数<br>// AT&amp;T语法<br>movl   $8,%eax //8是源操作数 EAX是目的操作数</p>
+<h3 id="标识长度的操作码后缀"><a href="#标识长度的操作码后缀" class="headerlink" title="标识长度的操作码后缀"></a>标识长度的操作码后缀</h3><p>在AT&amp;T的操作码后面有时还会有一个后缀，其含义就是指出操作码的大小。“l”表示长整数（32位），“w”表示字（16位），“b”表示字节（8位）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">movb    %bl,%al</span><br><span class="line">movw   %bx,%ax</span><br><span class="line">movl     %ebx,%eax</span><br><span class="line">movl     (%ebx),%eax</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="GCC内嵌汇编"><a href="#GCC内嵌汇编" class="headerlink" title="GCC内嵌汇编"></a>GCC内嵌汇编</h2><p>Linux操作系统内核代码绝大部分使用C语言编写，只有一小部分使用汇编语言编写，例如与特定体系结构相关的代码和对性能影响很大的代码。GCC提供了内嵌汇编的功能，可以在C代码中直接内嵌汇编语言语句，大大方便了程序设计。</p>
+<h3 id="基本行内汇编"><a href="#基本行内汇编" class="headerlink" title="基本行内汇编"></a>基本行内汇编</h3><p>基本行内汇编很容易理解，一般是按照下面的格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asm(“statements”);</span><br></pre></td></tr></table></figure>
+<p>在“asm”后面有时也会加上“volatile”表示编译器不要优化代码，后面的指令保留原样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__asm__ __volatile__(&quot;hlt&quot;);</span><br></pre></td></tr></table></figure>
+<p>如果有很多行汇编，则每一行后要加上“\n\t” ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">asm( &quot;pushl %eax\n\t&quot;</span><br><span class="line"> &quot;movl $0,%eax\n\t&quot;</span><br><span class="line">&quot;popl %eax&quot;);</span><br></pre></td></tr></table></figure>
+<p>或者我们也可以分成几行来写，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">asm(&quot;movl %eax,%ebx&quot;);</span><br><span class="line">asm(&quot;xorl %ebx,%edx&quot;);</span><br><span class="line">asm(&quot;movl $0,_booga);</span><br></pre></td></tr></table></figure>
+<p>通常使用汇编语句最方便的方式是把它们放在一个宏内，而宏语句需要在一行上定义，因此使用反斜杠\将这些语句连成一行，所以上述语句如果在宏中定义的话就是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">asm( &quot;pushl %eax; \</span><br><span class="line"> movl $0,%eax; \</span><br><span class="line">popl %eax&quot;);</span><br></pre></td></tr></table></figure>
+<h3 id="扩展的行内汇编"><a href="#扩展的行内汇编" class="headerlink" title="扩展的行内汇编"></a>扩展的行内汇编</h3><p>在扩展的行内汇编中，可以将C语言表达式（比如C语言中的变量）指定为汇编指令的操作数，而且不用去管如何将C语言表达式的值读入寄存器，以及如何将计算结果写回C变量，你只要告诉程序中C语言表达式与汇编指令操作数之间的对应关系即可， GCC会自动插入代码完成必要的操作。</p>
+<p>使用内嵌汇编，要先编写汇编指令模板，然后将C语言表达式与指令的操作数相关联，并告诉GCC对这些操作有哪些限制条件。例如下面的内嵌汇编语句：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> input = <span class="number">8</span>;</span><br><span class="line">    <span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">    __asm__ __violate__  (<span class="string">"movl %1,%0"</span> : <span class="string">"=r"</span> (result) : <span class="string">"r"</span> (input));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,result);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>“movl %1,%0”是指令模板；“%0”和“%1”代表指令的操作数，称为占位符，“=r”代表它之后是输入变量且需用到寄存器，指令模板后面用小括号括起来的是C语言表达式 ，其中input是输入变量，该指令会完成把input的值复制到result中的操作 。</p>
+<h3 id="扩展的行内汇编的语法"><a href="#扩展的行内汇编的语法" class="headerlink" title="扩展的行内汇编的语法"></a>扩展的行内汇编的语法</h3><p>内嵌汇编语法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">asm(&quot;汇编语句模块&quot;</span><br><span class="line"></span><br><span class="line">:输出寄存器</span><br><span class="line"></span><br><span class="line">  :输入寄存器</span><br><span class="line"></span><br><span class="line">  :会被修改的寄存器);</span><br></pre></td></tr></table></figure>
+
+<p>即格式为asm ( “statements” : output_regs : input_regs : clobbered_regs)</p>
+<p>汇编语句模块必不可少，其他三部分可选，如果使用了后面的部分，而前面部分为空，也需要用“:”格开，相应部分内容为空。</p>
+<h4 id="汇编语句模块"><a href="#汇编语句模块" class="headerlink" title="汇编语句模块"></a>汇编语句模块</h4><p>汇编语句模块由汇编语句序列组成，语句之间使用“;”、“\n”或“\n\t”分开。指令中的操作数可以使用占位符引用C语言变量，操作数占位符最多10个，名称如下：%0，%1…，%9。指令中使用占位符表示的操作数，总被视为long型（4，个字节），但对其施加的操作根据指令可以是字或者字节，当把操作数当作字或者字节使用时，默认为低字或者低字节。对字节操作可以显式的指明是低字节还是次字节。方法是在%和序号之间插入一个字母，“b”代表低字节，“h”代表高字节，例如：%h1。</p>
+<p>占位符的理解：将汇编输出寄存器与输入寄存器从输出寄存器行开始左到右从上到下进行编号分别为：%0，%1…，%9。比如有代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> get_seg_byte(seg,addr) \</span></span><br><span class="line">(&#123; \</span><br><span class="line"><span class="keyword">register</span> <span class="keyword">char</span> __res; \</span><br><span class="line">__asm__(<span class="string">"push %%fs; \</span></span><br><span class="line"><span class="string">mov %%ax,%%fs; \</span></span><br><span class="line"><span class="string">movb %%fs:%2,%%al; \</span></span><br><span class="line"><span class="string">pop %%fs"</span> \</span><br><span class="line">:<span class="string">"=a"</span> (__res) \</span><br><span class="line">:<span class="string">""</span> (seg),<span class="string">"m"</span> (*(addr))); \</span><br><span class="line">__res;&#125;)</span><br></pre></td></tr></table></figure>
+<p>输出寄存器”=a”eax记为%0,输入寄存器””(依然是eax)记为%1,输入寄存器”m”为%2。</p>
+<h4 id="输出寄存器"><a href="#输出寄存器" class="headerlink" title="输出寄存器"></a>输出寄存器</h4><p>描述输出操作数，不同的操作数描述符之间用逗号格开，每个操作数描述符由限定字符串和C语言变量组成。每个输出操作数的限定字符串必须包含“=”，表示它是一个输出操作数。例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__asm__ __volatile__ (<span class="string">"pushfl ; popl %0 ; cli"</span>:<span class="string">"=g"</span> (x) )</span><br></pre></td></tr></table></figure>
+<p>在这里“x”便是最终存放输出结果的C程序变量，而“=g”则是限定字符串，限定字符串表示了对它之后的变量的限制条件 。</p>
+<h4 id="输入寄存器"><a href="#输入寄存器" class="headerlink" title="输入寄存器"></a>输入寄存器</h4><p>描述输入操作数，不同的操作数描述符之间使用逗号格开，每个操作数描述符同样也由限定字符串和C语言表达式或者C语言变量组成。例：</p>
+<p><strong>asm</strong> volatile__ (“lidt %0” : : “m” (real_mode_idt));<br>其中%0是占位操作符，而输出寄存器为空，输入寄存器的值为C语言表达式real_mode_idt。</p>
+<h4 id="限定字符串"><a href="#限定字符串" class="headerlink" title="限定字符串"></a>限定字符串</h4><p>又叫做寄存器加载代码</p>
+<table>
+<thead>
+<tr>
+<th>限定字符</th>
+<th>描述</th>
+<th>限定字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>a</td>
+<td>使用寄存器eax</td>
+<td>m</td>
+<td>使用内存地址</td>
+</tr>
+<tr>
+<td>b</td>
+<td>使用寄存器ebx</td>
+<td>o</td>
+<td>使用内存地址并可以加偏移值</td>
+</tr>
+<tr>
+<td>m、o、V、p</td>
+<td>使用寄存器ecx</td>
+<td>I</td>
+<td>使用常数0~31 立即数</td>
+</tr>
+<tr>
+<td>g、X</td>
+<td>寄存器或内存</td>
+<td>J</td>
+<td>使用常数0~63 立即数</td>
+</tr>
+<tr>
+<td>I、J、N、i、n</td>
+<td>立即数</td>
+<td>K</td>
+<td>使用常数0~255立即数</td>
+</tr>
+<tr>
+<td>D</td>
+<td>使用edi</td>
+<td>L</td>
+<td>使用常数0~65535 立即数</td>
+</tr>
+<tr>
+<td>q</td>
+<td>使用动态分配字节可寻址寄存器（eax、ebx、ecx或edx）</td>
+<td>M</td>
+<td>使用常数0~3 立即数</td>
+</tr>
+<tr>
+<td>r</td>
+<td>使用任意动态分配的寄存器</td>
+<td>N</td>
+<td>使用1字节常数（0~255）立即数</td>
+</tr>
+<tr>
+<td>g</td>
+<td>使用通用有效的地址即可（eax、ebx、ecx、edx或内存变量）</td>
+<td>O</td>
+<td>使用常数0~31 立即数</td>
+</tr>
+<tr>
+<td>A</td>
+<td>使用eax与edx联合（64位）</td>
+<td>i</td>
+<td>立即数</td>
+</tr>
+</tbody></table>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>直接摘抄自《Linux内核完全注释》第5.2.2 traps.c程序的第82页</p>
+<p>例子1：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">01</span> <span class="meta">#<span class="meta-keyword">define</span> get_seg_byte(seg,addr) \</span></span><br><span class="line"><span class="number">02</span> (&#123; \</span><br><span class="line"><span class="number">03</span> <span class="keyword">register</span> <span class="keyword">char</span> __res; \</span><br><span class="line"><span class="number">04</span> __asm__(<span class="string">"push %%fs; \</span></span><br><span class="line"><span class="string">05 mov %%ax,%%fs; \</span></span><br><span class="line"><span class="string">06 movb %%fs:%2,%%al; \</span></span><br><span class="line"><span class="string">07 pop %%fs"</span> \</span><br><span class="line"><span class="number">08</span> :<span class="string">"=a"</span> (__res) \</span><br><span class="line"><span class="number">09</span> :<span class="string">""</span> (seg),<span class="string">"m"</span> (*(addr))); \</span><br><span class="line"><span class="number">10</span> __res;&#125;)</span><br></pre></td></tr></table></figure>
+<p>第1 行定义了宏的名称，也即是宏函数名称 get_seg_byte(seg,addr) 。第 3 行定义了一个寄存器变量 res 。第 4 行上的 <strong>asm</strong>表示嵌入汇编语句的开始。从第 4 行到第 7 行的 4 条语句是 AT&amp;T 格式的汇编语句。</p>
+<p>第 8 行即是输出寄存器，这句的含义是在这段代码运行结束后将 eax 所代表的寄存器的值放入__res变量中，作为本函数的输出值， “=a” 中的 “a” 称为加载代码， “=” 表示这是输出寄存器。第 9 行表示在这段代码开始运行时将 seg 放到 eax 寄存器中， “” 表示使用与上面同个位置的输出相同的寄存器。而 ((addr))表示一个内存偏移地址值。为了在上面汇编语句中使用该地址值，嵌入汇编程序规定把输出和输入寄存器统一按顺序编号，顺序是从输出寄存器序列从左到右从上到下以 “%0” 开始，分别记为 %0 、 %1 、 …%9 。因此，输出寄存器的编号是 %0 （这里只有一个输出寄存器），输入寄存器前一部分 (“” (seg)) 的编号是 %1 ，而后部分的编号是 %2 。上面第 6 行上的 %2 即代表 ((addr)) 这个内存偏移量。现在我们来研究 4—7 行上的代码的作用。第一句将 fs 段寄存器的内容入栈；第二句将 eax 中的段值赋给 fs 段寄存器；第三句是把 fs:(*(addr)) 所指定的字节放入 al 寄存器中。当执行完汇编语句后，输出寄存器 eax 的值将被放入 __res ，作为该宏函数（块结构表达式）的返回值。</p>
+<p>通过上面分析，我们知道，宏名称中的 seg 代表一指定的内存段值，而 addr 表示一内存偏移地址量。到现在为止，我们应该很清楚这段程序的功能了吧！该宏函数的功能是从指定段和偏移值的内存地址处取一个字节。</p>
+<p>通过上面的例子说明，阅读这段代码时应该像CPU处理指令时的逻辑一样，先从输出输入寄存器语句开始知道输入输出是什么，然后再阅读汇编语句，处理完后再看最后的返回是什么。</p>
+<p>例子2<br>再来看下Linux 内核中main()中对中断异常挂接的trap_init()中的设计到的一个GCC内嵌汇编。代码路径为；include\asm\system.h</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="meta">#<span class="meta-keyword">define</span> _set_gate(gate_addr,type,dpl,addr) \</span></span><br><span class="line"><span class="number">2</span> __asm__ (<span class="string">"movw %%dx,%%ax\n\t"</span> \</span><br><span class="line"><span class="number">3</span>   <span class="string">"movw %0,%%dx\n\t"</span> \</span><br><span class="line"><span class="number">4</span>   <span class="string">"movl %%eax,%1\n\t"</span> \</span><br><span class="line"><span class="number">5</span>   <span class="string">"movl %%edx,%2"</span> \</span><br><span class="line"><span class="number">6</span>   : \</span><br><span class="line"><span class="number">7</span>   : <span class="string">"i"</span> ((short) (<span class="number">0x8000</span>+(dpl&lt;&lt;<span class="number">13</span>)+(type&lt;&lt;<span class="number">8</span>))), \</span><br><span class="line"><span class="number">8</span>   <span class="string">"o"</span> (*((<span class="keyword">char</span> *) (gate_addr))), \</span><br><span class="line"><span class="number">9</span>   <span class="string">"o"</span> (*(<span class="number">4</span>+(<span class="keyword">char</span> *) (gate_addr))), \</span><br><span class="line"><span class="number">10</span>  <span class="string">"d"</span> ((<span class="keyword">char</span> *) (addr)),<span class="string">"a"</span> (<span class="number">0x00080000</span>))</span><br></pre></td></tr></table></figure>
+<p>首先从第6行输出寄存器开始阅读：输出寄存器为空。然后是第7至10行的输入寄存器。第%0个输入寄存器使用“i”表示输入立即数，第%1个输入寄存器使用“o”表示使用内存地址并可以加偏移值，第%2个输入寄存器依然使用“o”代码，第%3个寄存器使用“d”表示使用寄存器edx，第%4个寄存器使用“a”表示使用寄存器eax。</p>
+<p>之后再看下汇编语句：依次进行值的传递。</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2020年11月19日 23:38</p>
+        <p>原始链接： <a class="post-url" href="/2020/11/19/%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96/" title="内嵌汇编">https://xiao_feng_yang993.gitee.io/2020/11/19/%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96/</a></p>
+        <footer>
+            <a href="https://xiao_feng_yang993.gitee.io">
+                <img src="/images/logo.jpg" alt="yangxiaofeng">
+                yangxiaofeng
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2020/11/19/%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96/&title=《内嵌汇编》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2020/11/19/%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96/&title=《内嵌汇编》 — yangxiaofeng的博客&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2020/11/19/%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《内嵌汇编》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2020/11/19/%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2020/11/19/%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2020/11/19/%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/编程/" class="color3">编程</a>
+      
+    <a href="/tags/汇编/" class="color3">汇编</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内嵌汇编学习"><span class="post-toc-text">内嵌汇编学习</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#AT-amp-T基础知识"><span class="post-toc-text">AT&amp;T基础知识</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#源-目的操作数顺序"><span class="post-toc-text">源&#x2F;目的操作数顺序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#标识长度的操作码后缀"><span class="post-toc-text">标识长度的操作码后缀</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#GCC内嵌汇编"><span class="post-toc-text">GCC内嵌汇编</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#基本行内汇编"><span class="post-toc-text">基本行内汇编</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#扩展的行内汇编"><span class="post-toc-text">扩展的行内汇编</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#扩展的行内汇编的语法"><span class="post-toc-text">扩展的行内汇编的语法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#汇编语句模块"><span class="post-toc-text">汇编语句模块</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#输出寄存器"><span class="post-toc-text">输出寄存器</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#输入寄存器"><span class="post-toc-text">输入寄存器</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#限定字符串"><span class="post-toc-text">限定字符串</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#例子"><span class="post-toc-text">例子</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2020/10/11/Docker%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E4%B8%80%EF%BC%9ADocker-%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Docker学习笔记 一：Docker 架构及工作原理</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2020 yangxiaofeng<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://xiao_feng_yang993.gitee.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a><a class="category-link" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 12.5px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 15px;">cuda</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/news/" style="font-size: 10px;">news</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 12.5px;">位运算</a> <a href="/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 10px;">排序</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 10px;">汇编</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 17.5px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 15px;">编程</a> <a href="/tags/%E8%B0%83%E8%AF%95/" style="font-size: 10px;">调试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">软件工程</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 12.5px;">链表</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 12.5px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 15px;">cuda</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/news/" style="font-size: 10px;">news</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 10px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 12.5px;">位运算</a> <a href="/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 10px;">排序</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 10px;">汇编</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 17.5px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 15px;">编程</a> <a href="/tags/%E8%B0%83%E8%AF%95/" style="font-size: 10px;">调试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">软件工程</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 12.5px;">链表</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
