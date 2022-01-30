@@ -270,10 +270,13 @@
             gitment.render('comments')
         </script>
     </div> -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
-<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script> -->
+
 <div id="comments">
     <script>
+        import 'gitalk/dist/gitalk.css'
+        import Gitalk from 'gitalk'
         var gitalk = new Gitalk({
             clientID: '1325a5cf45551f1b2247',
             clientSecret: '8063d1eebdb01a60c3f7f8fbe4e86a1cf4db8005',
