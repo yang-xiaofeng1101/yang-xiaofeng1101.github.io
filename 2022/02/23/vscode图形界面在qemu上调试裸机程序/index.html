@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>vscode图形界面在qemu上调试裸机程序 | yangxiaofeng的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="yangxiaofeng,yangxiaofeng's Blog" />
+  
+  <meta name="description" content="1. 准备工作1）从扩展安装ms-vscode.cpptools插件2）配置文件launch.json&amp;emsp;&amp;emsp;从顶层目录打开miniOS项目，编辑debug配置文件launch.json，点击debug，创建launch.json文件，输入以下内容，重点在miDebuggerServerAddress设置为qemu对外暴露的调试端口IP填写qemu虚拟机所在的主机IP。progra">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vscode图形界面在qemu上调试裸机程序">
+<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2022/02/23/vscode%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%9C%A8qemu%E4%B8%8A%E8%B0%83%E8%AF%95%E8%A3%B8%E6%9C%BA%E7%A8%8B%E5%BA%8F/index.html">
+<meta property="og:site_name" content="yangxiaofeng的博客">
+<meta property="og:description" content="1. 准备工作1）从扩展安装ms-vscode.cpptools插件2）配置文件launch.json&amp;emsp;&amp;emsp;从顶层目录打开miniOS项目，编辑debug配置文件launch.json，点击debug，创建launch.json文件，输入以下内容，重点在miDebuggerServerAddress设置为qemu对外暴露的调试端口IP填写qemu虚拟机所在的主机IP。progra">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/02/23/58492d35-8cf4-40bb-9a18-b27941be8ac3.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/02/23/76ca1448-4e7c-40aa-aacc-c782cb1cc299.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/02/23/9fbd17ad-31b4-478c-87ee-3398bddd1447.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/02/23/581d739f-1841-41cb-9ab4-93bc04cc4a43.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/02/23/b811ea13-34e1-45cf-a3d0-2c12f0080b1c.png">
+<meta property="article:published_time" content="2022-02-23T15:14:44.000Z">
+<meta property="article:modified_time" content="2022-02-23T15:15:22.606Z">
+<meta property="article:author" content="yangxiaofeng">
+<meta property="article:tag" content="vscode">
+<meta property="article:tag" content="汇编">
+<meta property="article:tag" content="调试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiao_feng_yang993.gitee.io/images/2022/02/23/58492d35-8cf4-40bb-9a18-b27941be8ac3.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">yangxiaofeng&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.jpg" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        yangxiaofeng&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="yangxiaofeng" target="_blank" href="/">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/yang-xiaofeng1101">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/FKZx1UZnXdTYBP7">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                        <a title="QQ" target="_blank" href="//wpa.qq.com/msgrd?v=3&uin=1649675002&site=qq&menu=yes">
+                            <i class="fa fa-qq fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-vscode图形界面在qemu上调试裸机程序" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      vscode图形界面在qemu上调试裸机程序
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/技术/">技术</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2022-02-23
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h2 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1. 准备工作"></a>1. 准备工作</h2><h4 id="1）从扩展安装ms-vscode-cpptools插件"><a href="#1）从扩展安装ms-vscode-cpptools插件" class="headerlink" title="1）从扩展安装ms-vscode.cpptools插件"></a>1）从扩展安装ms-vscode.cpptools插件</h4><h4 id="2）配置文件launch-json"><a href="#2）配置文件launch-json" class="headerlink" title="2）配置文件launch.json"></a>2）配置文件launch.json</h4><p>&emsp;&emsp;从顶层目录打开miniOS项目，编辑debug配置文件launch.json，点击debug，创建launch.json文件，输入以下内容，重点在miDebuggerServerAddress设置为qemu对外暴露的调试端口IP填写qemu虚拟机所在的主机IP。program填写调试目标文件路径，绝对路径或相对路径都可，workspace表示项目目录，fileDirname表示当前focus所在编辑页面的文件目录。MIMode填写gdb，miDebuggerPath填写gdb程序的路径，如果是ARM程序需要使用ARM版GDB，x86程序使用x86的GDB。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">"version": "0.2.0",</span><br><span class="line">"configurations": [</span><br><span class="line">&#123;</span><br><span class="line">	<span class="attr">"name"</span>: <span class="string">"kernel-debug"</span>,</span><br><span class="line">	<span class="attr">"type"</span>: <span class="string">"cppdbg"</span>,</span><br><span class="line">	<span class="attr">"request"</span>: <span class="string">"launch"</span>,</span><br><span class="line">	<span class="attr">"miDebuggerServerAddress"</span>: <span class="string">"127.0.0.1:1234"</span>,</span><br><span class="line">	<span class="attr">"program"</span>: <span class="string">"$&#123;fileDirname&#125;/kernel.gdb.bin"</span>,</span><br><span class="line">	<span class="attr">"args"</span>: [],</span><br><span class="line">	<span class="attr">"stopAtEntry"</span>: <span class="literal">false</span>,</span><br><span class="line">	<span class="attr">"cwd"</span>: <span class="string">"$&#123;fileDirname&#125;"</span>,</span><br><span class="line">	<span class="attr">"environment"</span>: [],</span><br><span class="line">	<span class="attr">"externalConsole"</span>: <span class="literal">false</span>,</span><br><span class="line">	<span class="attr">"logging"</span>: &#123;</span><br><span class="line">		<span class="attr">"engineLogging"</span>: <span class="literal">false</span></span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="attr">"MIMode"</span>: <span class="string">"gdb"</span>,</span><br><span class="line">	<span class="attr">"miDebuggerPath"</span>: <span class="string">"/usr/bin/gdb"</span>,</span><br><span class="line">&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="2-启动调试"><a href="#2-启动调试" class="headerlink" title="2. 启动调试"></a>2. 启动调试</h2><h4 id="1）首先在命令行界面启动带gdb调试的qemu"><a href="#1）首先在命令行界面启动带gdb调试的qemu" class="headerlink" title="1）首先在命令行界面启动带gdb调试的qemu"></a>1）首先在命令行界面启动带gdb调试的qemu</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-i386 -m 2048 -hda b.img -boot order=a -ctrl-grab -gdb tcp::1234 -S -monitor stdio</span><br></pre></td></tr></table></figure>
+<h4 id="2-在vscode中启动调试"><a href="#2-在vscode中启动调试" class="headerlink" title="2) 在vscode中启动调试"></a>2) 在vscode中启动调试</h4><p>可以看到左侧有调试窗口分别是变量，监视，调用堆栈，断点。</p>
+<p>C语言部分的调试已经很熟悉了，重点说一下汇编的调试.<br>&emsp;&emsp;汇编部分要先设置断点后启动vscode调试程序，这点很重要，否则程序将直接执行到C语言的main函数入口。比如要调试kernel.asm的_start函数，则在断点窗口添加_start断点，注意由于汇编程序不能通过鼠标在源码上设置断点，只能在断点窗口输入断点位置后启动debuger程序，程序将停在_start函数入口处。如下图所示：<br><img src="/images/2022/02/23/58492d35-8cf4-40bb-9a18-b27941be8ac3.png" alt="image.png"><br>&emsp;&emsp;虽然停在_start了，可是编辑器的源码上没有任何光标指示，只能在调试控制台根据提示 用-exec disassemble这样的命令来执行GDB指令。<br>&emsp;&emsp;这样的原因推测是miniOS项目用的是nasm编译器来编译汇编程序，与GDB兼容性低造成的，因为ARM移植工作的miniOS完全采用gcc编译器，就能显示光标在源文件上，如下图所示为使用GCC编译汇编程序的调试效果。<br><img src="/images/2022/02/23/76ca1448-4e7c-40aa-aacc-c782cb1cc299.png" alt="image.png"><br>&emsp;&emsp;虽然x86的汇编上没有光标，但是可以通过反汇编来实现汇编级别的图形化调试，如下所示。可以看到反汇编的指令<br><img src="/images/2022/02/23/9fbd17ad-31b4-478c-87ee-3398bddd1447.png" alt="image.png"><br><img src="/images/2022/02/23/581d739f-1841-41cb-9ab4-93bc04cc4a43.png" alt="image.png"><br>&emsp;&emsp;这样还是有问题，发现有几条反汇编的指令与汇编源码不同，这是因为编译和反汇编采用的编译器不同造成的。但除了前2条指令其他反汇编指令还算正常，所以在通过图形界面设置断点的时候不能设置在错误的反汇编指令上，否则是不能起作用的甚至可能奔溃。可以在调试控制台 -exec b xxx来设置正确的断点。<br>&emsp;&emsp;<strong>总之对于用nasm编译的汇编程序更推荐在调试控制台来调试，反汇编界面只作为参考。</strong><br>&emsp;&emsp;即使要用图形界面调试汇编也要<strong>先用-exec ni在调试控制台将反汇编错误的指令过去</strong>了再用图形界面调试。</p>
+<h4 id="3）错误的反汇编指令例子："><a href="#3）错误的反汇编指令例子：" class="headerlink" title="3）错误的反汇编指令例子："></a>3）错误的反汇编指令例子：</h4><p><img src="/images/2022/02/23/b811ea13-34e1-45cf-a3d0-2c12f0080b1c.png" alt="image.png"><br>&emsp;&emsp;可以看到当前指令的前面2条指令反汇编结果错误，在反汇编无误的时候才能在图形界面设置断点和单步调试。否则vscode会奔溃。</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年02月23日 23:15</p>
+        <p>原始链接： <a class="post-url" href="/2022/02/23/vscode%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%9C%A8qemu%E4%B8%8A%E8%B0%83%E8%AF%95%E8%A3%B8%E6%9C%BA%E7%A8%8B%E5%BA%8F/" title="vscode图形界面在qemu上调试裸机程序">https://xiao_feng_yang993.gitee.io/2022/02/23/vscode%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%9C%A8qemu%E4%B8%8A%E8%B0%83%E8%AF%95%E8%A3%B8%E6%9C%BA%E7%A8%8B%E5%BA%8F/</a></p>
+        <footer>
+            <a href="https://xiao_feng_yang993.gitee.io">
+                <img src="/images/logo.jpg" alt="yangxiaofeng">
+                yangxiaofeng
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2022/02/23/vscode%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%9C%A8qemu%E4%B8%8A%E8%B0%83%E8%AF%95%E8%A3%B8%E6%9C%BA%E7%A8%8B%E5%BA%8F/&title=《vscode图形界面在qemu上调试裸机程序》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2022/02/23/vscode%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%9C%A8qemu%E4%B8%8A%E8%B0%83%E8%AF%95%E8%A3%B8%E6%9C%BA%E7%A8%8B%E5%BA%8F/&title=《vscode图形界面在qemu上调试裸机程序》 — yangxiaofeng的博客&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2022/02/23/vscode%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%9C%A8qemu%E4%B8%8A%E8%B0%83%E8%AF%95%E8%A3%B8%E6%9C%BA%E7%A8%8B%E5%BA%8F/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《vscode图形界面在qemu上调试裸机程序》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2022/02/23/vscode%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%9C%A8qemu%E4%B8%8A%E8%B0%83%E8%AF%95%E8%A3%B8%E6%9C%BA%E7%A8%8B%E5%BA%8F/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2022/02/23/vscode%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%9C%A8qemu%E4%B8%8A%E8%B0%83%E8%AF%95%E8%A3%B8%E6%9C%BA%E7%A8%8B%E5%BA%8F/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2022/02/23/vscode%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%9C%A8qemu%E4%B8%8A%E8%B0%83%E8%AF%95%E8%A3%B8%E6%9C%BA%E7%A8%8B%E5%BA%8F/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/vscode/" class="color2">vscode</a>
+      
+    <a href="/tags/汇编/" class="color3">汇编</a>
+      
+    <a href="/tags/调试/" class="color3">调试</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-准备工作"><span class="post-toc-text">1. 准备工作</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1）从扩展安装ms-vscode-cpptools插件"><span class="post-toc-text">1）从扩展安装ms-vscode.cpptools插件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2）配置文件launch-json"><span class="post-toc-text">2）配置文件launch.json</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-启动调试"><span class="post-toc-text">2. 启动调试</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1）首先在命令行界面启动带gdb调试的qemu"><span class="post-toc-text">1）首先在命令行界面启动带gdb调试的qemu</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-在vscode中启动调试"><span class="post-toc-text">2) 在vscode中启动调试</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3）错误的反汇编指令例子："><span class="post-toc-text">3）错误的反汇编指令例子：</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2020/11/19/%E5%86%85%E5%B5%8C%E6%B1%87%E7%BC%96/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">内嵌汇编</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+    <!-- <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <div id="comments">
+        <script>
+            var gitment = new Gitment({
+                owner: 'yang-xiaofeng1101',
+                repo: 'yang-xiaofeng1101.github.io',
+                oauth: {
+                    client_id: '1325a5cf45551f1b2247',
+                    client_secret: '8063d1eebdb01a60c3f7f8fbe4e86a1cf4db8005',
+                },
+            })
+            gitment.render('comments')
+        </script>
+    </div> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<div id="comments">
+    <script>
+        var gitalk = new Gitalk({
+            clientID: '1325a5cf45551f1b2247',
+            clientSecret: '8063d1eebdb01a60c3f7f8fbe4e86a1cf4db8005',
+            repo: 'yang-xiaofeng1101.github.io',      // The repository of store comments,
+            owner: 'yang-xiaofeng1101',
+            admin: ['yang-xiaofeng1101'],
+            id: decodeURI(location.pathname),      // Ensure uniqueness and length less than 50
+            distractionFreeMode: false  // Facebook-like distraction free mode
+        })
+        gitalk.render('comments')
+    </script>
+</div>
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 yangxiaofeng<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://xiao_feng_yang993.gitee.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 12.5px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 15px;">cuda</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 12.5px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 12.5px;">位运算</a> <a href="/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 10px;">排序</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 12.5px;">汇编</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 17.5px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 15px;">编程</a> <a href="/tags/%E8%B0%83%E8%AF%95/" style="font-size: 12.5px;">调试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">软件工程</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 12.5px;">链表</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 12.5px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 15px;">cuda</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 12.5px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 12.5px;">位运算</a> <a href="/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 10px;">排序</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 12.5px;">汇编</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 17.5px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 15px;">编程</a> <a href="/tags/%E8%B0%83%E8%AF%95/" style="font-size: 12.5px;">调试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">软件工程</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 12.5px;">链表</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
