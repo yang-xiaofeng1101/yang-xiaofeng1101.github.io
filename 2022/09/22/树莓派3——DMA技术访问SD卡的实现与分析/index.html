@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>树莓派3——DMA技术访问SD卡的实现与分析 | yangxiaofeng的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="yangxiaofeng,yangxiaofeng's Blog" />
+  
+  <meta name="description" content="概述在SD卡读写和framebuffer拷贝功能上用DMA实现  添加了dma.c和dma.h源码文件，定义了dma接口和实现 在sd.c的sd_readblock和sd_writeblock函数中添加了DMA相关函数调用实现数据传输。  树莓派dma简介概述BCM2835 中的大多数硬件流水线和外设都是总线主控器，使它们能够有效地满足自己的数据需求。这降低了 DMA 控制器对块到块内存传输的要求">
+<meta property="og:type" content="article">
+<meta property="og:title" content="树莓派3——DMA技术访问SD卡的实现与分析">
+<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="yangxiaofeng的博客">
+<meta property="og:description" content="概述在SD卡读写和framebuffer拷贝功能上用DMA实现  添加了dma.c和dma.h源码文件，定义了dma接口和实现 在sd.c的sd_readblock和sd_writeblock函数中添加了DMA相关函数调用实现数据传输。  树莓派dma简介概述BCM2835 中的大多数硬件流水线和外设都是总线主控器，使它们能够有效地满足自己的数据需求。这降低了 DMA 控制器对块到块内存传输的要求">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/487ebf58-0eda-4227-be89-b38eb369c2dd.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/afc3249f-6b5f-4e6f-9a05-8930fc71ed54.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/a01c7fe3-8ec9-42f2-9bb2-bf0ec0efa07d.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/ac883c12-0844-45b4-9792-6f4a84961fef.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/09abbb74-62bc-47c6-aa66-eb952b753024.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/263baaaa-df9b-4ec3-b355-78e259fdfb69.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/86e6187d-093a-42b7-8fd1-3d79b129fab0.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/b52cc65e-026c-445f-8fa3-9327f52800eb.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/86d9dfc8-a105-440b-aefb-d4cc87972a62.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/5d989131-76ab-40a6-a491-a76b49666feb.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/ee7d6357-c40d-42de-bc76-232ab0e93b4a.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/0b18786f-77eb-4539-bba9-aa9d7b5d8090.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/592ff41c-5a9b-4450-81ce-c0b3b8a5af94.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/1f03220b-5c01-4efa-a5d8-1f89bc6bff92.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/6b006e66-caa5-4a27-a46a-a930f5da7b27.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/f2a3e806-f325-4f31-99a2-aaa59aec01e3.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/c2d8d73a-edcf-440a-99e4-aad6a437266f.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/44d808de-f0b9-4178-8250-618f55eb4d3e.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/1cb34ab5-7f94-4e02-b56b-3df92a53c8b8.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/810897ea-1c07-4583-8b20-8c22486955fb.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/f56ecf78-82d1-4183-bfbb-9d15b98d8e8a.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/f877e688-cb4c-45d3-af3e-dc624e2319ee.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/521088d1-47f6-4c07-9a2f-af502e1c9ea7.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/b513464a-719d-43e6-948e-0124418a4ebf.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/762d7004-c38a-4a09-855d-d59e10190efd.png">
+<meta property="article:published_time" content="2022-09-22T12:44:32.000Z">
+<meta property="article:modified_time" content="2022-09-22T12:44:32.417Z">
+<meta property="article:author" content="yangxiaofeng">
+<meta property="article:tag" content="编程">
+<meta property="article:tag" content="EMMC">
+<meta property="article:tag" content="树莓派">
+<meta property="article:tag" content="DMA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/487ebf58-0eda-4227-be89-b38eb369c2dd.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">yangxiaofeng&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.jpg" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        yangxiaofeng&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="yangxiaofeng" target="_blank" href="/">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/yang-xiaofeng1101">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/FKZx1UZnXdTYBP7">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                        <a title="QQ" target="_blank" href="//wpa.qq.com/msgrd?v=3&uin=1649675002&site=qq&menu=yes">
+                            <i class="fa fa-qq fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-树莓派3——DMA技术访问SD卡的实现与分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      树莓派3——DMA技术访问SD卡的实现与分析
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/技术/">技术</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2022-09-22
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>在SD卡读写和framebuffer拷贝功能上用DMA实现</p>
+<ol>
+<li>添加了dma.c和dma.h源码文件，定义了dma接口和实现</li>
+<li>在sd.c的sd_readblock和sd_writeblock函数中添加了DMA相关函数调用实现数据传输。</li>
+</ol>
+<h1 id="树莓派dma简介"><a href="#树莓派dma简介" class="headerlink" title="树莓派dma简介"></a>树莓派dma简介</h1><h2 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h2><p>BCM2835 中的大多数硬件流水线和外设都是总线主控器，使它们能够有效地满足自己的数据需求。这降低了 DMA 控制器对块到块内存传输的要求，并支持一些更简单的外设。此外，DMA 控制器提供只读预取模式，以允许将数据带入 L2 高速缓存以供以后使用。</p>
+<p>注意 DMA 控制器直接连接到外围设备。因此，DMA控制器必须设置为使用外设的物理（硬件）地址。</p>
+<p>BCM2835 DMA 控制器总共提供 16 个 DMA 通道。每个通道独立于其他通道运行，并在内部仲裁到 3 条系统总线之一。这意味着 DMA 通道可能消耗的带宽量可以通过仲裁器设置来控制。</p>
+<p>每个 DMA 通道通过将控制块 (control block) 数据结构从内存加载到内部寄存器来运行。控制块定义所需的 DMA 操作。一旦当前控制块中描述的操作完成，每个控制块都可以指向另一个要加载和执行的控制块。以这种方式，可以构建控制块的链接列表，以便在没有软件干预的情况下执行一系列 DMA 操作。</p>
+<p>外设到 DMA 通道的分配是可编程的。<br>DMA 可以处理字节对齐的传输，并通过缓冲和打包未对齐的访问来最小化总线流量。<br>每个 DMA 通道都可以通过顶级电源寄存器完全禁用以节省功耗。</p>
+<h2 id="DMA-控制器寄存器"><a href="#DMA-控制器寄存器" class="headerlink" title="DMA 控制器寄存器"></a>DMA 控制器寄存器</h2><p>DMA 控制器由几个相同的 DMA 通道组成，具体取决于所需的配置。每个单独的 DMA 通道都有一个相同的寄存器映射（尽管 LITE 通道的功能较少，因此寄存器较少）。<br>DMA 通道 0 位于地址 0x7E007000，通道 1 位于 0x7E007100，通道 2 位于 0x7E007200，依此类推。<br>因此相邻的 DMA 通道偏移 0x100。然而，DMA 通道 15 在物理上从其他 DMA 通道中移除，因此具有不同的地址基址 0x7EE05000。<br><img src="/images/2022/09/22/487ebf58-0eda-4227-be89-b38eb369c2dd.png" alt="image.png"></p>
+<h3 id="DMA-通道寄存器地址映射"><a href="#DMA-通道寄存器地址映射" class="headerlink" title="DMA 通道寄存器地址映射"></a>DMA 通道寄存器地址映射</h3><p>每个 DMA 通道都有一个相同的寄存器映射，只是每个通道的基地址不同。地址映射顶部有一个全局启用寄存器，可以禁用每个 DMA 以实现节能。每个通道寄存器集中只有三个寄存器是可直接写的（CS、CONBLK_AD 和 DEBUG）。其他寄存器（TI、SOURCE_AD、DEST_AD、TXFR_LEN、STRIDE 和 NEXTCONBK）从外部存储器中保存的控制块数据结构自动加载。</p>
+<h3 id="控制块数据结构"><a href="#控制块数据结构" class="headerlink" title="控制块数据结构"></a>控制块数据结构</h3><p>控制块 (CB) 的长度为 8 个字（256 位），并且必须从 256 位对齐的地址开始。<br>CB 数据结构在内存中的格式如下图所示。<br>在 DMA 传输开始时，控制块的每个 32 位字会自动加载到相应的 32 位 DMA 控制块寄存器中。这些寄存器的描述也定义了内存中CB数据结构中对应的位位置。</p>
+<p><img src="/images/2022/09/22/afc3249f-6b5f-4e6f-9a05-8930fc71ed54.png" alt="image.png"><br>&emsp;&emsp;通过将 CB 结构的地址写入 CONBLK_AD 寄存器然后设置 ACTIVE 位来启动 DMA。 DMA 将从该 reg 的 SCB_ADDR 字段中设置的地址获取 CB，并将其加载到下面描述的只读寄存器中。然后它将根据 CB 中的信息开始 DMA 传输。<br>&emsp;&emsp;当它完成当前的 DMA 传输（长度 =&gt; 0）时，DMA 将使用 NEXTCONBK 寄存器的内容更新 CONBLK_AD 寄存器，从该地址获取一个新的 CB，并再次开始整个过程。<br>&emsp;&emsp;当 DMA 完成 DMA 传输并且 NEXTCONBK 寄存器设置为 0x0000_0000 时，DMA 将停止（并清除 ACTIVE 位）。它将将此值加载到 CONBLK_AD reg 中，然后停止。<br>&emsp;&emsp;大多数控制块寄存器不能直接写入，因为它们是从内存中自动加载的。可以读取它们以提供状态信息，并指示当前 DMA 传输的进度。加载到 NEXTCONBK 寄存器中的值可以被覆盖，以便控制块数据结构的链表可以动态更改。然而，只有在 DMA 暂停时才可以安全地执行此操作。</p>
+<h3 id="Register-Map"><a href="#Register-Map" class="headerlink" title="Register Map"></a>Register Map</h3><p>dma寄存器映射到内存上的地址详情见下表：<br>每个channel有一组寄存器，每个通道的寄存器占0x100的内存，channel 0寄存器相对于0x7E007000的偏移是0，channel 1的寄存器相对0x7E007000的偏移是0x100，依次递增<br><img src="/images/2022/09/22/a01c7fe3-8ec9-42f2-9bb2-bf0ec0efa07d.png" alt="image.png"></p>
+<p>CS寄存器<br>DMA 控制和状态寄存器包含该 DMA 通道的主要控制和状态位。<br><img src="/images/2022/09/22/ac883c12-0844-45b4-9792-6f4a84961fef.png" alt="image.png"><br>最高位是RESET位，设置为1时初始化DMA<br><img src="/images/2022/09/22/09abbb74-62bc-47c6-aa66-eb952b753024.png" alt="image.png"><br>第3位是Data request位，<br>指示所选 DREQ（数据请求）信号的状态，即。由传输信息的 PERMAP 字段选择的 DREQ。 1 = 请求数据。这仅在 DMA 启动并且 PERMAP 字段已从 CB 加载后才有效。它将保持有效，指示选定的 DREQ 信号，直到加载新的 CB。如果 PERMAP 设置为零（无节奏传输），则该位将读回为 1。 0 = 无数据请求。<br><img src="/images/2022/09/22/263baaaa-df9b-4ec3-b355-78e259fdfb69.png" alt="image.png"><br><img src="/images/2022/09/22/86e6187d-093a-42b7-8fd1-3d79b129fab0.png" alt="image.png"><br>第0，1，2位分别是传输启动位和当前control block传输结束位，active位还表示所有的control _block传输结束</p>
+<p>TI寄存器<br>保存了DMA 传输信息<br><img src="/images/2022/09/22/b52cc65e-026c-445f-8fa3-9327f52800eb.png" alt="image.png"><br>PERMAP表示外设编号 (1-31)，其就绪信号将用于控制传输速率，其紧急信号将在 DMA AXI 总线上输出。设置为 0 表示连续的无节奏传输。</p>
+<p><img src="/images/2022/09/22/86d9dfc8-a105-440b-aefb-d4cc87972a62.png" alt="image.png"><br>这三个SRC开头的位，表示了对源数据的设置，SRC_INC表示源地址是否增长，如果为1， 则每次增长，否则不变。</p>
+<p>SRC_WITDH表示源数据传输时地址宽度，如果是0则每次32bit，否则128bit</p>
+<p>SRC_DREQ<br>如果该位是1，PER_MAP 选择的 DREQ 将选通源读取<br>否则DREQ位没有影响</p>
+<p><img src="/images/2022/09/22/5d989131-76ab-40a6-a491-a76b49666feb.png" alt="image.png"><br>DEST开头的三个位，与SRC含义相同，只是作用于目标数据而已</p>
+<p><img src="/images/2022/09/22/ee7d6357-c40d-42de-bc76-232ab0e93b4a.png" alt="image.png"><br>INTEN表示INT enable，用于允许CS 寄存器的INT位变化</p>
+<p>TXFR寄存器<br>DMA 传输长度。这指定要传输的数据量（以字节为单位）。在正常（非 2D）模式下，这指定了要传输的字节数。在 2D 模式下，它被解释为 X 和 Y 长度，并且 DMA 将执行 Y 传输，每个长度为 X 字节，并在传输的每个 X 支路之后将跨度添加到地址上。随着传输的进行，DMA 引擎会更新长度寄存器，因此它将指示剩余要传输的数据。<br><img src="/images/2022/09/22/0b18786f-77eb-4539-bba9-aa9d7b5d8090.png" alt="image.png"></p>
+<p>ENABLE寄存器<br>每个通道的全局使能位，每个比特表示第几个dma channel被允许<br><img src="/images/2022/09/22/592ff41c-5a9b-4450-81ce-c0b3b8a5af94.png" alt="image.png"></p>
+<p>外设到 DREQ 的映射如下<br><img src="/images/2022/09/22/1f03220b-5c01-4efa-a5d8-1f89bc6bff92.png" alt="image.png">)<img src="/images/2022/09/22/6b006e66-caa5-4a27-a46a-a930f5da7b27.png" alt="image.png"></p>
+<p>这里是TI寄存器的PERMAP位可选的值，对应SD卡的读写，选择11号外设，也就是EMMC，因为在sd.c中用的是EMMC协议完成的与sd交互</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="dma-h"><a href="#dma-h" class="headerlink" title="dma.h"></a>dma.h</h2><h3 id="peripherals-dma-h"><a href="#peripherals-dma-h" class="headerlink" title="peripherals/dma.h"></a>peripherals/dma.h</h3><p>定义control _block数据结构</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> transfer_info;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> src_addr;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> dest_addr;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> transfer_length;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> mode_2d_stride;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> next_block_addr;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> res[<span class="number">2</span>];</span><br><span class="line">&#125; dma_control_block;</span><br></pre></td></tr></table></figure>
+
+<p>定义dma通道寄存器组对应的数据结构</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> control;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> control_block_addr;</span><br><span class="line">    dma_control_block block;</span><br><span class="line">&#125; dma_channel_regs;</span><br></pre></td></tr></table></figure>
+
+<p>DMA通道寄存器组偏移计算，每个通道的寄存器占0x100字节宽度<br><img src="/images/2022/09/22/f2a3e806-f325-4f31-99a2-aaa59aec01e3.png" alt="image.png"><br>其中KERNEL_MMIO_BASE被定义为</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> KERNEL_MMIO_BASE 0xFFFFFFFFFF000000</span></span><br></pre></td></tr></table></figure>
+<p>物理地址0x3F000000被映射到线性地址的0xffffffffff000000地址处<br><img src="/images/2022/09/22/c2d8d73a-edcf-440a-99e4-aad6a437266f.png" alt="image.png"></p>
+<p>enable寄存器和status寄存器的宏定义<br><img src="/images/2022/09/22/44d808de-f0b9-4178-8250-618f55eb4d3e.png" alt="image.png"><br><img src="/images/2022/09/22/1cb34ab5-7f94-4e02-b56b-3df92a53c8b8.png" alt="image.png"></p>
+<h3 id="dma-h-1"><a href="#dma-h-1" class="headerlink" title="dma.h"></a>dma.h</h3><p>在dma.h中定义了dma通道结构体，和channel类型。<br>dma_channel的channel成员表示通道序号，从0~14.<br>block成员是个指向dma_control_block结构体的指针<br>status成员是当前通道最近一次数据传输的状态</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"peripherals/dma.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IO_TO_BUS(x)     (void*)((unsigned int)(x) &amp; 0x00ffffff | 0x7e000000)</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> channel;</span><br><span class="line">    dma_control_block *block;</span><br><span class="line">    <span class="keyword">int</span> status;</span><br><span class="line">&#125; dma_channel;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> &#123;</span><br><span class="line">    CT_NONE = <span class="number">-1</span>,</span><br><span class="line">    CT_NORMAL = <span class="number">0x81</span></span><br><span class="line">&#125; dma_channel_type;</span><br></pre></td></tr></table></figure>
+
+<p>暴露的dma功能函数接口，打开一个channel，关闭一个channel，dma实现内存拷贝，dma传输启动, dma等待</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">dma_channel *<span class="title">dma_open_channel</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> channel)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dma_close_channel</span><span class="params">(dma_channel *channel)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dma_setup_mem_copy</span><span class="params">(dma_channel *channel, <span class="keyword">void</span> *dest, <span class="keyword">void</span> *src, <span class="keyword">unsigned</span> <span class="keyword">int</span> length, <span class="keyword">unsigned</span> <span class="keyword">int</span> burst_length)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dma_start</span><span class="params">(dma_channel *channel)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dma_wait</span><span class="params">(dma_channel *channel)</span></span>;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="dma-c"><a href="#dma-c" class="headerlink" title="dma.c"></a>dma.c</h2><p>定义控制块变量，分别用于framebuffer和sd卡读写；定义通道数组<br><img src="/images/2022/09/22/810897ea-1c07-4583-8b20-8c22486955fb.png" alt="image.png"></p>
+<p>dma_open_channel函数，从dma_channel结构体数组选出参数channel对应的channel，并让结构体的block指针指向对应的控制块变量。sd卡用0号channel，framebuffer使用2号channel。<br>通过REGS_DMA_ENABLE 指向的enable寄存器的值的变化，使能对应的dma_channel设备。<br>通过REGS_DMA(dma-&gt;channel)-&gt;control 指向的CS寄存器让对应的dma channel完成重置。<br>语句REGS_DMA(dma-&gt;channel)-&gt;control &amp; CS_RESET 检查CS寄存器的RESET位，直至不为1表示reset过程完成。<br>返回对应的dma_channel结构体指针。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">dma_channel *<span class="title">dma_open_channel</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> channel)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> _channel = allocate_channel(channel);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (_channel == CT_NONE)</span><br><span class="line">    &#123;</span><br><span class="line">        lfb_color_printf(<span class="number">0x0000ff</span>, <span class="string">"INVALID CHANNEL! %d\n"</span>, channel);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    dma_channel *dma = (dma_channel *)&amp;channels[_channel];</span><br><span class="line">    dma-&gt;channel = _channel;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(channel == <span class="number">0</span>)</span><br><span class="line">        dma-&gt;block = &amp;sd_control_block;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(channel == <span class="number">2</span>)</span><br><span class="line">        dma-&gt;block = &amp;lfb_control_block;</span><br><span class="line">    dma-&gt;block-&gt;res[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">    dma-&gt;block-&gt;res[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    REGS_DMA_ENABLE |= (<span class="number">1</span> &lt;&lt; dma-&gt;channel);</span><br><span class="line">    <span class="built_in">delay</span>(<span class="number">300</span>);</span><br><span class="line">    REGS_DMA(dma-&gt;channel)-&gt;control |= CS_RESET;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (REGS_DMA(dma-&gt;channel)-&gt;control &amp; CS_RESET)</span><br><span class="line">        ;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> dma;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>dma_start启动dma数据传输，首先设置控制块的地址，需要将线性地址转换为物理地址。<br>使用ACTIVE位启动数据传输，END让当前控制块的dma传输结束时中断，INT允许中断，<br><img src="/images/2022/09/22/f56ecf78-82d1-4183-bfbb-9d15b98d8e8a.png" alt="image.png"></p>
+<p>dma_wait函数，判断当前dma通道的CS寄存器的active位是否为1，当所有的控制块表示的dma传输完成时，CS寄存器的active位变为0<br>读取CS寄存器的error位，作为本地dma传输的status状态返回<br><img src="/images/2022/09/22/f877e688-cb4c-45d3-af3e-dc624e2319ee.png" alt="image.png"></p>
+<p>dma_setup_mem_copy的实现在dma.c中<br><img src="/images/2022/09/22/521088d1-47f6-4c07-9a2f-af502e1c9ea7.png" alt="image.png"><br>这里与sd卡读写的dma设置有所不同，其源地址和目的地址在数据传输过程中都是要递增的，所以要给transfer_info设置TI_SRC_WIDTH，TI_SRC_INC，TI_DEST_WITDH，TI_DEST_INC属性</p>
+<hr>
+<h2 id="sd-c"><a href="#sd-c" class="headerlink" title="sd.c"></a>sd.c</h2><p>在sd_init函数的最后使用dma_open_channel打开0号通道，完成初始化。<br><img src="/images/2022/09/22/b513464a-719d-43e6-948e-0124418a4ebf.png" alt="image.png"></p>
+<p>在sd_readblock函数中发送读取命令后，如果不使用DMA，那么就用循环的方法从EMMC_DATA处读取数据到buf中。<br>如果使用DMA的话，设置DMA的源地址和目的地址，使用TI_SRC_DREQ表示从外围设备获取数据，TI_DEST_INC, TI_DEST_WITDH表示目的地址递增，TI_PERMAP_EMMC表示外围设备类型是EMMC。<br>完成控制块的构造后，调用dma_start启动dma数据传输，调用dma_wait等待dma数据传输完成。<br>如果不用dma，则需要判断emmc的命令是否执行完成</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>( c &lt; num ) &#123;</span><br><span class="line">        <span class="keyword">if</span>(!(sd_scr[<span class="number">0</span>] &amp; SCR_SUPP_CCS)) &#123;</span><br><span class="line">            sd_cmd(CMD_READ_SINGLE,(lba+c)*<span class="number">512</span>);</span><br><span class="line">            <span class="keyword">if</span>(sd_err) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!use_dma)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> ((r = sd_int(INT_READ_RDY)))</span><br><span class="line">            &#123;</span><br><span class="line">                uart_puts(<span class="string">"\rERROR: Timeout waiting for ready to read\n"</span>);</span><br><span class="line">                sd_err = r;</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span> (d = <span class="number">0</span>; d &lt; <span class="number">128</span>; d++)</span><br><span class="line">                buf[d] = *EMMC_DATA;</span><br><span class="line">            buf += <span class="number">128</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        c++; </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(use_dma)</span><br><span class="line">    &#123;</span><br><span class="line">        dma_sd_channel-&gt;block-&gt;src_addr = IO_TO_BUS(EMMC_DATA);</span><br><span class="line">        dma_sd_channel-&gt;block-&gt;dest_addr = K_LIN2PHY(buf);</span><br><span class="line">        dma_sd_channel-&gt;block-&gt;transfer_info = TI_INTEN |</span><br><span class="line">                                                TI_WAIT_RESP |</span><br><span class="line">                                                TI_DEST_INC |</span><br><span class="line">                                                TI_DEST_WIDTH |</span><br><span class="line">                                                TI_SRC_DREQ |</span><br><span class="line">                                                TI_PERMAP_EMMC;</span><br><span class="line">        dma_sd_channel-&gt;block-&gt;next_block_addr = <span class="number">0</span>;</span><br><span class="line">        dma_sd_channel-&gt;block-&gt;transfer_length = num*<span class="number">512</span>;</span><br><span class="line">        dma_sd_channel-&gt;block-&gt;mode_2d_stride = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        dma_start(dma_sd_channel);</span><br><span class="line">        <span class="keyword">if</span>(dma_wait(dma_sd_channel) == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            uart_puts(<span class="string">"ERROR in dma read\n"</span>);</span><br><span class="line">            <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">/* code */</span></span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!use_dma)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> ((r = sd_int(INT_DATA_DONE)))</span><br><span class="line">        &#123;</span><br><span class="line">            uart_puts(<span class="string">"\rERROR: Timeout waiting for data done\n"</span>);</span><br><span class="line">            sd_err = r;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于sd_writeblock函数，只需要将目的地址和源地址交换，在transfer_info中设置TI_DEST_DREQ，TI_SRC_INC,TI_SRC_WITDH, TI_PERMAP_EMMC表示是从内存到外设。<br><img src="/images/2022/09/22/762d7004-c38a-4a09-855d-d59e10190efd.png" alt="image.png"></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年09月22日 20:44</p>
+        <p>原始链接： <a class="post-url" href="/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" title="树莓派3——DMA技术访问SD卡的实现与分析">https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/</a></p>
+        <footer>
+            <a href="https://xiao_feng_yang993.gitee.io">
+                <img src="/images/logo.jpg" alt="yangxiaofeng">
+                yangxiaofeng
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/&title=《树莓派3——DMA技术访问SD卡的实现与分析》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/&title=《树莓派3——DMA技术访问SD卡的实现与分析》 — yangxiaofeng的博客&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《树莓派3——DMA技术访问SD卡的实现与分析》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/编程/" class="color3">编程</a>
+      
+    <a href="/tags/EMMC/" class="color5">EMMC</a>
+      
+    <a href="/tags/树莓派/" class="color4">树莓派</a>
+      
+    <a href="/tags/DMA/" class="color4">DMA</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#概述"><span class="post-toc-text">概述</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#树莓派dma简介"><span class="post-toc-text">树莓派dma简介</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#概述-1"><span class="post-toc-text">概述</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#DMA-控制器寄存器"><span class="post-toc-text">DMA 控制器寄存器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#DMA-通道寄存器地址映射"><span class="post-toc-text">DMA 通道寄存器地址映射</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#控制块数据结构"><span class="post-toc-text">控制块数据结构</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Register-Map"><span class="post-toc-text">Register Map</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#实现"><span class="post-toc-text">实现</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#dma-h"><span class="post-toc-text">dma.h</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#peripherals-dma-h"><span class="post-toc-text">peripherals&#x2F;dma.h</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#dma-h-1"><span class="post-toc-text">dma.h</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#dma-c"><span class="post-toc-text">dma.c</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#sd-c"><span class="post-toc-text">sd.c</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2022/05/24/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94EMMC%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">树莓派3——EMMC访问SD卡的实现与分析</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+    <!-- <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <div id="comments">
+        <script>
+            var gitment = new Gitment({
+                owner: 'yang-xiaofeng1101',
+                repo: 'yang-xiaofeng1101.github.io',
+                oauth: {
+                    client_id: 'e460a9c0f66b72f89833',
+                    client_secret: '4d3e6140015e2f8b97a7158b70ab99d320256e57',
+                },
+            })
+            gitment.render('comments')
+        </script>
+    </div> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<div id="comments">
+    <script>
+        var gitalk = new Gitalk({
+            clientID: 'e460a9c0f66b72f89833',
+            clientSecret: '4d3e6140015e2f8b97a7158b70ab99d320256e57',
+            repo: 'yang-xiaofeng1101.github.io',      // The repository of store comments,
+            owner: 'yang-xiaofeng1101',
+            admin: ['yang-xiaofeng1101'],
+            id: decodeURI(location.pathname),      // Ensure uniqueness and length less than 50
+            distractionFreeMode: false  // Facebook-like distraction free mode
+        })
+        gitalk.render('comments')
+    </script>
+</div>
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 yangxiaofeng<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://xiao_feng_yang993.gitee.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 12px;">C++</a> <a href="/tags/DMA/" style="font-size: 10px;">DMA</a> <a href="/tags/Dart/" style="font-size: 12px;">Dart</a> <a href="/tags/EMMC/" style="font-size: 12px;">EMMC</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 14px;">cuda</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 12px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 12px;">位运算</a> <a href="/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 10px;">排序</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 12px;">树莓派</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 12px;">汇编</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 16px;">编程</a> <a href="/tags/%E8%B0%83%E8%AF%95/" style="font-size: 12px;">调试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">软件工程</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 12px;">链表</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 12px;">C++</a> <a href="/tags/DMA/" style="font-size: 10px;">DMA</a> <a href="/tags/Dart/" style="font-size: 12px;">Dart</a> <a href="/tags/EMMC/" style="font-size: 12px;">EMMC</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 14px;">cuda</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 12px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 12px;">位运算</a> <a href="/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 10px;">排序</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 12px;">树莓派</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 12px;">汇编</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 16px;">编程</a> <a href="/tags/%E8%B0%83%E8%AF%95/" style="font-size: 12px;">调试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">软件工程</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 12px;">链表</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
