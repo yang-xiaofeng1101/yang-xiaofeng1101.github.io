@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="yangxiaofeng的博客">
 <meta property="og:description" content="a+b位运算核心思想a^b(不进位加法)。(a&amp;b)&lt;&lt;1(用于表示进位的位置)。 具体步骤将上面2结果再次进行按位异或^运算，再求新的异或加法的进位表示，直到没有进位产生也就是(a&amp;b)&lt;&lt;1&#x3D;&#x3D;0时a^b的结果即为a+b的最终结果 源码实现123456789101112131415161718192021class Solution &amp;#123;publ">
 <meta property="article:published_time" content="2020-06-15T03:21:12.000Z">
-<meta property="article:modified_time" content="2020-06-15T07:41:48.492Z">
+<meta property="article:modified_time" content="2022-09-29T11:37:32.407Z">
 <meta property="article:author" content="yangxiaofeng">
 <meta property="article:tag" content="位运算">
 <meta property="article:tag" content="算法">
@@ -88,7 +88,7 @@
                 <div id="header-description">
                     
                     <h3>
-                        开发的技术博客
+                        技术博客
                     </h3>
                     
                 </div>
@@ -155,7 +155,7 @@
 <h4 id="源码实现"><a href="#源码实现" class="headerlink" title="源码实现"></a>源码实现</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * @param a: An integer</span></span><br><span class="line"><span class="comment">     * @param b: An integer</span></span><br><span class="line"><span class="comment">     * @return: The sum of a and b </span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">aplusb</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> c= a^b;</span><br><span class="line">        <span class="keyword">int</span> d = (a&amp;b)&lt;&lt;<span class="number">1</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span>(d!=<span class="number">0</span>)&#123;</span><br><span class="line">            a=c;</span><br><span class="line">            b=d;</span><br><span class="line">            c=a^b;</span><br><span class="line">            d=(a&amp;b)&lt;&lt;<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2020年06月15日 15:41</p>
+        <p>最后更新： 2022年09月29日 19:37</p>
         <p>原始链接： <a class="post-url" href="/2020/06/15/a-b%E4%BD%8D%E8%BF%90%E7%AE%97/" title="a+b位运算">https://xiao_feng_yang993.gitee.io/2020/06/15/a-b%E4%BD%8D%E8%BF%90%E7%AE%97/</a></p>
         <footer>
             <a href="https://xiao_feng_yang993.gitee.io">
