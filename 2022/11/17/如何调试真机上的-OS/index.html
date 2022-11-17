@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何调试真机上的 OS | yangxiaofeng的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="yangxiaofeng,yangxiaofeng's Blog" />
+  
+  <meta name="description" content="1 技术背景1.1 stub 初探GDB作为 GNU 项目一款知名的调试工具大家应该都不陌生，我们可以通过其很方便地对本地代码进行调试。当我们在本地调试不便的时候，也可以选择在目标机上启动gdbserver，在调试机上运行 GDB 并通过 IP 地址和端口号连接到目标机，从而实现远程调试。 但是 gdbserver 存在其本身的限制：它所需要的操作系统环境基本上与 GDB 所需要的环境是一致的。换">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何调试真机上的 OS">
+<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/index.html">
+<meta property="og:site_name" content="yangxiaofeng的博客">
+<meta property="og:description" content="1 技术背景1.1 stub 初探GDB作为 GNU 项目一款知名的调试工具大家应该都不陌生，我们可以通过其很方便地对本地代码进行调试。当我们在本地调试不便的时候，也可以选择在目标机上启动gdbserver，在调试机上运行 GDB 并通过 IP 地址和端口号连接到目标机，从而实现远程调试。 但是 gdbserver 存在其本身的限制：它所需要的操作系统环境基本上与 GDB 所需要的环境是一致的。换">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/8fac0d3ca4fc97ddcdd0d9ab50dac2c5.jpeg">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/36428c71e225aabfeb4baeef69f60ce0.jpeg">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/0293065afa7eb9f30301c180b6847a61.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/5a0dc24d57c843e0482165f919a7cd35.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/f27ffcdaeb79ddcd00070bed7bb601c5.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/ca50985d71c14dd84307ce7bf112169a.jpeg">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/4b254bbb7a81fb68a06c32c93596a0d7.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/5d55e596625f4e2a53c876617c639e15.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/2127537daff879fd483285e4db6a83aa.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/8d033614ddc559cff01dc3e6392928ae.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/0a4973a60bea93ff4bf48b91ec9a1a65.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/7e6803d9555c354e4cebca7dfeaff3d1.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/e060f0afe40d0238a3dd4a3a0da73d2d.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/916982f53c4d1d3b0bb1ac0c881575a2.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/dde6d8c2d57f32f212b0a668eb78ed58.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/843258dbf6fd0e25d895f59b42f78d84.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/6dcbe1b3c43992021654c989b4a084ea.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/def62c1ceb370d5c1a2bde92e0292900.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/f87177366b25bc23e18f8c85827daf65.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/8aed8387d6dc8284ee354e7937d05969.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/e12ce147ba24ec924aac51ad87edd5d4.jpeg">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/beffb09fc2c22dfd75cc55de3c49c7ad.png">
+<meta property="article:published_time" content="2022-11-17T07:50:39.000Z">
+<meta property="article:modified_time" content="2022-11-17T08:01:13.774Z">
+<meta property="article:author" content="yangxiaofeng">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="调试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/8fac0d3ca4fc97ddcdd0d9ab50dac2c5.jpeg">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">yangxiaofeng&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.jpg" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        yangxiaofeng&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="yangxiaofeng" target="_blank" href="/">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/yang-xiaofeng1101">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/FKZx1UZnXdTYBP7">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                        <a title="QQ" target="_blank" href="//wpa.qq.com/msgrd?v=3&uin=1649675002&site=qq&menu=yes">
+                            <i class="fa fa-qq fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-如何调试真机上的-OS" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      如何调试真机上的 OS
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/技术/">技术</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2022-11-17
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="1-技术背景"><a href="#1-技术背景" class="headerlink" title="1 技术背景"></a>1 技术背景</h1><h2 id="1-1-stub-初探"><a href="#1-1-stub-初探" class="headerlink" title="1.1 stub 初探"></a>1.1 stub 初探</h2><p><a href="https://wiki.osdev.org/GDB" target="_blank" rel="noopener">GDB</a>作为 GNU 项目一款知名的调试工具大家应该都不陌生，我们可以通过其很方便地对本地代码进行调试。当我们在本地调试不便的时候，也可以选择在目标机上启动<a href="https://sourceware.org/gdb/current/onlinedocs/gdb/Server.html#Server" target="_blank" rel="noopener">gdbserver</a>，在调试机上运行 GDB 并通过 IP 地址和端口号连接到目标机，从而实现远程调试。</p>
+<p>但是 gdbserver 存在其本身的限制：它所需要的操作系统环境基本上与 GDB 所需要的环境是一致的。换句话来说，也就是目标机和调试机都要拥有可以运行 GDB 的操作系统环境。那么如果我们要自己编写一个操作系统并运行在真实的硬件上时，能够采用什么方法来调试呢？</p>
+<p>在这个时候，<a href="https://sourceware.org/gdb/current/onlinedocs/gdb/Remote-Stub.html#Remote-Stub" target="_blank" rel="noopener">remote stub</a>技术就派上用场了。我们可以通过一根串口线（例如 RS-232）连接两台主机：一台作为目标机（存放了自己编写的 OS），另一台作为调试机运行 GDB。如何让两台机器通过串口进行通信呢？这需要我们在两端都实现串口的通信协议。stub 就是那个在目标端实现了串口通信协议的文件，我们会将它与自己的 OS 共同编译；而调试端的串口通信协议由 GDB 在remote.c源文件中进行了实现。</p>
+<h2 id="1-2-串口略讲"><a href="#1-2-串口略讲" class="headerlink" title="1.2 串口略讲"></a>1.2 串口略讲</h2><p>上文提及了<a href="https://wiki.osdev.org/Serial_Ports" target="_blank" rel="noopener">串口</a>的概念，这里便多说两句。</p>
+<p>串口是 IBM-PC 兼容计算机上常见的传统通信端口，但其已被 USB 和其他现代外围设备接口逐渐取代。但操作系统开发人员对串行端口青睐有加，因为它们比 USB 更容易实现驱动程序，并且在许多 x86 系统中仍然很常见。现代串行端口通常实现 RS-232 标准，并且可以使用各种不同的连接器接口。DE-9 接口是现代系统中串行端口最常用的一种连接器。</p>
+<p>至于有关串口更详细的概念以及如何调试串口，互联网上有许多不错的资料，本文也就不再赘述了。但在实际操作中，有以下几点要提醒大家注意：</p>
+<ul>
+<li><p>RS-232 的串口线包含直连和交叉两种，根据两端设备的不同，我们需要选择不同的串口线。选购的方式可以参考<a href="https://knowledge.ni.com/KnowledgeArticleDetails?id=kA00Z000000P9w0SAC&l=zh-CN" target="_blank" rel="noopener">这个回答</a>。因为计算机的内置串口是数据终端（DTE）设备，我在这里选用了交叉线。</p>
+<ul>
+<li><p>简单交叉线</p>
+<p><img src="/images/2022/11/17/8fac0d3ca4fc97ddcdd0d9ab50dac2c5.jpeg" alt="图示 描述已自动生成"></p>
+</li>
+<li><p>简单直连线</p>
+<p><img src="/images/2022/11/17/36428c71e225aabfeb4baeef69f60ce0.jpeg" alt="图示 描述已自动生成"></p>
+</li>
+</ul>
+</li>
+<li><p>如果要判断串口数据收发是否正常，可以用面包线短接计算机串口的 2、3 引脚，并使用串口调试程序进行判断（Linux 下我用的 cutecom，Windows 下用的 UartAssist）。</p>
+</li>
+<li><p>正常情况下，Linux 下串口的设备名为ttyS0，Windows 下为COM1。</p>
+</li>
+</ul>
+<h2 id="1-3-RSP-概述"><a href="#1-3-RSP-概述" class="headerlink" title="1.3 RSP 概述"></a>1.3 RSP 概述</h2><p>在 1.1 节中我们介绍到 stub 需要实现串口的通信协议，而该协议就是 RSP（Remote Serial Protocal）。RSP 是一种简单的，通过串口线、网络等至少支持半双工通信的媒介进行ASCII消息传输的协议。</p>
+<p>如果一个目标机的体系结构已经在 GDB 中被定义过，并且该目标机实现了 RSP 协议的服务器端，那么调试器将能够远程连接到该目标。</p>
+<p>该协议支持多种连接类型：直接串行设备、UDP/IP、TCP/IP 和 POSIX 管道。该协议是分层的，大致遵循下图的 OSI 模型。</p>
+<p><img src="/images/2022/11/17/0293065afa7eb9f30301c180b6847a61.png" alt="形状 中度可信度描述已自动生成"></p>
+<h3 id="1-3-1-客户端-服务器-关系"><a href="#1-3-1-客户端-服务器-关系" class="headerlink" title="1.3.1 客户端-服务器 关系"></a>1.3.1 客户端-服务器 关系</h3><p>GDB 程序作为 RSP 的客户端，目标机作为 RSP 的服务器。客户端发出数据包，这些数据包是对信息或行动的请求。根据客户端数据包的性质，服务器可能会用自己的数据包来回应。</p>
+<p>服务器发送数据包的唯一情况就是回复来自客户端的需要相应的数据包。</p>
+<h3 id="1-3-2-表示层：数据包传输"><a href="#1-3-2-表示层：数据包传输" class="headerlink" title="1.3.2 表示层：数据包传输"></a>1.3.2 表示层：数据包传输</h3><p>RSP 包的基本格式如下图所示。</p>
+<p><img src="/images/2022/11/17/5a0dc24d57c843e0482165f919a7cd35.png" alt=""></p>
+<p>RSP 包以$号作为数据包的开始，后跟一个或多个用于组成要发送的消息的 ASCII 字节，并以#作为数据包的结束。随后，还有两个 16 进制的 ASCII 字符checksum作为要发送的消息的校验和，其具体的计算方式是数据包中所有字符求和再用 256 求余数。</p>
+<p>消息的接收方会返回 ‘+’ 表示正确接收数据，检验和有效，或 ‘-‘ 表示没有正确接收数据。当返回 ‘-‘ 时，GDB会将错误码返回给用户，并无条件挂起GDB进程。</p>
+<h3 id="1-3-3-应用层：远程串行协议"><a href="#1-3-3-应用层：远程串行协议" class="headerlink" title="1.3.3 应用层：远程串行协议"></a>1.3.3 应用层：远程串行协议</h3><p>从客户端到服务器的 RSP 命令是文本字符串，后面可以有参数。每条命令都在自己的数据包中发送。这些数据包可分为四组：</p>
+<ol>
+<li>不需要确认的数据包。这些命令是：<strong>f</strong>、<strong>i</strong>、<strong>I</strong>、<strong>k</strong>、<strong>R</strong>、<strong>t</strong> 和 <strong>vFlashDone</strong>。</li>
+<li>需要一个简单的确认包的数据包。这种确认要么是 <strong>OK</strong>，要么是 <strong>Enn</strong>（其中 <strong>nn</strong> 是错误号码），或者对于某些命令返回空包（意味着 “不支持”）。这些命令是：<strong>!</strong>、<strong>A</strong>、<strong>D</strong>、<strong>G</strong>、<strong>H</strong>、<strong>M</strong>、<strong>P</strong>、<strong>Qxxxx</strong>、<strong>T</strong>、<strong>vFlashErase</strong>、<strong>vFlashWrite</strong>、<strong>X</strong>、<strong>z</strong> 和 <strong>Z</strong>。</li>
+<li>返回结果数据或错误代码的数据包。这些命令是 ：<strong>?</strong>，<strong>c</strong>，<strong>C</strong>，<strong>g</strong>，<strong>m</strong>，<strong>p</strong>，<strong>qxxxx</strong>，<strong>s</strong>，<strong>S</strong> 和 <strong>vxxxx</strong>。</li>
+<li>不应再使用的已弃用数据包。这些命令是：<strong>b</strong>、<strong>B</strong>、<strong>d</strong> 和 <strong>r</strong>。</li>
+</ol>
+<p>数据包命令的详细说明可参考<a href="https://sourceware.org/gdb/current/onlinedocs/gdb/Packets.html#Packets" target="_blank" rel="noopener">官方文档</a>。部分 GDB 命令的实现如下：</p>
+<p><img src="/images/2022/11/17/f27ffcdaeb79ddcd00070bed7bb601c5.png" alt="图形用户界面, 表格 中度可信度描述已自动生成"></p>
+<h3 id="1-3-4-实例"><a href="#1-3-4-实例" class="headerlink" title="1.3.4 实例"></a>1.3.4 实例</h3><p>如果要将 0xc320 写入内存 0x4015cc 中，GDB 会调用set 0x4015cc = 0xc320。</p>
+<p>其底层的通信为：</p>
+<p>$M4015CC,2:C320#6d</p>
+<p>其中 ‘M’ 命令的格式是 <em>‘M addr,length:XX…’</em> 。意为将数据 <em>XX…</em> 写入从地址 <em>addr</em> 开始的 <em>length</em> 个可寻址的内存单元中。</p>
+<p>目标机收到数据并验证检验码后正确，会首先返回</p>
+<p>+</p>
+<p>接着返回状态</p>
+<p>$OK#9a</p>
+<p>这样，一个通过 GDB 操作内存数据的通信协议就完成了。关于 RSP 协议的更详细的内容，大家可以参考 <a href="https://www.embecosm.com/appnotes/ean4/embecosm-howto-rsp-server-ean4-issue-2.html" target="_blank" rel="noopener">Howto: GDB Remote Serial Protocol</a>。</p>
+<h1 id="2-gdbstub"><a href="#2-gdbstub" class="headerlink" title="2 gdbstub"></a>2 gdbstub</h1><h2 id="2-1-概览"><a href="#2-1-概览" class="headerlink" title="2.1 概览"></a>2.1 概览</h2><p>GDB 源码中内置了多种计算机体系结构下适用的 stub，如i386-stub.c、sparc-stub.c等，但无一例外需要二次开发，针对串口的地址进行读写，从而实现收发数据包、实现异常处理等功能。为了简化流程，我们可以使用已开发得较为完善的<a href="https://github.com/mborgerson/gdbstub" target="_blank" rel="noopener">gdbstub</a>。</p>
+<p>gdbstub 依赖于 32 位的 x86 架构。该项目的各个文件中有两个文件起到了核心作用——gdbstub_x86_int.nasm和gdbstub.h。接下来我会以这两个文件为依据，梳理一下 gdbstub 起作用的总体流程。</p>
+<h2 id="2-2-处理流程"><a href="#2-2-处理流程" class="headerlink" title="2.2 处理流程"></a>2.2 处理流程</h2><p>gdbstub 的处理流程非常清晰：生成异常处理函数向量表；获取 OS 的 IDT 并将 IDT 的 1 号和 3 号异常与对应的异常处理函数进行绑定（1 号异常是单步异常，3 号异常是断点异常）；在每一次 1 号和 3 号异常被触发的时候执行对应的异常处理程序。</p>
+<p><img src="/images/2022/11/17/ca50985d71c14dd84307ce7bf112169a.jpeg" alt="图示 描述已自动生成"></p>
+<h3 id="2-2-1-生成异常处理函数向量表"><a href="#2-2-1-生成异常处理函数向量表" class="headerlink" title="2.2.1 生成异常处理函数向量表"></a>2.2.1 生成异常处理函数向量表</h3><p>在gdbstub_x86_int.nasm文件中，我们看到其定义了一个全局变量gdb_x86_int_handlers数组，该数组的每个元素是个 32 位的地址，该地址指向何处？我们接着往下看。</p>
+<p><img src="/images/2022/11/17/4b254bbb7a81fb68a06c32c93596a0d7.png" alt=""></p>
+<p>在此，我们发现了数组元素指向的位置。它对应着一段与数组序号对应的代码段。这段代码会将异常号压栈，并跳转到gdb_x86_int_handler_common所在的位置。</p>
+<p><img src="/images/2022/11/17/5d55e596625f4e2a53c876617c639e15.png" alt="文本 描述已自动生成"></p>
+<p>可能大家会对上述代码有所疑惑：为什么有的异常处理需要将 0 压栈，有的却不需要呢？这是因为有些异常是拥有错误码的，在这些拥有错误码的异常触发时会自动将错误码压栈。因此，为了使栈中的各元素序列保持一致，我们在处理没有错误码的异常时，需要将 0 压栈，表示什么也不做。</p>
+<p><img src="/images/2022/11/17/2127537daff879fd483285e4db6a83aa.png" alt="表格 描述已自动生成"></p>
+<p>好了，言归正传，现在我们来看看gdb_x86_int_handler_common都做了什么吧。由下图可以看出，这段代码首先是将各个寄存器压栈（作为gdb_x86_int_handler的参数），然后调用了gdb_x86_int_handler函数，最后再将压栈的寄存器弹出，恢复现场，然后返回。</p>
+<p><img src="/images/2022/11/17/8d033614ddc559cff01dc3e6392928ae.png" alt="文本 描述已自动生成"></p>
+<p>到这里为止，异常处理函数向量表的全貌就展现在我们的眼前了。gdb_x86_int_handlers数组的每一个元素都会指向一个地址，最终调用gdb_x86_int_handler函数，也就是自定义的异常处理函数。至于gdb_x86_int_handler的具体实现逻辑，我会在之后进行说明。</p>
+<h3 id="2-2-2-绑定异常处理函数"><a href="#2-2-2-绑定异常处理函数" class="headerlink" title="2.2.2 绑定异常处理函数"></a>2.2.2 绑定异常处理函数</h3><p>gdbstub.h中我们将gdb_sys_init()作为 stub 的入口。它将 1 号异常（Debug）和 3 号异常（Breakpoint）与对应的异常处理函数进行绑定，随后调用int3开启 3 号中断，等待调试机上的 GDB 发送数据包并进行相应的处理。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">gdb_sys_init</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/* Hook current IDT. */</span></span><br><span class="line">    gdb_x86_hook_idt(<span class="number">1</span>, gdb_x86_int_handlers[<span class="number">1</span>]);</span><br><span class="line">    gdb_x86_hook_idt(<span class="number">3</span>, gdb_x86_int_handlers[<span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Interrupt to start debugging. */</span></span><br><span class="line">    <span class="function"><span class="keyword">asm</span> <span class="title">volatile</span> <span class="params">(<span class="string">"int3"</span>)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在以下代码中，我们可以了解程序是如何将异常号与异常处理函数进行绑定的。</p>
+<ul>
+<li>通过sidt指令获取到 IDTR 中的基址，该基址指向中断描述符表 IDT 的地址。</li>
+<li>通过中断向量号索引当前中断在 IDT 中的位置，也就是门描述符。</li>
+<li>将中断处理程序所在段的段选择子和段内偏移地址、特权级等写入门描述符内对应的位置。</li>
+</ul>
+<p>这样一来，就实现了绑定功能。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Get current IDT.</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">gdb_x86_store_idt</span><span class="params">(struct gdb_idtr *idtr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">asm</span> <span class="title">volatile</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="string">"sidt    %0"</span></span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="comment">/* Outputs  */</span> : <span class="string">"=m"</span> (*idtr)</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="comment">/* Inputs   */</span> : <span class="comment">/* None */</span></span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="comment">/* Clobbers */</span> : <span class="comment">/* None */</span></span></span></span><br><span class="line"><span class="function"><span class="params">        )</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Get current code segment (CS register).</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">uint32_t</span> <span class="title">gdb_x86_get_cs</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">uint32_t</span> cs;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">asm</span> <span class="title">volatile</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="string">"push    %%cs;"</span></span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="string">"pop     %%eax;"</span></span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="comment">/* Outputs  */</span> : <span class="string">"=a"</span> (cs)</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="comment">/* Inputs   */</span> : <span class="comment">/* None */</span></span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="comment">/* Clobbers */</span> : <span class="comment">/* None */</span></span></span></span><br><span class="line"><span class="function"><span class="params">        )</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> cs;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hook a vector of the current IDT.</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">gdb_x86_hook_idt</span><span class="params">(<span class="keyword">uint8_t</span> <span class="built_in">vector</span>, <span class="keyword">const</span> <span class="keyword">void</span> *function)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">gdb_idtr</span>      <span class="title">idtr</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">gdb_idt_gate</span> *<span class="title">gates</span>;</span></span><br><span class="line"></span><br><span class="line">    gdb_x86_store_idt(&amp;idtr);</span><br><span class="line">    gates = (struct gdb_idt_gate *)idtr.offset;</span><br><span class="line">    gates[<span class="built_in">vector</span>].flags       = <span class="number">0x8E00</span>;</span><br><span class="line">    gates[<span class="built_in">vector</span>].segment     = gdb_x86_get_cs();</span><br><span class="line">    gates[<span class="built_in">vector</span>].offset_low  = (((<span class="keyword">uint32_t</span>)function)      ) &amp; <span class="number">0xffff</span>;</span><br><span class="line">    gates[<span class="built_in">vector</span>].offset_high = (((<span class="keyword">uint32_t</span>)function) &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xffff</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>中断描述符表寄存器 IDTR 为 48 位，其中高 32 位存放着中断描述符表 IDT 的地址。</p>
+<p><img src="/images/2022/11/17/0a4973a60bea93ff4bf48b91ec9a1a65.png" alt="表格 描述已自动生成"></p>
+<p>保护模式下，中断描述符表每个描述符占有 8 字节，该描述符被称为门。门有不同的种类，包括任务门、陷阱门、中断门等等，我们此处用的就是中断门。中断门描述符的格式如下所示。</p>
+<p><img src="/images/2022/11/17/7e6803d9555c354e4cebca7dfeaff3d1.png" alt="表格 描述已自动生成"></p>
+<h3 id="2-2-3-异常处理函数的实现"><a href="#2-2-3-异常处理函数的实现" class="headerlink" title="2.2.3 异常处理函数的实现"></a>2.2.3 异常处理函数的实现</h3><p>好了，终于要窥探中断处理函数的内部细节了。还记得在 2.2.1 节的gdb_x86_int_handler_common中调用的gdb_x86_int_handler()方法吗？它就是异常处理函数的入口，我们可以看到它调用了gdb_x86_interrupt()方法。在该方法中顺序执行了以下步骤：</p>
+<ol>
+<li>判断当前是否是 1 号或 3 号中断，如果是，则将 GDB 信号设置为3，即 SIGTRAP；否则设置为 7。</li>
+<li>将上下文环境赋给 gdb_state.registers[]。</li>
+<li>调用gdb_main()方法。</li>
+<li>更新上下文环境。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">gdb_x86_int_handler</span><span class="params">(struct gdb_interrupt_state *istate)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    gdb_x86_interrupt(istate);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Debug interrupt handler.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">gdb_x86_interrupt</span><span class="params">(struct gdb_interrupt_state *istate)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/* Translate vector to signal */</span></span><br><span class="line">    <span class="keyword">switch</span> (istate-&gt;<span class="built_in">vector</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>:  gdb_state.signum = <span class="number">5</span>; <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">3</span>:  gdb_state.signum = <span class="number">5</span>; <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>: gdb_state.signum = <span class="number">7</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Load Registers */</span></span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_EAX] = istate-&gt;eax;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_ECX] = istate-&gt;ecx;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_EDX] = istate-&gt;edx;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_EBX] = istate-&gt;ebx;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_ESP] = istate-&gt;esp;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_EBP] = istate-&gt;ebp;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_ESI] = istate-&gt;esi;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_EDI] = istate-&gt;edi;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_PC]  = istate-&gt;eip;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_CS]  = istate-&gt;cs;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_PS]  = istate-&gt;eflags;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_SS]  = istate-&gt;ss;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_DS]  = istate-&gt;ds;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_ES]  = istate-&gt;es;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_FS]  = istate-&gt;fs;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_GS]  = istate-&gt;gs;</span><br><span class="line"></span><br><span class="line">    gdb_main(&amp;gdb_state);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Restore Registers */</span></span><br><span class="line">    istate-&gt;eax    = gdb_state.registers[GDB_CPU_I386_REG_EAX];</span><br><span class="line">    istate-&gt;ecx    = gdb_state.registers[GDB_CPU_I386_REG_ECX];</span><br><span class="line">    istate-&gt;edx    = gdb_state.registers[GDB_CPU_I386_REG_EDX];</span><br><span class="line">    istate-&gt;ebx    = gdb_state.registers[GDB_CPU_I386_REG_EBX];</span><br><span class="line">    istate-&gt;esp    = gdb_state.registers[GDB_CPU_I386_REG_ESP];</span><br><span class="line">    istate-&gt;ebp    = gdb_state.registers[GDB_CPU_I386_REG_EBP];</span><br><span class="line">    istate-&gt;esi    = gdb_state.registers[GDB_CPU_I386_REG_ESI];</span><br><span class="line">    istate-&gt;edi    = gdb_state.registers[GDB_CPU_I386_REG_EDI];</span><br><span class="line">    istate-&gt;eip    = gdb_state.registers[GDB_CPU_I386_REG_PC];</span><br><span class="line">    istate-&gt;cs     = gdb_state.registers[GDB_CPU_I386_REG_CS];</span><br><span class="line">    istate-&gt;eflags = gdb_state.registers[GDB_CPU_I386_REG_PS];</span><br><span class="line">    istate-&gt;ss     = gdb_state.registers[GDB_CPU_I386_REG_SS];</span><br><span class="line">    istate-&gt;ds     = gdb_state.registers[GDB_CPU_I386_REG_DS];</span><br><span class="line">    istate-&gt;es     = gdb_state.registers[GDB_CPU_I386_REG_ES];</span><br><span class="line">    istate-&gt;fs     = gdb_state.registers[GDB_CPU_I386_REG_FS];</span><br><span class="line">    istate-&gt;gs     = gdb_state.registers[GDB_CPU_I386_REG_GS];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们主要来看gdb_main()方法的实现。该方法就是对串口进行驱动编程，实现 RSP 服务器端的响应。</p>
+<p>从宏观上看，该方法的内部是通过一个while()循环在不断地读取从调试机发送来的数据包，并进行解析，根据不同的 RSP 命令执行不同的操作并返回相应的数据包。这一逻辑过程的实现可以抽象成三个部分：从串口收/发数据包、解析/编码数据包以及根据指令进行相应的处理。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">gdb_main</span><span class="params">(struct gdb_state *state)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    address addr;</span><br><span class="line">    <span class="keyword">char</span> pkt_buf[<span class="number">256</span>];</span><br><span class="line">    <span class="keyword">int</span> status;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> length;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> pkt_len;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *ptr_next;</span><br><span class="line"></span><br><span class="line">    gdb_send_signal_packet(state, pkt_buf, <span class="keyword">sizeof</span>(pkt_buf), state-&gt;signum);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">/* Receive the next packet */</span></span><br><span class="line">        status = gdb_recv_packet(state, pkt_buf, <span class="keyword">sizeof</span>(pkt_buf), &amp;pkt_len);</span><br><span class="line">        <span class="keyword">if</span> (status == GDB_EOF) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (pkt_len == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">/* Received empty packet.. */</span></span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ptr_next = pkt_buf;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * Handle one letter commands</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">switch</span> (pkt_buf[<span class="number">0</span>]) &#123;</span><br><span class="line"></span><br><span class="line">         <span class="comment">/*</span></span><br><span class="line"><span class="comment">    	 * 省略……</span></span><br><span class="line"><span class="comment">    	 */</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * Read Registers</span></span><br><span class="line"><span class="comment">         * Command Format: g</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">case</span> <span class="string">'g'</span>:</span><br><span class="line">            <span class="comment">/* Encode registers */</span></span><br><span class="line">            status = gdb_enc_hex(pkt_buf, <span class="keyword">sizeof</span>(pkt_buf),</span><br><span class="line">                                 (<span class="keyword">char</span> *)&amp;(state-&gt;registers),</span><br><span class="line">                                 <span class="keyword">sizeof</span>(state-&gt;registers));</span><br><span class="line">            <span class="keyword">if</span> (status == GDB_EOF) &#123;</span><br><span class="line">                <span class="keyword">goto</span> error;</span><br><span class="line">            &#125;</span><br><span class="line">            pkt_len = status;</span><br><span class="line">            gdb_send_packet(state, pkt_buf, pkt_len);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">    	 * 省略……</span></span><br><span class="line"><span class="comment">    	 */</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * Continue</span></span><br><span class="line"><span class="comment">         * Command Format: c [addr]</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">case</span> <span class="string">'c'</span>:</span><br><span class="line">            gdb_continue(state);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * Single-step</span></span><br><span class="line"><span class="comment">         * Command Format: s [addr]</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">case</span> <span class="string">'s'</span>:</span><br><span class="line">            gdb_step(state);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> <span class="string">'?'</span>:</span><br><span class="line">            gdb_send_signal_packet(state, pkt_buf, <span class="keyword">sizeof</span>(pkt_buf),</span><br><span class="line">                                   state-&gt;signum);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * Unsupported Command</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            gdb_send_packet(state, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">    error:</span><br><span class="line">        gdb_send_error_packet(state, pkt_buf, <span class="keyword">sizeof</span>(pkt_buf), <span class="number">0x00</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-3-1-从串口收-发数据包"><a href="#2-2-3-1-从串口收-发数据包" class="headerlink" title="2.2.3.1 从串口收/发数据包"></a>2.2.3.1 从串口收/发数据包</h4><p>收/发数据包的处理逻辑非常类似，两者之间是逆过程，因此我们以发送数据包为例，自底向上地了解其实现的具体细节。在开始之前，我梳理了一下发送数据包这一过程的方法调用链，如下所示。</p>
+<p>最底层的串口通信方法非常简单，将值写入串口号对应的寄存器即可。关于串口各端口的含义，我会在后文进行介绍。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">gdb_x86_io_write_8</span><span class="params">(<span class="keyword">uint16_t</span> port, <span class="keyword">uint8_t</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">asm</span> <span class="title">volatile</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="string">"outb    %%al, %%dx;"</span></span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="comment">/* Outputs  */</span> : <span class="comment">/* None */</span></span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="comment">/* Inputs   */</span> : <span class="string">"a"</span> (val), <span class="string">"d"</span> (port)</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="comment">/* Clobbers */</span> : <span class="comment">/* None */</span></span></span></span><br><span class="line"><span class="function"><span class="params">        )</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其上一层的方法对其做了一层封装，需要判断当前的传输缓冲区是否为空，非空无法传送数据。这里用到了串口编程的知识，详细内容可翻看 2.4 节。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">gdb_x86_serial_putchar</span><span class="params">(<span class="keyword">int</span> ch)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/* Wait for THRE (bit 5) to be high */</span></span><br><span class="line">    <span class="keyword">while</span> ((gdb_x86_io_read_8(SERIAL_PORT + SERIAL_LSR) &amp; (<span class="number">1</span>&lt;&lt;<span class="number">5</span>)) == <span class="number">0</span>);</span><br><span class="line">    gdb_x86_io_write_8(SERIAL_PORT + SERIAL_THR, ch);</span><br><span class="line">    <span class="keyword">return</span> ch;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再上一层没有什么好说的，单纯的调用，应该是为后期支持不同的系统架构抽象出的接口。</p>
+<p>int gdb_sys_putchar(struct gdb_state *state, int ch)</p>
+<p>{</p>
+<p>return gdb_x86_serial_putchar(ch);</p>
+<p>}</p>
+<p>此处再封装一层，通过对之前方法的重复调用，实现向串口写入一系列字节的目的。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Write a sequence of bytes.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Returns:</span></span><br><span class="line"><span class="comment"> *    0   if successful</span></span><br><span class="line"><span class="comment"> *    GDB_EOF if failed to write all bytes</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">gdb_write</span><span class="params">(struct gdb_state *state, <span class="keyword">const</span> <span class="keyword">char</span> *buf, <span class="keyword">unsigned</span> <span class="keyword">int</span> len)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (len--) &#123;</span><br><span class="line">        <span class="keyword">if</span> (gdb_sys_putchar(state, *buf++) == GDB_EOF) &#123;</span><br><span class="line">            <span class="keyword">return</span> GDB_EOF;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面的方法是整个数据包能够发送的核心。还记得 RSP 包的基本格式吗？$&lt;packet-data&gt;#&lt;checksum&gt;，遗忘的朋友可翻看 1.3.2 节的内容。该方法发送的数据包严格遵守该格式：首先发送$字符，接着借助上文的gdb_write()方法发送具体的数据序列（注：该数据序列为 ASCII 码格式，会由上层函数进行保证，下文会提及），最后将#与计算出的检验和共同发送到串口。发送完之后不要忘记从串口中读取一个字符——这是调试机上 GDB 返回的响应。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Transmits a packet of data.</span></span><br><span class="line"><span class="comment"> * Packets are of the form: $&lt;packet-data&gt;#&lt;checksum&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Returns:</span></span><br><span class="line"><span class="comment"> *    0   if the packet was transmitted and acknowledged</span></span><br><span class="line"><span class="comment"> *    1   if the packet was transmitted but not acknowledged</span></span><br><span class="line"><span class="comment"> *    GDB_EOF otherwise</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">gdb_send_packet</span><span class="params">(struct gdb_state *state, <span class="keyword">const</span> <span class="keyword">char</span> *pkt_data,</span></span></span><br><span class="line"><span class="function"><span class="params">                           <span class="keyword">unsigned</span> <span class="keyword">int</span> pkt_len)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">3</span>];</span><br><span class="line">    <span class="keyword">char</span> csum;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Send packet start */</span></span><br><span class="line">    <span class="keyword">if</span> (gdb_sys_putchar(state, <span class="string">'$'</span>) == GDB_EOF) &#123;</span><br><span class="line">        <span class="keyword">return</span> GDB_EOF;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Send packet data */</span></span><br><span class="line">    <span class="keyword">if</span> (gdb_write(state, pkt_data, pkt_len) == GDB_EOF) &#123;</span><br><span class="line">        <span class="keyword">return</span> GDB_EOF;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Send the checksum */</span></span><br><span class="line">    buf[<span class="number">0</span>] = <span class="string">'#'</span>;</span><br><span class="line">    csum = gdb_checksum(pkt_data, pkt_len);</span><br><span class="line">    <span class="keyword">if</span> ((gdb_enc_hex(buf+<span class="number">1</span>, <span class="keyword">sizeof</span>(buf)<span class="number">-1</span>, &amp;csum, <span class="number">1</span>) == GDB_EOF) ||</span><br><span class="line">        (gdb_write(state, buf, <span class="keyword">sizeof</span>(buf)) == GDB_EOF)) &#123;</span><br><span class="line">        <span class="keyword">return</span> GDB_EOF;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> gdb_recv_ack(state);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">gdb_recv_ack</span><span class="params">(struct gdb_state *state)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> response;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Wait for packet ack */</span></span><br><span class="line">    <span class="keyword">switch</span> (response = gdb_sys_getc(state)) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'+'</span>:</span><br><span class="line">        <span class="comment">/* Packet acknowledged */</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'-'</span>:</span><br><span class="line">        <span class="comment">/* Packet negative acknowledged */</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="comment">/* Bad response! */</span></span><br><span class="line">        GDB_PRINT(<span class="string">"received bad packet response: 0x%2x\n"</span>, response);</span><br><span class="line">        <span class="keyword">return</span> GDB_EOF;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最上层的四个方法都是针对不同的场景，对gdb_send_packet()进行特定封装。我们以 gdb_send_error_packet()为例，它向串口发送一个错误数据包，以 ‘E’ 开头，后面接着具体的数据。上个方法gdb_send_packet()中发送的数据序列需要保证其为 ASCII 格式，就是在此处进行编码的。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Send a error packet (E AA).</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">gdb_send_error_packet</span><span class="params">(struct gdb_state *state, <span class="keyword">char</span> *buf,</span></span></span><br><span class="line"><span class="function"><span class="params">                                 <span class="keyword">unsigned</span> <span class="keyword">int</span> buf_len, <span class="keyword">char</span> error)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="built_in">size</span>;</span><br><span class="line">    <span class="keyword">int</span> status;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (buf_len &lt; <span class="number">4</span>) &#123;</span><br><span class="line">        <span class="comment">/* Buffer too small */</span></span><br><span class="line">        <span class="keyword">return</span> GDB_EOF;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    buf[<span class="number">0</span>] = <span class="string">'E'</span>;</span><br><span class="line">    status = gdb_enc_hex(&amp;buf[<span class="number">1</span>], buf_len<span class="number">-1</span>, &amp;error, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (status == GDB_EOF) &#123;</span><br><span class="line">        <span class="keyword">return</span> GDB_EOF;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">size</span> = <span class="number">1</span> + status;</span><br><span class="line">    <span class="keyword">return</span> gdb_send_packet(state, buf, <span class="built_in">size</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>好了，到此为止，我们整个数据包发送的流程就已经理清了。接收数据包的过程非常类似，大家可以自行阅读相关代码并理解。</p>
+<h4 id="2-2-3-2-解析-编码数据包"><a href="#2-2-3-2-解析-编码数据包" class="headerlink" title="2.2.3.2 解析/编码数据包"></a>2.2.3.2 解析/编码数据包</h4><p>这一部分的代码较为简单，不作详细讲解。我将相关代码整理并贴在下方，大家可自行阅读。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Decode data from its hex-value representation to a buffer.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Returns:</span></span><br><span class="line"><span class="comment"> *    0   if successful</span></span><br><span class="line"><span class="comment"> *    GDB_EOF if the buffer is too small</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">gdb_dec_hex</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *buf, <span class="keyword">unsigned</span> <span class="keyword">int</span> buf_len, <span class="keyword">char</span> *data,</span></span></span><br><span class="line"><span class="function"><span class="params">                       <span class="keyword">unsigned</span> <span class="keyword">int</span> data_len)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> pos;</span><br><span class="line">    <span class="keyword">int</span> tmp;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (buf_len != data_len*<span class="number">2</span>) &#123;</span><br><span class="line">        <span class="comment">/* Buffer too small */</span></span><br><span class="line">        <span class="keyword">return</span> GDB_EOF;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (pos = <span class="number">0</span>; pos &lt; data_len; pos++) &#123;</span><br><span class="line">        <span class="comment">/* Decode high nibble */</span></span><br><span class="line">        tmp = gdb_get_val(*buf++, <span class="number">16</span>);</span><br><span class="line">        <span class="keyword">if</span> (tmp == GDB_EOF) &#123;</span><br><span class="line">            <span class="comment">/* Buffer contained junk. */</span></span><br><span class="line">            GDB_ASSERT(<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">return</span> GDB_EOF;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        data[pos] = tmp &lt;&lt; <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* Decode low nibble */</span></span><br><span class="line">        tmp = gdb_get_val(*buf++, <span class="number">16</span>);</span><br><span class="line">        <span class="keyword">if</span> (tmp == GDB_EOF) &#123;</span><br><span class="line">            <span class="comment">/* Buffer contained junk. */</span></span><br><span class="line">            GDB_ASSERT(<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">return</span> GDB_EOF;</span><br><span class="line">        &#125;</span><br><span class="line">        data[pos] |= tmp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Get the corresponding value for a ASCII digit character.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Supports bases 2-16.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">gdb_get_val</span><span class="params">(<span class="keyword">char</span> digit, <span class="keyword">int</span> base)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> value;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ((digit &gt;= <span class="string">'0'</span>) &amp;&amp; (digit &lt;= <span class="string">'9'</span>)) &#123;</span><br><span class="line">        value = digit-<span class="string">'0'</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((digit &gt;= <span class="string">'a'</span>) &amp;&amp; (digit &lt;= <span class="string">'f'</span>)) &#123;</span><br><span class="line">        value = digit-<span class="string">'a'</span>+<span class="number">0xa</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((digit &gt;= <span class="string">'A'</span>) &amp;&amp; (digit &lt;= <span class="string">'F'</span>)) &#123;</span><br><span class="line">        value = digit-<span class="string">'A'</span>+<span class="number">0xa</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> GDB_EOF;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (value &lt; base) ? value : GDB_EOF;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Encode data to its hex-value representation in a buffer.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Returns:</span></span><br><span class="line"><span class="comment"> *    0+  number of bytes written to buf</span></span><br><span class="line"><span class="comment"> *    GDB_EOF if the buffer is too small</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">gdb_enc_hex</span><span class="params">(<span class="keyword">char</span> *buf, <span class="keyword">unsigned</span> <span class="keyword">int</span> buf_len, <span class="keyword">const</span> <span class="keyword">char</span> *data,</span></span></span><br><span class="line"><span class="function"><span class="params">                       <span class="keyword">unsigned</span> <span class="keyword">int</span> data_len)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> pos;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (buf_len &lt; data_len*<span class="number">2</span>) &#123;</span><br><span class="line">        <span class="comment">/* Buffer too small */</span></span><br><span class="line">        <span class="keyword">return</span> GDB_EOF;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (pos = <span class="number">0</span>; pos &lt; data_len; pos++) &#123;</span><br><span class="line">        *buf++ = gdb_get_digit((data[pos] &gt;&gt; <span class="number">4</span>) &amp; <span class="number">0xf</span>);</span><br><span class="line">        *buf++ = gdb_get_digit((data[pos]     ) &amp; <span class="number">0xf</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> data_len*<span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Get the corresponding ASCII hex digit character for a value.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">char</span> <span class="title">gdb_get_digit</span><span class="params">(<span class="keyword">int</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ((val &gt;= <span class="number">0</span>) &amp;&amp; (val &lt;= <span class="number">0xf</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> digits[val];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> GDB_EOF;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> digits[] = <span class="string">"0123456789abcdef"</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-3-3-根据指令进行相应的处理"><a href="#2-2-3-3-根据指令进行相应的处理" class="headerlink" title="2.2.3.3 根据指令进行相应的处理"></a>2.2.3.3 根据指令进行相应的处理</h4><p>对指令的处理过程我们以 ‘g’ 为例。’g’ 指令的作用是读取寄存器的值。我们将寄存器的值存储在state-&gt;registers中，只需要对这些值进行编码，转换成 ASCII 格式并将其封装为数据包发送至串口即可。其余指令的实现大体上都是以 2.2.3.1 节和 2.2.3.2 节为基础，再进行特定的逻辑处理，也就不在此赘述了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Read Registers</span></span><br><span class="line"><span class="comment"> * Command Format: g</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">case</span> <span class="string">'g'</span>:</span><br><span class="line">    <span class="comment">/* Encode registers */</span></span><br><span class="line">    status = gdb_enc_hex(pkt_buf, <span class="keyword">sizeof</span>(pkt_buf),</span><br><span class="line">                         (<span class="keyword">char</span> *)&amp;(state-&gt;registers),</span><br><span class="line">                         <span class="keyword">sizeof</span>(state-&gt;registers));</span><br><span class="line">    <span class="keyword">if</span> (status == GDB_EOF) &#123;</span><br><span class="line">        <span class="keyword">goto</span> error;</span><br><span class="line">    &#125;</span><br><span class="line">    pkt_len = status;</span><br><span class="line">    gdb_send_packet(state, pkt_buf, pkt_len);</span><br><span class="line">    <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这里尤其要强调一下 ‘s’ 与 ‘c’ 指令。大家注意，在执行完这两个指令对应的处理过程后，其所在的函数gdb_main()直接返回了，返回到我们上文提及的gdb_x86_interrupt()方法去更新上下文环境；接着返回到gdb_x86_int_handler()，完成了中断处理的整个过程，<strong>执行被调试程序的下一条指令</strong>。遗忘这一层调用关系的朋友可以重新回看本小节的开头。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Continue</span></span><br><span class="line"><span class="comment"> * Command Format: c [addr]</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">case</span> <span class="string">'c'</span>:</span><br><span class="line">    gdb_continue(state);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Single-step</span></span><br><span class="line"><span class="comment"> * Command Format: s [addr]</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">case</span> <span class="string">'s'</span>:</span><br><span class="line">    gdb_step(state);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>我们接着看看gdb_continue()与gdb_step()究竟做了什么。持续往下跟进，我们可以看到这两个方法都修改了gdb_state.registers[GDB_CPU_I386_REG_PS]第 8 位的值。而gdb_state.registers[GDB_CPU_I386_REG_PS]已经在之前的gdb_x86_interrupt()方法中被赋值为eflags寄存器的值。那么eflags寄存器的第 8 位究竟有什么作用呢？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Continue program execution at PC.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">gdb_continue</span><span class="params">(struct gdb_state *state)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    gdb_sys_continue(state);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Step one instruction.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">gdb_step</span><span class="params">(struct gdb_state *state)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    gdb_sys_step(state);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Continue program execution.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">gdb_sys_continue</span><span class="params">(struct gdb_state *state)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_PS] &amp;= ~(<span class="number">1</span>&lt;&lt;<span class="number">8</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Single step the next instruction.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">gdb_sys_step</span><span class="params">(struct gdb_state *state)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    gdb_state.registers[GDB_CPU_I386_REG_PS] |= <span class="number">1</span>&lt;&lt;<span class="number">8</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>eflags寄存器第 8 位为 Trap Flag。当该位为 1 时，CPU 执行完一条指令后会产生单步异常（1 号异常），进入异常处理程序后 TF 自动置 0。调试器通过处理这个单步异常实现对程序的中断控制。持续地把 TF 置 1，程序就可以每执行一句中断一次，从而实现调试器的单步跟踪功能。</p>
+<p>在上方的代码中可以很明显地看出 ‘s’ 指令将 TF 置 1，为之后的单步调试做准备；而 ‘c’ 指令要不间断地执行被调试程序（遇到 breakpoint 的情况除外），为了不触发单步异常，因此要将 TF 置 0。</p>
+<p><img src="/images/2022/11/17/e060f0afe40d0238a3dd4a3a0da73d2d.png" alt="图片包含 表格 描述已自动生成"></p>
+<h2 id="2-3-修改-gdbstub"><a href="#2-3-修改-gdbstub" class="headerlink" title="2.3 修改 gdbstub"></a>2.3 修改 gdbstub</h2><p>对于整个 gdbstub 在 x86 架构上的运作流程，我们已经在上文介绍得很清楚了。但为了其能够更加适配我们自己的系统，还要对它进行微调。</p>
+<ol>
+<li>在gdbstub.h文件的开头加上如下定义。这是为了启用 x86 架构，否则默认为模拟的系统结构。 <img src="/images/2022/11/17/916982f53c4d1d3b0bb1ac0c881575a2.png" alt="图片包含 文本 描述已自动生成"></li>
+<li>由于我们编写的 mini-os 中已经声明过uint8_t、uint16_t、uint32_t，为了避免重复，我在这里将其注释，并增加了&lt;stdint.h&gt;头文件。</li>
+</ol>
+<p><img src="/images/2022/11/17/dde6d8c2d57f32f212b0a668eb78ed58.png" alt="文本 描述已自动生成"></p>
+<ol>
+<li><p>增加串口初始化方法init_serial()，并在gdb_sys_init()中进行调用。</p>
+<p><img src="/images/2022/11/17/843258dbf6fd0e25d895f59b42f78d84.png" alt="文本 描述已自动生成"></p>
+</li>
+</ol>
+<h2 id="2-4-对串口-IO-端口进行编程"><a href="#2-4-对串口-IO-端口进行编程" class="headerlink" title="2.4 对串口 IO 端口进行编程"></a>2.4 对串口 IO 端口进行编程</h2><h3 id="2-4-1-端口地址"><a href="#2-4-1-端口地址" class="headerlink" title="2.4.1 端口地址"></a>2.4.1 端口地址</h3><p>首先，我们需要确定串口 IO 端口的地址。由于与机器的连接方式以及 BIOS 的配置方式不同，IO 端口的地址也有可能发生改变，但一般来说，各 COM 口对应的 IO 端口地址如下所示。当然，我们也可以在 BIOS 的 Data Area 中查询到该信息。</p>
+<table>
+<thead>
+<tr>
+<th><strong>通讯端口</strong></th>
+<th><strong>IO 端口</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>COM1</td>
+<td>0x3F8</td>
+</tr>
+<tr>
+<td>COM2</td>
+<td>0x2F8</td>
+</tr>
+</tbody></table>
+<p>在获得 COM 口的基地址后，我们可以添加一个偏移值以访问其中的数据寄存器。</p>
+<table>
+<thead>
+<tr>
+<th><strong>IO 端口偏移</strong></th>
+<th><strong>DLAB的设置</strong></th>
+<th><strong>映射到此端口的寄存器</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+0</td>
+<td>0</td>
+<td>数据寄存器。从接收缓冲区读取此寄存器。写入该寄存器会写入发送缓冲区。</td>
+</tr>
+<tr>
+<td>+1</td>
+<td>0</td>
+<td>中断使能寄存器。</td>
+</tr>
+<tr>
+<td>+0</td>
+<td>1</td>
+<td>当 DLAB 设置为 1 时，这是用于设置波特率的除数的最低有效字节。</td>
+</tr>
+<tr>
+<td>+1</td>
+<td>1</td>
+<td>DLAB 设置为 1 时，这是除数的最高有效字节。</td>
+</tr>
+<tr>
+<td>+2</td>
+<td>-</td>
+<td>中断识别和 FIFO 控制寄存器</td>
+</tr>
+<tr>
+<td>+3</td>
+<td>-</td>
+<td>线路控制寄存器。该寄存器的最高有效位是 DLAB。</td>
+</tr>
+<tr>
+<td>+4</td>
+<td>-</td>
+<td>MODEM 控制寄存器。</td>
+</tr>
+<tr>
+<td>+5</td>
+<td>-</td>
+<td>线路状态寄存器。</td>
+</tr>
+<tr>
+<td>+6</td>
+<td>-</td>
+<td>MODEM 状态寄存器。</td>
+</tr>
+<tr>
+<td>+7</td>
+<td>-</td>
+<td>暂存器。</td>
+</tr>
+</tbody></table>
+<h3 id="2-4-2-线路协议"><a href="#2-4-2-线路协议" class="headerlink" title="2.4.2 线路协议"></a>2.4.2 线路协议</h3><p>通过电线传输的串行数据可以有许多不同的参数设置。通常情况下，发送设备和接收设备需要向每个串行控制器写入相同的协议参数值，以便通信成功。</p>
+<p>一般情况下 8N1（8位，无奇偶性，一个停止位）几乎是默认的。</p>
+<h4 id="2-4-2-1-波特率"><a href="#2-4-2-1-波特率" class="headerlink" title="2.4.2.1 波特率"></a>2.4.2.1 波特率</h4><p>串行控制器（UART）有一个内部时钟，以每秒 115200 次的速度运行，还有一个时钟除数，用来控制波特率。这与可编程中断定时器（PIT）使用的系统类型完全相同。</p>
+<p>为了设置端口的速度，计算给定波特率所需的除数，并将其编入除数寄存器。例如，除数为 1 会得到115200 波特，除数为 2 会得到 57600 波特，3 会得到 38400 波特，等等。</p>
+<p>不要试图使用 0 的除数来获得无限的波特率，这是不可行的。大多数串行控制器将产生一个未指定的和不可预测的波特率（无论如何，无限波特将意味着无限的传输错误，因为它们是成比例的）。</p>
+<p>给控制器设置除数的步骤：</p>
+<ol>
+<li>设置线路控制寄存器的最有效位。这是DLAB位，允许访问除数寄存器。</li>
+<li>将除数值的最小有效字节发送到[PORT + 0]。</li>
+<li>将除数值的最有意义的字节发送到 [PORT + 1]。</li>
+<li>清除线路控制寄存器的最重要位。</li>
+</ol>
+<h4 id="2-4-2-2-数据位"><a href="#2-4-2-2-数据位" class="headerlink" title="2.4.2.2 数据位"></a>2.4.2.2 数据位</h4><p>一个字符中的比特数是可变的。当然，位数越少越快，但它们储存的信息越少。如果你只发送 ASCII 文本，你可能只需要 7 位。</p>
+<p>通过写入行控制寄存器 [PORT + 3 ]的两个最小有效位来设置这个值。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Bit 1</strong></th>
+<th><strong>Bit 0</strong></th>
+<th><strong>Character Length (bits)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>6</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>7</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>8</td>
+</tr>
+</tbody></table>
+<h4 id="2-4-2-3-停止位"><a href="#2-4-2-3-停止位" class="headerlink" title="2.4.2.3 停止位"></a>2.4.2.3 停止位</h4><p>串行控制器可以被配置为在每个数据字符后发送一些比特。这些可靠的位可以被控制器用来验证发送和接收设备是否处于相位。</p>
+<p>如果字符长度具体为 5 位，停止位只能设置为 1 或 1.5。对于其他长度的字符，停止位只能设置为 1 或 2。</p>
+<p>要设置停止位的数量，设置线路控制寄存器 PORT + 3] 的第 2 位。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Bit 2</strong></th>
+<th><strong>Stop Bits</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1.5 / 2 (depending on character length)</td>
+</tr>
+</tbody></table>
+<h4 id="2-4-2-4-奇偶校验位"><a href="#2-4-2-4-奇偶校验位" class="headerlink" title="2.4.2.4 奇偶校验位"></a>2.4.2.4 奇偶校验位</h4><p>可以使控制器在传输的每个数据字符的末尾增加或期待一个奇偶校验位。有了这个奇偶校验位，如果数据的一个位被干扰颠倒了，就可以提出一个奇偶校验错误。奇偶校验类型可以是 NONE、EVEN、ODD、MARK 或 SPACE。</p>
+<p>如果奇偶校验设置为 NONE，将不添加奇偶校验位，也不期望有奇偶校验。如果发射器发送了一个，而接收器却没有预期到，这很可能会导致错误。</p>
+<p>如果奇偶校验设置为 MARK 或 SPACE，奇偶校验位将分别被期望总是设置为 1 或 0。</p>
+<p>如果奇偶校验被设置为 EVEN 或 ODD，控制器通过将所有数据位和奇偶校验位的值相加来计算奇偶校验的准确性。如果端口被设置为 EVEN 奇偶校验，其结果必须是偶数。如果它被设置为 ODD 奇偶校验，结果必须是奇数。</p>
+<p>要设置端口奇偶校验，请设置线路控制寄存器 [PORT + 3] 的第 3、4 和 5 位。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Bit 5</strong></th>
+<th><strong>Bit 4</strong></th>
+<th><strong>Bit 3</strong></th>
+<th><strong>Parity</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-</td>
+<td>-</td>
+<td>0</td>
+<td>NONE</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>ODD</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>EVEN</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>MARK</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>SPACE</td>
+</tr>
+</tbody></table>
+<h3 id="2-4-3-中断使能寄存器"><a href="#2-4-3-中断使能寄存器" class="headerlink" title="2.4.3 中断使能寄存器"></a>2.4.3 中断使能寄存器</h3><p>要在中断模式下与串口通信，必须正确设置中断使能寄存器。为了确定哪些中断应该被启用，必须向中断使能寄存器写入一个具有下列位的值（0 = 禁用，1 = 启用）。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Bit</strong></th>
+<th><strong>Interrupt</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>Data available</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Transmitter empty</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Break/error</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Status change</td>
+</tr>
+<tr>
+<td>4-7</td>
+<td>Unused</td>
+</tr>
+</tbody></table>
+<h3 id="2-4-4-MODEM-控制寄存器"><a href="#2-4-4-MODEM-控制寄存器" class="headerlink" title="2.4.4 MODEM 控制寄存器"></a>2.4.4 MODEM 控制寄存器</h3><p>MODEM 控制寄存器是硬件握手寄存器的一半。虽然大多数串行设备不再使用硬件握手，但在所有与16550 兼容的 UARTS 中仍然包括这些线路。这些可以作为一般用途的输出端口，也可以用来实际执行握手。通过写入调制解调器控制寄存器，它将把这些线设置为有效。</p>
+<table>
+<thead>
+<tr>
+<th>Bit</th>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>Data Terminal Ready (DTR)</td>
+<td>Controls the Data Terminal Ready Pin</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Request to Send (RTS)</td>
+<td>Controls the Request to Send Pin</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Out 1</td>
+<td>Controls a hardware pin (OUT1) which is unused in PC implementations</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Out 2</td>
+<td>Controls a hardware pin (OUT2) which is used to enable the IRQ in PC implementations</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Loop</td>
+<td>Provides a local loopback feature for diagnostic testing of the UART</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0</td>
+<td>Unused</td>
+</tr>
+<tr>
+<td>6</td>
+<td>0</td>
+<td>Unused</td>
+</tr>
+<tr>
+<td>7</td>
+<td>0</td>
+<td>Unused</td>
+</tr>
+</tbody></table>
+<h3 id="2-4-5-线路状态寄存器"><a href="#2-4-5-线路状态寄存器" class="headerlink" title="2.4.5 线路状态寄存器"></a>2.4.5 线路状态寄存器</h3><p>线路状态寄存器对于检查错误和启用轮询非常有用。</p>
+<table>
+<thead>
+<tr>
+<th><strong>Bit</strong></th>
+<th><strong>Name</strong></th>
+<th><strong>Meaning</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>Data ready (DR)</td>
+<td>Set if there is data that can be read</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Overrun error (OE)</td>
+<td>Set if there has been data lost</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Parity error (PE)</td>
+<td>Set if there was an error in the transmission as detected by parity</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Framing error (FE)</td>
+<td>Set if a stop bit was missing</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Break indicator (BI)</td>
+<td>Set if there is a break in data input</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Transmitter holding register empty (THRE)</td>
+<td>Set if the transmission buffer is empty (i.e. data can be sent)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Transmitter empty (TEMT)</td>
+<td>Set if the transmitter is not doing anything</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Impending Error</td>
+<td>Set if there is an error with a word in the input buffer</td>
+</tr>
+</tbody></table>
+<h3 id="2-4-6-MODEM-状态寄存器"><a href="#2-4-6-MODEM-状态寄存器" class="headerlink" title="2.4.6 MODEM 状态寄存器"></a>2.4.6 MODEM 状态寄存器</h3><p>该寄存器提供来自外围设备的控制线的当前状态。除了这些当前状态信息，MODEM 状态寄存器的四个位提供了变化信息。每当来自 MODEM 的控制输入改变状态时，这些位被设置为逻辑 1。每当 CPU 读取MODEM 状态寄存器时，它们就被重置为逻辑 0。</p>
+<table>
+<thead>
+<tr>
+<th>Bit</th>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>Delta Clear to Send (DCTS)</td>
+<td>Indicates that CTS input has changed state since the last time it was read</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Delta Data Set Ready (DDSR)</td>
+<td>Indicates that DSR input has changed state since the last time it was read</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Trailing Edge of Ring Indicator (TERI)</td>
+<td>Indicates that RI input to the chip has changed from a low to a high state</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Delta Data Carrier Detect (DDCD)</td>
+<td>Indicates that DCD input has changed state since the last time it ware read</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Clear to Send (CTS)</td>
+<td>Inverted CTS Signal</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Data Set Ready (DSR)</td>
+<td>Inverted DSR Signal</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Ring Indicator (RI)</td>
+<td>Inverted RI Signal</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Data Carrier Detect (DCD)</td>
+<td>Inverted DCD Signal</td>
+</tr>
+</tbody></table>
+<p>如果 MCR 的第 4 位（LOOP 位）被设置，上面的 4 位将反映调制解调器控制寄存器中设置的 4 条状态输出线。</p>
+<h3 id="2-4-7-实例"><a href="#2-4-7-实例" class="headerlink" title="2.4.7 实例"></a>2.4.7 实例</h3><p>以之前提到的串口初始化程序为例，我们来说明如何对串口 IO 端口进行编程。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init_serial</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   gdb_x86_io_write_8(SERIAL_PORT + <span class="number">1</span>, <span class="number">0x00</span>);    <span class="comment">// Disable all interrupts</span></span><br><span class="line">   gdb_x86_io_write_8(SERIAL_PORT + <span class="number">3</span>, <span class="number">0x80</span>);    <span class="comment">// Enable DLAB (set baud rate divisor)</span></span><br><span class="line">   gdb_x86_io_write_8(SERIAL_PORT + <span class="number">0</span>, <span class="number">0x03</span>);    <span class="comment">// Set divisor to 3 (lo byte) 38400 baud</span></span><br><span class="line">   gdb_x86_io_write_8(SERIAL_PORT + <span class="number">1</span>, <span class="number">0x00</span>);    <span class="comment">//                  (hi byte)</span></span><br><span class="line">   gdb_x86_io_write_8(SERIAL_PORT + <span class="number">3</span>, <span class="number">0x03</span>);    <span class="comment">// 8 bits, no parity, one stop bit</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>向相对于基地址 0x3F8 偏移量为 1 的中断使能寄存器中写入 0x00，意为关闭所有的串口中断。</li>
+<li>向相对于基地址 0x3F8 偏移量为 3 的线路控制寄存器中写入 0x80。线路控制寄存器的最高位为 DLAB(Divisor Latch Access Bit)，即除数锁存存取位，这是为后面设置波特率做准备。</li>
+<li>向相对于基地址 0x3F8 偏移量为 0 的寄存器中写入 0x03。当 DLAB 设置为 1 时，这是用于设置波特率的除数的最低有效字节。例如，除数 1 将产生 115200 波特，除数 2 将产生 57600 波特，3 将产生 38400 波特等。</li>
+<li>向相对于基地址 0x3F8 偏移量为 1 的寄存器中写入 0x00，意味设置波特率的除数的最高有效字节为 0。</li>
+<li>相对于基地址 0x3F8 偏移量为 3 的线路控制寄存器中写入 0x03，意为关闭 DLAB，并设置为无奇偶校验位与 1 位停止位。</li>
+</ol>
+<p>对串口的 IO 端口编程就简单介绍到这里，各个端口各个位的具体含义大家可以参考 <a href="https://wiki.osdev.org/Serial_Ports" target="_blank" rel="noopener">Serial Port</a> 和 <a href="https://bochs.sourceforge.io/techspec/PORTS.LST" target="_blank" rel="noopener">PORTS</a>。</p>
+<h1 id="3-编译、运行与测试"><a href="#3-编译、运行与测试" class="headerlink" title="3 编译、运行与测试"></a>3 编译、运行与测试</h1><h2 id="3-1-编译"><a href="#3-1-编译" class="headerlink" title="3.1 编译"></a>3.1 编译</h2><ol>
+<li>在项目中新建一个 gdbstub 文件夹，内含gdbstub_x86_int.nasm和gdbstub.h两个文件。</li>
+</ol>
+<p><img src="/images/2022/11/17/6dcbe1b3c43992021654c989b4a084ea.png" alt="文本 描述已自动生成"></p>
+<ol>
+<li><p>在 mini-os 的main.c中引入gdbstub.h头文件，并在函数kernel_main()中调用gdb_sys_init()方法。</p>
+<p><img src="/images/2022/11/17/def62c1ceb370d5c1a2bde92e0292900.png" alt=""></p>
+</li>
+<li><p>在os/Makefile文件增加如下的编译命令。</p>
+<p><img src="/images/2022/11/17/f87177366b25bc23e18f8c85827daf65.png" alt="图形用户界面, 文本 描述已自动生成">)<img src="/images/2022/11/17/8aed8387d6dc8284ee354e7937d05969.png" alt=""></p>
+</li>
+</ol>
+<h2 id="3-2-运行"><a href="#3-2-运行" class="headerlink" title="3.2 运行"></a>3.2 运行</h2><ol>
+<li>在调试机上设置波特率。由于之前初始化串口时，我们设置目标机的波特率为 38400，为保证两机通信正常，需要设置同样的波特率。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo stty -F /dev/ttyS0 ispeed 38400 ospeed 38400 cs8</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>将目标机上编译好的代码文件（mini-os）复制一份放入调试机中，并用如下命令启动 GDB。其中kernel.gdb.bin是带调试符号的可执行文件。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gdb kernel.gdb.bin</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>用如下命令连接串口。其中/dev/ttyS0是本机的串口号。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">target remote /dev/ttyS0</span><br></pre></td></tr></table></figure>
+
+<p>经过上述步骤就可以愉快地调试程序啦！</p>
+<p><img src="/images/2022/11/17/e12ce147ba24ec924aac51ad87edd5d4.jpeg" alt="电脑的屏幕 描述已自动生成"></p>
+<p><img src="/images/2022/11/17/beffb09fc2c22dfd75cc55de3c49c7ad.png" alt="电脑屏幕截图 描述已自动生成"></p>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h1><p>由于查阅许多资料，依然没能找到一篇系统地讲解如何调试真机上的 OS 的文章，因此决定将自己这一探索经历分享出来，希望可以帮助到更多的人。</p>
+<p>在这次实践中，有过许多次难有进展的时间段，只能不断地查资料、编码、编译、运行、重启电脑、Debug，反反复复，甚至在临睡前、骑车回寝室的路上都会思考接下来的步骤（插入一句，骑车回去的时候头脑最清楚）。这篇文章展现出来的都是成功的尝试，只是总体过程的冰山一角。</p>
+<p>但是在这一过程中我也复习了很多之前没怎么注意的细小的知识点，重新回顾了 Makefile 文件的用法、ELF 文件的基本格式、汇编语言，了解了串口编程，加深了对底层的了解，的确是一次很有收获的经历。</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年11月17日 16:01</p>
+        <p>原始链接： <a class="post-url" href="/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/" title="如何调试真机上的 OS">https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/</a></p>
+        <footer>
+            <a href="https://xiao_feng_yang993.gitee.io">
+                <img src="/images/logo.jpg" alt="yangxiaofeng">
+                yangxiaofeng
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/&title=《如何调试真机上的 OS》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/&title=《如何调试真机上的 OS》 — yangxiaofeng的博客&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《如何调试真机上的 OS》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Linux/" class="color1">Linux</a>
+      
+    <a href="/tags/调试/" class="color3">调试</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-技术背景"><span class="post-toc-text">1 技术背景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-1-stub-初探"><span class="post-toc-text">1.1 stub 初探</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-2-串口略讲"><span class="post-toc-text">1.2 串口略讲</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-3-RSP-概述"><span class="post-toc-text">1.3 RSP 概述</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-3-1-客户端-服务器-关系"><span class="post-toc-text">1.3.1 客户端-服务器 关系</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-3-2-表示层：数据包传输"><span class="post-toc-text">1.3.2 表示层：数据包传输</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-3-3-应用层：远程串行协议"><span class="post-toc-text">1.3.3 应用层：远程串行协议</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-3-4-实例"><span class="post-toc-text">1.3.4 实例</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-gdbstub"><span class="post-toc-text">2 gdbstub</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-1-概览"><span class="post-toc-text">2.1 概览</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-2-处理流程"><span class="post-toc-text">2.2 处理流程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-2-1-生成异常处理函数向量表"><span class="post-toc-text">2.2.1 生成异常处理函数向量表</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-2-2-绑定异常处理函数"><span class="post-toc-text">2.2.2 绑定异常处理函数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-2-3-异常处理函数的实现"><span class="post-toc-text">2.2.3 异常处理函数的实现</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-2-3-1-从串口收-发数据包"><span class="post-toc-text">2.2.3.1 从串口收&#x2F;发数据包</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-2-3-2-解析-编码数据包"><span class="post-toc-text">2.2.3.2 解析&#x2F;编码数据包</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-2-3-3-根据指令进行相应的处理"><span class="post-toc-text">2.2.3.3 根据指令进行相应的处理</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-3-修改-gdbstub"><span class="post-toc-text">2.3 修改 gdbstub</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-4-对串口-IO-端口进行编程"><span class="post-toc-text">2.4 对串口 IO 端口进行编程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-4-1-端口地址"><span class="post-toc-text">2.4.1 端口地址</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-4-2-线路协议"><span class="post-toc-text">2.4.2 线路协议</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-4-2-1-波特率"><span class="post-toc-text">2.4.2.1 波特率</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-4-2-2-数据位"><span class="post-toc-text">2.4.2.2 数据位</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-4-2-3-停止位"><span class="post-toc-text">2.4.2.3 停止位</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-4-2-4-奇偶校验位"><span class="post-toc-text">2.4.2.4 奇偶校验位</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-4-3-中断使能寄存器"><span class="post-toc-text">2.4.3 中断使能寄存器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-4-4-MODEM-控制寄存器"><span class="post-toc-text">2.4.4 MODEM 控制寄存器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-4-5-线路状态寄存器"><span class="post-toc-text">2.4.5 线路状态寄存器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-4-6-MODEM-状态寄存器"><span class="post-toc-text">2.4.6 MODEM 状态寄存器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-4-7-实例"><span class="post-toc-text">2.4.7 实例</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-编译、运行与测试"><span class="post-toc-text">3 编译、运行与测试</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-1-编译"><span class="post-toc-text">3.1 编译</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-2-运行"><span class="post-toc-text">3.2 运行</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#4-总结"><span class="post-toc-text">4 总结</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">树莓派3——DMA技术访问SD卡的实现与分析</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+    <!-- <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <div id="comments">
+        <script>
+            var gitment = new Gitment({
+                owner: 'yang-xiaofeng1101',
+                repo: 'yang-xiaofeng1101.github.io',
+                oauth: {
+                    client_id: 'e460a9c0f66b72f89833',
+                    client_secret: '4d3e6140015e2f8b97a7158b70ab99d320256e57',
+                },
+            })
+            gitment.render('comments')
+        </script>
+    </div> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<div id="comments">
+    <script>
+        var gitalk = new Gitalk({
+            clientID: 'e460a9c0f66b72f89833',
+            clientSecret: '4d3e6140015e2f8b97a7158b70ab99d320256e57',
+            repo: 'yang-xiaofeng1101.github.io',      // The repository of store comments,
+            owner: 'yang-xiaofeng1101',
+            admin: ['yang-xiaofeng1101'],
+            id: decodeURI(location.pathname),      // Ensure uniqueness and length less than 50
+            distractionFreeMode: false  // Facebook-like distraction free mode
+        })
+        gitalk.render('comments')
+    </script>
+</div>
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 yangxiaofeng<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://xiao_feng_yang993.gitee.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 12px;">C++</a> <a href="/tags/DMA/" style="font-size: 10px;">DMA</a> <a href="/tags/Dart/" style="font-size: 12px;">Dart</a> <a href="/tags/EMMC/" style="font-size: 12px;">EMMC</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 14px;">cuda</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 12px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 12px;">位运算</a> <a href="/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 10px;">排序</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 12px;">树莓派</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 12px;">汇编</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 16px;">编程</a> <a href="/tags/%E8%B0%83%E8%AF%95/" style="font-size: 14px;">调试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">软件工程</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 12px;">链表</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 12px;">C++</a> <a href="/tags/DMA/" style="font-size: 10px;">DMA</a> <a href="/tags/Dart/" style="font-size: 12px;">Dart</a> <a href="/tags/EMMC/" style="font-size: 12px;">EMMC</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 14px;">cuda</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 12px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 12px;">位运算</a> <a href="/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 10px;">排序</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 12px;">树莓派</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 12px;">汇编</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 16px;">编程</a> <a href="/tags/%E8%B0%83%E8%AF%95/" style="font-size: 14px;">调试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">软件工程</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 12px;">链表</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
