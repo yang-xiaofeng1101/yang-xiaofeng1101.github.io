@@ -16,6 +16,8 @@
 <meta property="og:description" content="1. 背景在单位局域网下的计算机设备由于没有连接到Internet，每次要安装什么软件的时候都很麻烦，需要手动下载安装包再上传，当安装包有众多依赖包的时候，很是麻烦。国内有多家单位都建设了镜像站，为国内开发人员提供了很大便利，但是对于不能访问Internet的局域网服务器来说，还是用不了。那么为何不自己建设一个镜像站呢。 2. 准备工作2.1. 硬件设备 一台局域网中可以连接Internet的计算">
 <meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/7813da31-66d6-4569-b45b-e1073f85c56f.png">
 <meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/e566e0e9-ac2b-4449-98f0-60857cbfa205.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/746ca0a1-aac1-4f5f-858c-3d7e83d0ae6c.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/7ff3f501-360d-4473-9f53-a4e2d63e8b1d.png">
 <meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/9780479d-b001-4f5c-8c1b-b10dc711a945.png">
 <meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/1c69bb2d-2674-4feb-b8f7-6b00667023d5.png">
 <meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/4d90307e-5d1f-49bd-9b4a-3ef4d4c25467.png">
@@ -28,7 +30,7 @@
 <meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/e494d618-4c0c-46e4-b206-f2ebe71c5913.png">
 <meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/64c963ca-607c-4323-ac2a-a63ee42d43b7.png">
 <meta property="article:published_time" content="2022-11-17T08:55:43.000Z">
-<meta property="article:modified_time" content="2022-11-17T10:02:01.451Z">
+<meta property="article:modified_time" content="2022-11-17T10:11:02.560Z">
 <meta property="article:author" content="yangxiaofeng">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -209,7 +211,7 @@
 
 <p>11、添加计划任务</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -q http://127.0.0.1:12345/<span class="built_in">jobs</span> -O /data/mirrors/jobs.json</span><br></pre></td></tr></table></figure>
-
+<p><img src="/images/2022/11/17/746ca0a1-aac1-4f5f-858c-3d7e83d0ae6c.png" alt="image.png"><br><img src="/images/2022/11/17/7ff3f501-360d-4473-9f53-a4e2d63e8b1d.png" alt="image.png"><br>jobs.json中记录着当前的镜像列表和状态</p>
 <p>12、配置前端web<br><strong>安装nginx</strong><br>采用nginx来实现，docker镜像或yum安装包都可</p>
 <p>1）yum安装</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install nginx</span><br></pre></td></tr></table></figure>
@@ -264,7 +266,7 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tunasynctl <span class="built_in">set</span>-size -w &lt;worker_id&gt; &lt;mirror_name&gt; &lt;size&gt;</span><br></pre></td></tr></table></figure>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2022年11月17日 18:02</p>
+        <p>最后更新： 2022年11月17日 18:11</p>
         <p>原始链接： <a class="post-url" href="/2022/11/17/%E5%BC%80%E6%BA%90%E9%95%9C%E5%83%8F%E7%AB%99%E5%BB%BA%E8%AE%BE/" title="开源镜像站建设">https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%BC%80%E6%BA%90%E9%95%9C%E5%83%8F%E7%AB%99%E5%BB%BA%E8%AE%BE/</a></p>
         <footer>
             <a href="https://xiao_feng_yang993.gitee.io">
