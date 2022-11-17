@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>开源镜像站建设 | yangxiaofeng的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="yangxiaofeng,yangxiaofeng's Blog" />
+  
+  <meta name="description" content="1. 背景在单位局域网下的计算机设备由于没有连接到Internet，每次要安装什么软件的时候都很麻烦，需要手动下载安装包再上传，当安装包有众多依赖包的时候，很是麻烦。国内有多家单位都建设了镜像站，为国内开发人员提供了很大便利，但是对于不能访问Internet的局域网服务器来说，还是用不了。那么为何不自己建设一个镜像站呢。 2. 准备工作2.1. 硬件设备 一台局域网中可以连接Internet的计算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开源镜像站建设">
+<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%BC%80%E6%BA%90%E9%95%9C%E5%83%8F%E7%AB%99%E5%BB%BA%E8%AE%BE/index.html">
+<meta property="og:site_name" content="yangxiaofeng的博客">
+<meta property="og:description" content="1. 背景在单位局域网下的计算机设备由于没有连接到Internet，每次要安装什么软件的时候都很麻烦，需要手动下载安装包再上传，当安装包有众多依赖包的时候，很是麻烦。国内有多家单位都建设了镜像站，为国内开发人员提供了很大便利，但是对于不能访问Internet的局域网服务器来说，还是用不了。那么为何不自己建设一个镜像站呢。 2. 准备工作2.1. 硬件设备 一台局域网中可以连接Internet的计算">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/7813da31-66d6-4569-b45b-e1073f85c56f.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/e566e0e9-ac2b-4449-98f0-60857cbfa205.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/9780479d-b001-4f5c-8c1b-b10dc711a945.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/1c69bb2d-2674-4feb-b8f7-6b00667023d5.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/4d90307e-5d1f-49bd-9b4a-3ef4d4c25467.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/08421a89-593a-485b-9c01-9bbe4317f47b.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/47c66f74-a2cc-4712-86bc-13abb735084f.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/16e70057-46f3-4378-90db-b474b0214536.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/cecdece5-1f39-4b3a-98f2-1bc6938b4a45.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/3d31ebf4-f989-4852-8015-b62af569ac04.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/389b819a-79ab-4b85-a092-d22a8d023418.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/e494d618-4c0c-46e4-b206-f2ebe71c5913.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/64c963ca-607c-4323-ac2a-a63ee42d43b7.png">
+<meta property="article:published_time" content="2022-11-17T08:55:43.000Z">
+<meta property="article:modified_time" content="2022-11-17T10:02:01.451Z">
+<meta property="article:author" content="yangxiaofeng">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/7813da31-66d6-4569-b45b-e1073f85c56f.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">yangxiaofeng&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.jpg" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        yangxiaofeng&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="yangxiaofeng" target="_blank" href="/">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/yang-xiaofeng1101">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/FKZx1UZnXdTYBP7">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                        <a title="QQ" target="_blank" href="//wpa.qq.com/msgrd?v=3&uin=1649675002&site=qq&menu=yes">
+                            <i class="fa fa-qq fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-开源镜像站建设" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      开源镜像站建设
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/技术/">技术</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2022-11-17
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h1><p>在单位局域网下的计算机设备由于没有连接到Internet，每次要安装什么软件的时候都很麻烦，需要手动下载安装包再上传，当安装包有众多依赖包的时候，很是麻烦。国内有多家单位都建设了镜像站，为国内开发人员提供了很大便利，但是对于不能访问Internet的局域网服务器来说，还是用不了。那么为何不自己建设一个镜像站呢。</p>
+<h1 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="2. 准备工作"></a>2. 准备工作</h1><h2 id="2-1-硬件设备"><a href="#2-1-硬件设备" class="headerlink" title="2.1. 硬件设备"></a>2.1. 硬件设备</h2><ol>
+<li>一台局域网中可以连接Internet的计算机</li>
+<li>足够大的存储磁盘<br>根据自己要同步的镜像大小选择合适大小的磁盘，镜像大小详情参见：<a href="http://mirrors.ustc.edu.cn/status/" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/status/</a><br>我有个剩余不足2T空间的磁盘，可以用来作为Centos的镜像站了</li>
+</ol>
+<h2 id="2-2-软件准备"><a href="#2-2-软件准备" class="headerlink" title="2.2. 软件准备"></a>2.2. 软件准备</h2><ol>
+<li><p>后端准备<br>tunasync是清华大学TUNA镜像源目前使用的镜像方案，github地址：<a href="https://github.com/tuna/tunasync" target="_blank" rel="noopener">https://github.com/tuna/tunasync</a></p>
+</li>
+<li><p>前端准备<br>如果只简单的要个html页面的话， 可以看 <a href="https://github.com/weyo/mirrors" target="_blank" rel="noopener">https://github.com/weyo/mirrors</a>，它风格类似于163镜像站<br><img src="/images/2022/11/17/7813da31-66d6-4569-b45b-e1073f85c56f.png" alt="image.png"><br>如果想要些美化以及配置生成工具的话可以参考哈工大镜像前端项目 <a href="https://github.com/hitlug/mirror-web" target="_blank" rel="noopener">https://github.com/hitlug/mirror-web</a>，界面样式如下<br><img src="/images/2022/11/17/e566e0e9-ac2b-4449-98f0-60857cbfa205.png" alt="image.png"></p>
+</li>
+</ol>
+<h1 id="3-开始部署"><a href="#3-开始部署" class="headerlink" title="3. 开始部署"></a>3. 开始部署</h1><p>1、安装依赖</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install rsync wget</span><br></pre></td></tr></table></figure>
+<p>2、下载tunasync</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/tuna/tunasync/releases/download/v0.3.7/tunasync-linux-bin.tar.gz</span><br><span class="line">tar xf tunasync-linux-bin.tar.gz</span><br><span class="line">mv tunasync /usr/bin/</span><br><span class="line">mv tunasynctl /usr/bin/</span><br></pre></td></tr></table></figure>
+
+<p>3、创建仓库目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/mirrors</span><br></pre></td></tr></table></figure>
+
+<p>4、创建日志目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/logs/tunasync</span><br></pre></td></tr></table></figure>
+
+<p>5、创建tunasync配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir /etc/tunasync</span><br></pre></td></tr></table></figure>
+
+<p>6、创建manager.conf配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/tunasync/manager.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[server]</span><br><span class="line">addr = <span class="string">"127.0.0.1"</span></span><br><span class="line">port = 12345</span><br><span class="line">ssl_cert = <span class="string">""</span></span><br><span class="line">ssl_key = <span class="string">""</span></span><br><span class="line"></span><br><span class="line">[files]</span><br><span class="line">db_type = <span class="string">"bolt"</span></span><br><span class="line">db_file = <span class="string">"/etc/tunasync/manager.db"</span></span><br><span class="line">ca_cert = <span class="string">""</span></span><br></pre></td></tr></table></figure>
+<p>manager部分参数说明：<br>addr：manager服务监听地址<br>port：manager服务监听端口<br>ssl_cert和ssl_key：证书配置<br>db_file：数据库文件位置</p>
+<p>7、创建worker.conf配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/tunasync/worker.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">[global]</span><br><span class="line">name = <span class="string">"test_worker"</span></span><br><span class="line">log_dir = <span class="string">"/data/logs/tunasync/&#123;&#123;.Name&#125;&#125;"</span></span><br><span class="line">mirror_dir = <span class="string">"/data/mirrors"</span></span><br><span class="line">concurrent = 10</span><br><span class="line">interval = 240</span><br><span class="line"></span><br><span class="line">[manager]</span><br><span class="line">api_base = <span class="string">"http://127.0.0.1:12345"</span></span><br><span class="line">token = <span class="string">""</span></span><br><span class="line">ca_cert = <span class="string">""</span></span><br><span class="line"></span><br><span class="line">[cgroup]</span><br><span class="line"><span class="built_in">enable</span> = <span class="literal">false</span></span><br><span class="line">base_path = <span class="string">"/sys/fs/cgroup"</span></span><br><span class="line">group = <span class="string">"tunasync"</span></span><br><span class="line"></span><br><span class="line">[server]</span><br><span class="line">hostname = <span class="string">"localhost"</span></span><br><span class="line">listen_addr = <span class="string">"127.0.0.1"</span></span><br><span class="line">listen_port = 6000</span><br><span class="line">ssl_cert = <span class="string">""</span></span><br><span class="line">ssl_key = <span class="string">""</span></span><br><span class="line"></span><br><span class="line">[[mirrors]]</span><br><span class="line">name = <span class="string">"centos"</span></span><br><span class="line">provider = <span class="string">"rsync"</span></span><br><span class="line">upstream = <span class="string">"rsync://mirrors.tuna.tsinghua.edu.cn/centos/"</span></span><br><span class="line">use_ipv6 = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">[[mirrors]]</span><br><span class="line">name = <span class="string">"epel"</span></span><br><span class="line">provider = <span class="string">"rsync"</span></span><br><span class="line">upstream = <span class="string">"rsync://mirrors.tuna.tsinghua.edu.cn/epel/"</span></span><br><span class="line">use_ipv6 = <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>注：更多worker.conf配置参见 <a href="https://github.com/tuna/tunasync/blob/master/docs/zh_CN/workers.conf" target="_blank" rel="noopener">https://github.com/tuna/tunasync/blob/master/docs/zh_CN/workers.conf</a></p>
+<p>worker部分参数说明：<br>log_dir：tunasync日志路径<br>mirror_dir：镜像的路径<br>concurrent：线程数<br>interval：同步周期，单位分钟<br>api_base：manager地址<br>name：镜像名称<br>upstream：upstream同步地址</p>
+<p>8、下载tunasync启动停止脚本</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -P /etc/init.d/ https://raw.githubusercontent.com/whsir/tunasync-bin/master/tunasync-manager</span><br><span class="line">wget -P /etc/init.d/ https://raw.githubusercontent.com/whsir/tunasync-bin/master/tunasync-worker</span><br><span class="line">chmod +x /etc/init.d/tunasync-manager</span><br><span class="line">chmod +x /etc/init.d/tunasync-worker</span><br></pre></td></tr></table></figure>
+<p>9、启动服务</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/tunasync-manager start</span><br><span class="line">/etc/init.d/tunasync-worker start</span><br></pre></td></tr></table></figure>
+
+<p>10、查看同步状态<br>此处12345为manager的端口</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tunasynctl list -p 12345 --all</span><br></pre></td></tr></table></figure>
+
+<p>11、添加计划任务</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -q http://127.0.0.1:12345/<span class="built_in">jobs</span> -O /data/mirrors/jobs.json</span><br></pre></td></tr></table></figure>
+
+<p>12、配置前端web<br><strong>安装nginx</strong><br>采用nginx来实现，docker镜像或yum安装包都可</p>
+<p>1）yum安装</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install nginx</span><br></pre></td></tr></table></figure>
+
+<p>2）docker 安装</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull nginx:1.23.2</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2022/11/17/9780479d-b001-4f5c-8c1b-b10dc711a945.png" alt="image.png"></p>
+<p><strong>修改配置文件nginx.conf</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># For more information on configuration, see:</span></span><br><span class="line"><span class="comment">#   * Official English Documentation: http://nginx.org/en/docs/</span></span><br><span class="line"><span class="comment">#   * Official Russian Documentation: http://nginx.org/ru/docs/</span></span><br><span class="line"></span><br><span class="line">user nginx;</span><br><span class="line">worker_processes auto;</span><br><span class="line">error_log /var/<span class="built_in">log</span>/nginx/error.log;</span><br><span class="line">pid /run/nginx.pid;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.</span></span><br><span class="line">include /usr/share/nginx/modules/*.conf;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections 1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    autoindex on;                       <span class="comment">#开启nginx目录浏览功能</span></span><br><span class="line">    autoindex_exact_size off;           <span class="comment">#文件大小从KB开始显示</span></span><br><span class="line">    autoindex_localtime on;             <span class="comment">#显示文件修改时间为服务器本地时间</span></span><br><span class="line"></span><br><span class="line">    log_format  main  <span class="string">'$remote_addr - $remote_user [$time_local] "$request" '</span></span><br><span class="line">                      <span class="string">'$status $body_bytes_sent "$http_referer" '</span></span><br><span class="line">                      <span class="string">'"$http_user_agent" "$http_x_forwarded_for"'</span>;</span><br><span class="line"></span><br><span class="line">    access_log  /var/<span class="built_in">log</span>/nginx/access.log  main;</span><br><span class="line"></span><br><span class="line">    sendfile            on;</span><br><span class="line">    tcp_nopush          on;</span><br><span class="line">    tcp_nodelay         on;</span><br><span class="line">    keepalive_timeout   65;</span><br><span class="line">    types_hash_max_size 4096;</span><br><span class="line"></span><br><span class="line">    include             /etc/nginx/mime.types;</span><br><span class="line">    default_type        application/octet-stream;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Load modular configuration files from the /etc/nginx/conf.d directory.</span></span><br><span class="line">    <span class="comment"># See http://nginx.org/en/docs/ngx_core_module.html#include</span></span><br><span class="line">    <span class="comment"># for more information.</span></span><br><span class="line">    include /etc/nginx/conf.d/*.conf;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        listen       [::]:80;</span><br><span class="line">        server_name  _;</span><br><span class="line">        root         /data/mirrors/;</span><br><span class="line"></span><br><span class="line">         <span class="comment">#Load configuration files for the default server block.</span></span><br><span class="line">        include /etc/nginx/default.d/*.conf;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page 404 /404.html;</span><br><span class="line">        location = /404.html &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page 500 502 503 504 /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Settings for a TLS enabled server.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       443 ssl http2;</span><br><span class="line">        listen       [::]:443 ssl http2;</span><br><span class="line">        server_name  _a;</span><br><span class="line">        root         /data/mirrors/;</span><br><span class="line"></span><br><span class="line">        ssl_certificate <span class="string">"/etc/nginx/server.crt"</span>;</span><br><span class="line">        ssl_certificate_key <span class="string">"/etc/nginx/server.key"</span>;</span><br><span class="line">        ssl_session_cache shared:SSL:1m;</span><br><span class="line">        ssl_session_timeout  10m;</span><br><span class="line">        ssl_ciphers HIGH:!aNULL:!MD5;</span><br><span class="line">        ssl_prefer_server_ciphers on;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Load configuration files for the default server block.</span></span><br><span class="line">        include /etc/nginx/default.d/*.conf;</span><br><span class="line">        location / &#123;</span><br><span class="line">        &#125;</span><br><span class="line">        error_page 404 /404.html;</span><br><span class="line">            location = /40x.html &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page 500 502 503 504 /50x.html;</span><br><span class="line">            location = /50x.html &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置文件中，我们同时启用了http和https</p>
+<p>13、设置前端web<br>下载哈工大开源镜像站前端项目，根据我们的实际情况稍作修改<br><img src="/images/2022/11/17/1c69bb2d-2674-4feb-b8f7-6b00667023d5.png" alt="image.png"><br>这里的获取镜像列表，而我们再服务器上生成的是名为jobs.json的文件，需要将原来的jobs改为jobs.json，通过读取本地文件来获取jobs信息。</p>
+<p><img src="/images/2022/11/17/4d90307e-5d1f-49bd-9b4a-3ef4d4c25467.png" alt="image.png"><br>为了从网页看到每个镜像的大小信息，在这里添加一列显示镜像大小</p>
+<p>原来的下载链接生成器和配置生成器的数据位于/public/static/下的json文件<br><img src="/images/2022/11/17/08421a89-593a-485b-9c01-9bbe4317f47b.png" alt="image.png"><br><img src="/images/2022/11/17/47c66f74-a2cc-4712-86bc-13abb735084f.png" alt="image.png"><br>修改这些json文件，适配实际环境</p>
+<p><img src="/images/2022/11/17/16e70057-46f3-4378-90db-b474b0214536.png" alt="image.png"><br>如果要添加新的镜像说明文档，在docPage目录下，添加md,js文件，并在menu.json中添加</p>
+<p>目录结构<br>.<br>├── doc<br>│   ├── …<br>│   ├── js<br>│   │   ├── docHome.js<br>│   │   └── …<br>│   └── markdown<br>│       ├── docHome.md<br>│       └── …<br>├── …<br>└── menu.json</p>
+<p>结构说明<br>./doc/markdown: 存放所有 Markdown 文档</p>
+<p>./doc/js: 存放所有 JavaScript 代码</p>
+<ul>
+<li><p>命名规则: 请检查 ./menu.json 文件中对应的 path 项。若 path 为 /doc/MyDoc ，则 js 文件应命名为 MyDoc.js</p>
+</li>
+<li><p>请在 js 中引入您的 Markdown 文档，方式为:</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> doc <span class="keyword">from</span> <span class="string">"../markdown/YourMarkdown.md"</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>调用方式:</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;DocTemplate doc=&#123;doc&#125;/&gt;</span><br></pre></td></tr></table></figure>
+<p>./menu.json: 目录文件，存放文档页面左侧的导航栏相关信息</p>
+<ul>
+<li><p>key: 可选，会将提供 key 的项目排序后置顶；若不提供，则按照 title 的字典序显示在下面</p>
+</li>
+<li><p>title: 将作为导航栏 MenuItem 的标题</p>
+</li>
+<li><p>name: 镜像名称，应与主页的对应项目和对应的 js 文件名相同，用于在主页添加帮助文档的链接及帮助文档的路由路径</p>
+</li>
+</ul>
+<p><strong>编译运行</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+<p>上传build目录下内容到服务器的/data/mirrors路径下</p>
+<p><strong>启动nginx服务</strong></p>
+<p>1） 系统安装启动<br>/etc/init.d/nginx restart</p>
+<p>2） docker启动</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mirrors-web -p 80:80 -p 443:443 -v /etc/nginx/:/etc/nginx/:ro -v /data/mirrors/:/data/mirrors/ -v /data/sdc1/epel/:/data/sdc1/epel/ -v /var/<span class="built_in">log</span>/:/var/<span class="built_in">log</span>/ -d nginx:1.23.2</span><br></pre></td></tr></table></figure>
+<p>将/etc/nginx映射到docker的相应目录下，镜像安装位置为/data/mirrors，镜像目录支持软连接指向，所以开源将其他磁盘链接进来增加空间</p>
+<p>14、访问测试<br><img src="/images/2022/11/17/cecdece5-1f39-4b3a-98f2-1bc6938b4a45.png" alt="image.png"><br>小工具测试<br><img src="/images/2022/11/17/3d31ebf4-f989-4852-8015-b62af569ac04.png" alt="image.png"><br>配置文档测试<br><img src="/images/2022/11/17/389b819a-79ab-4b85-a092-d22a8d023418.png" alt="image.png"><br>更新系统源<br>修改/etc/yum.repo.d下的CentOS-Base.repo，将域名换成nginx服务所在服务器域名或IP。<br><img src="/images/2022/11/17/e494d618-4c0c-46e4-b206-f2ebe71c5913.png" alt="image.png"><br><img src="/images/2022/11/17/64c963ca-607c-4323-ac2a-a63ee42d43b7.png" alt="image.png"></p>
+<p>15、 配置更新<br>修改worker.conf文件，添加镜像</p>
+<p>热重载 worker.conf</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tunasynctl reload -w &lt;worker_id&gt;</span><br><span class="line">tunasynctl flush</span><br></pre></td></tr></table></figure>
+
+<p>更新镜像的大小</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tunasynctl <span class="built_in">set</span>-size -w &lt;worker_id&gt; &lt;mirror_name&gt; &lt;size&gt;</span><br></pre></td></tr></table></figure>
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年11月17日 18:02</p>
+        <p>原始链接： <a class="post-url" href="/2022/11/17/%E5%BC%80%E6%BA%90%E9%95%9C%E5%83%8F%E7%AB%99%E5%BB%BA%E8%AE%BE/" title="开源镜像站建设">https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%BC%80%E6%BA%90%E9%95%9C%E5%83%8F%E7%AB%99%E5%BB%BA%E8%AE%BE/</a></p>
+        <footer>
+            <a href="https://xiao_feng_yang993.gitee.io">
+                <img src="/images/logo.jpg" alt="yangxiaofeng">
+                yangxiaofeng
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%BC%80%E6%BA%90%E9%95%9C%E5%83%8F%E7%AB%99%E5%BB%BA%E8%AE%BE/&title=《开源镜像站建设》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%BC%80%E6%BA%90%E9%95%9C%E5%83%8F%E7%AB%99%E5%BB%BA%E8%AE%BE/&title=《开源镜像站建设》 — yangxiaofeng的博客&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%BC%80%E6%BA%90%E9%95%9C%E5%83%8F%E7%AB%99%E5%BB%BA%E8%AE%BE/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《开源镜像站建设》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%BC%80%E6%BA%90%E9%95%9C%E5%83%8F%E7%AB%99%E5%BB%BA%E8%AE%BE/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%BC%80%E6%BA%90%E9%95%9C%E5%83%8F%E7%AB%99%E5%BB%BA%E8%AE%BE/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%BC%80%E6%BA%90%E9%95%9C%E5%83%8F%E7%AB%99%E5%BB%BA%E8%AE%BE/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Linux/" class="color1">Linux</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-背景"><span class="post-toc-text">1. 背景</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-准备工作"><span class="post-toc-text">2. 准备工作</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-1-硬件设备"><span class="post-toc-text">2.1. 硬件设备</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-2-软件准备"><span class="post-toc-text">2.2. 软件准备</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-开始部署"><span class="post-toc-text">3. 开始部署</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">如何调试真机上的 OS</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+    <!-- <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <div id="comments">
+        <script>
+            var gitment = new Gitment({
+                owner: 'yang-xiaofeng1101',
+                repo: 'yang-xiaofeng1101.github.io',
+                oauth: {
+                    client_id: 'e460a9c0f66b72f89833',
+                    client_secret: '4d3e6140015e2f8b97a7158b70ab99d320256e57',
+                },
+            })
+            gitment.render('comments')
+        </script>
+    </div> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<div id="comments">
+    <script>
+        var gitalk = new Gitalk({
+            clientID: 'e460a9c0f66b72f89833',
+            clientSecret: '4d3e6140015e2f8b97a7158b70ab99d320256e57',
+            repo: 'yang-xiaofeng1101.github.io',      // The repository of store comments,
+            owner: 'yang-xiaofeng1101',
+            admin: ['yang-xiaofeng1101'],
+            id: decodeURI(location.pathname),      // Ensure uniqueness and length less than 50
+            distractionFreeMode: false  // Facebook-like distraction free mode
+        })
+        gitalk.render('comments')
+    </script>
+</div>
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 yangxiaofeng<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://xiao_feng_yang993.gitee.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 12px;">C++</a> <a href="/tags/DMA/" style="font-size: 10px;">DMA</a> <a href="/tags/Dart/" style="font-size: 12px;">Dart</a> <a href="/tags/EMMC/" style="font-size: 12px;">EMMC</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 14px;">cuda</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 12px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 12px;">位运算</a> <a href="/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 10px;">排序</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 12px;">树莓派</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 12px;">汇编</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 16px;">编程</a> <a href="/tags/%E8%B0%83%E8%AF%95/" style="font-size: 14px;">调试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">软件工程</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 12px;">链表</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/C/" style="font-size: 12px;">C++</a> <a href="/tags/DMA/" style="font-size: 10px;">DMA</a> <a href="/tags/Dart/" style="font-size: 12px;">Dart</a> <a href="/tags/EMMC/" style="font-size: 12px;">EMMC</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/cuda/" style="font-size: 14px;">cuda</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/dp/" style="font-size: 10px;">dp</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/proxy/" style="font-size: 10px;">proxy</a> <a href="/tags/thrust/" style="font-size: 10px;">thrust</a> <a href="/tags/time-synchronization/" style="font-size: 10px;">time synchronization</a> <a href="/tags/vscode/" style="font-size: 12px;">vscode</a> <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" style="font-size: 12px;">位运算</a> <a href="/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 10px;">排序</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 12px;">树莓派</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 12px;">汇编</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 18px;">算法</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 16px;">编程</a> <a href="/tags/%E8%B0%83%E8%AF%95/" style="font-size: 14px;">调试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" style="font-size: 10px;">软件工程</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 12px;">链表</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>

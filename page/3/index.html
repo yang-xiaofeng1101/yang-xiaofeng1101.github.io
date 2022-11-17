@@ -110,6 +110,71 @@
       <div class="outer">
         <section id="main" class="body-wrap">
   
+    <article id="post-GPUDirect-RDMA-for-openmpi" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/10/GPUDirect-RDMA-for-openmpi/"  >GPUDirect RDMA for openmpi</a>
+    </h1>
+  
+
+          
+              <span class="header-cate">
+                <i class="fa fa-map-marker"></i>
+                  
+                  <a href="/categories/技术/">技术</a>
+                  
+              </span>
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+        <div class="article-img">
+            <a href="/2020/04/10/GPUDirect-RDMA-for-openmpi/" >
+                
+                <img src="https://xiao_feng_yang993.gitee.io/images/banner.jpg" alt="GPUDirect RDMA for openmpi" title="GPUDirect RDMA for openmpi">
+                
+            </a>
+        </div>
+        <div class="article-feed">
+            <p>
+                背景对于MPI跨节点项目，对GPU上的数据一般需要先cudaMemcopy到Host，再通过mpi_send出去，另一设备通过mpi_Recv到Host内存，再cudamemcopy到GPU显存，这一过程明显要费时。
+1. compile openmpi with –with-cuda这一编译方法可以让openmpi对显存的数据操作，但是它只是减少了代码的书写量，从GPU...
+            </p>
+        </div>
+      
+        
+    </div>
+    <footer class="article-footer">
+        
+        <ul class="article-footer-menu">
+            
+                <li><i class="fa fa-calendar"></i>2020-04-10</li>
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Linux/" class="color1">Linux</a>
+      
+    <a href="/tags/cuda/" class="color5">cuda</a>
+      
+  </li>
+
+        </ul>
+        
+            <a href="/2020/04/10/GPUDirect-RDMA-for-openmpi/#more" class="article-more-link" >more&gt;&gt;</a>
+        
+    </footer>
+  </div>
+</article>
+
+
+  
     <article id="post-openmpi-with-cuda" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -703,72 +768,10 @@ gcc选择自己想要的版本并下载我下载的是7.5.0版本.然后解压�
 
 
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/07/hello-world/"  >Hello World</a>
-    </h1>
-  
-
-          
-              <span class="header-cate">
-                <i class="fa fa-map-marker"></i>
-                  
-                  <a href="/categories/技术/">技术</a>
-                  
-              </span>
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/2020/03/07/hello-world/" >
-                
-                <img src="https://xiao_feng_yang993.gitee.io/images/banner.jpg" alt="Hello World" title="Hello World">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on ...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2020-03-07</li>
-            
-            
-  <li class="article-footer-tags">
-    <i class="fa fa-tags"></i>
-      
-    <a href="/tags/hexo/" class="color5">hexo</a>
-      
-  </li>
-
-        </ul>
-        
-            <a href="/2020/03/07/hello-world/#more" class="article-more-link" >more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
 
 
   <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/page/2/">&lt;&lt; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/">&lt;&lt; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next &gt;&gt;</a>
   </nav>
 </section>
         
