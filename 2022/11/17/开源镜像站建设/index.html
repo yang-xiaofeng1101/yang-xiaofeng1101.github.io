@@ -29,8 +29,13 @@
 <meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/389b819a-79ab-4b85-a092-d22a8d023418.png">
 <meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/e494d618-4c0c-46e4-b206-f2ebe71c5913.png">
 <meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/64c963ca-607c-4323-ac2a-a63ee42d43b7.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/05/af3b92e4-f545-4741-84b0-794c1dada169.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/05/bbfdad6f-5792-4d63-af24-d5d41dc77412.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/05/b47c56b1-6c6e-48e9-a24e-72d580190c22.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/05/09c1d049-b5ec-45f1-9053-c8a6757964a4.png">
+<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/05/23cc4c37-11d0-470b-a9d1-9c4671bbae56.png">
 <meta property="article:published_time" content="2022-11-17T08:55:43.000Z">
-<meta property="article:modified_time" content="2022-11-17T10:11:02.560Z">
+<meta property="article:modified_time" content="2023-06-05T05:56:20.152Z">
 <meta property="article:author" content="yangxiaofeng">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -264,9 +269,23 @@
 
 <p>更新镜像的大小</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tunasynctl <span class="built_in">set</span>-size -w &lt;worker_id&gt; &lt;mirror_name&gt; &lt;size&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-配置网关服务器"><a href="#4-配置网关服务器" class="headerlink" title="4. 配置网关服务器"></a>4. 配置网关服务器</h1><p>虽然我搭建了镜像站，但是镜像站的IP是不能被其他集群的计算节点访问的，因为镜像站节点只和其他集群的登陆节点在一个网段，集群 计算节点的IP是集群内的IP，无法访问外部网络。但是集群的计算节点上要安装软件就要用到镜像站，所以需要给登录节点配置成网关服务器，<strong>让集群的计算节点以集群的登录节点为网关访问镜像站服务器</strong>。</p>
+<p><img src="/images/2023/06/05/af3b92e4-f545-4741-84b0-794c1dada169.png" alt="image.png"><br>大致的示意图就像这样，拥有外网访问能力的服务器作为网关服务器。</p>
+<h2 id="1-网关服务器配置方法"><a href="#1-网关服务器配置方法" class="headerlink" title="1. 网关服务器配置方法"></a>1. 网关服务器配置方法</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> step 1：关闭并永久禁用firewalld服务</span></span><br><span class="line">systemctl stop firewalld </span><br><span class="line">systemctl disable firewalld </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> step 2：安装iptables-services</span></span><br><span class="line">yum -y install iptables-services</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> step 3：开启内核转发</span></span><br><span class="line">vim /etc/sysctl.conf </span><br><span class="line">添加一条：net.ipv4.ip_forward = 1</span><br><span class="line">sysctl -p #使之生效 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> step 4：配置iptables转发规则</span></span><br><span class="line">iptables -t nat -A POSTROUTING -s 10.10.0.0/16 -j MASQUERADE</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">step 5：保存iptables规则</span></span><br><span class="line">service iptables save #如果不执行save，重启失效</span><br></pre></td></tr></table></figure>
+<p>以上第step 4步骤中： MASQUERADE ：它是用于动态获取IP地址连接的。</p>
+<p>也可以静态指定外网IP：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -t nat -A POSTROUTING -s 10.10.0.0/16 -j SNAT --to 202.117.249.6</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2023/06/05/bbfdad6f-5792-4d63-af24-d5d41dc77412.png" alt="image.png"></p>
+<h2 id="2-计算节点配置默认路由"><a href="#2-计算节点配置默认路由" class="headerlink" title="2.计算节点配置默认路由"></a>2.计算节点配置默认路由</h2><p>将登录节点的集群内IP地址作为计算节点的默认网关地址</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">route add default gw 10.10.10.253</span><br></pre></td></tr></table></figure>
+<p>路由表结果如下图所示<br><img src="/images/2023/06/05/b47c56b1-6c6e-48e9-a24e-72d580190c22.png" alt="image.png"></p>
+<p>测试ping集群外IP地址<br><img src="/images/2023/06/05/09c1d049-b5ec-45f1-9053-c8a6757964a4.png" alt="image.png"></p>
+<p>至此，集群的计算节点就可以配置为自建镜像站的软件源实现yum或apt安装软件了。<br><img src="/images/2023/06/05/23cc4c37-11d0-470b-a9d1-9c4671bbae56.png" alt="image.png"></p>
+
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2022年11月17日 18:11</p>
+        <p>最后更新： 2023年06月05日 13:56</p>
         <p>原始链接： <a class="post-url" href="/2022/11/17/%E5%BC%80%E6%BA%90%E9%95%9C%E5%83%8F%E7%AB%99%E5%BB%BA%E8%AE%BE/" title="开源镜像站建设">https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%BC%80%E6%BA%90%E9%95%9C%E5%83%8F%E7%AB%99%E5%BB%BA%E8%AE%BE/</a></p>
         <footer>
             <a href="https://xiao_feng_yang993.gitee.io">
@@ -384,7 +403,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-背景"><span class="post-toc-text">1. 背景</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-准备工作"><span class="post-toc-text">2. 准备工作</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-1-硬件设备"><span class="post-toc-text">2.1. 硬件设备</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-2-软件准备"><span class="post-toc-text">2.2. 软件准备</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-开始部署"><span class="post-toc-text">3. 开始部署</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-背景"><span class="post-toc-text">1. 背景</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-准备工作"><span class="post-toc-text">2. 准备工作</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-1-硬件设备"><span class="post-toc-text">2.1. 硬件设备</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-2-软件准备"><span class="post-toc-text">2.2. 软件准备</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-开始部署"><span class="post-toc-text">3. 开始部署</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#4-配置网关服务器"><span class="post-toc-text">4. 配置网关服务器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-网关服务器配置方法"><span class="post-toc-text">1. 网关服务器配置方法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-计算节点配置默认路由"><span class="post-toc-text">2.计算节点配置默认路由</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
@@ -454,7 +473,7 @@
       <p>
         Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
         Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
-      &copy; 2022 yangxiaofeng<br>
+      &copy; 2023 yangxiaofeng<br>
       </p>
     </div>
   </div>
