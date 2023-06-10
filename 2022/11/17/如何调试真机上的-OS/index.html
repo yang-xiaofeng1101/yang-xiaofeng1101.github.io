@@ -11,38 +11,38 @@
   <meta name="description" content="1 技术背景1.1 stub 初探GDB作为 GNU 项目一款知名的调试工具大家应该都不陌生，我们可以通过其很方便地对本地代码进行调试。当我们在本地调试不便的时候，也可以选择在目标机上启动gdbserver，在调试机上运行 GDB 并通过 IP 地址和端口号连接到目标机，从而实现远程调试。 但是 gdbserver 存在其本身的限制：它所需要的操作系统环境基本上与 GDB 所需要的环境是一致的。换">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何调试真机上的 OS">
-<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/index.html">
+<meta property="og:url" content="https://yang-xiaofeng1101.github.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/index.html">
 <meta property="og:site_name" content="yangxiaofeng的博客">
 <meta property="og:description" content="1 技术背景1.1 stub 初探GDB作为 GNU 项目一款知名的调试工具大家应该都不陌生，我们可以通过其很方便地对本地代码进行调试。当我们在本地调试不便的时候，也可以选择在目标机上启动gdbserver，在调试机上运行 GDB 并通过 IP 地址和端口号连接到目标机，从而实现远程调试。 但是 gdbserver 存在其本身的限制：它所需要的操作系统环境基本上与 GDB 所需要的环境是一致的。换">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/8fac0d3ca4fc97ddcdd0d9ab50dac2c5.jpeg">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/36428c71e225aabfeb4baeef69f60ce0.jpeg">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/0293065afa7eb9f30301c180b6847a61.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/5a0dc24d57c843e0482165f919a7cd35.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/f27ffcdaeb79ddcd00070bed7bb601c5.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/ca50985d71c14dd84307ce7bf112169a.jpeg">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/4b254bbb7a81fb68a06c32c93596a0d7.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/5d55e596625f4e2a53c876617c639e15.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/2127537daff879fd483285e4db6a83aa.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/8d033614ddc559cff01dc3e6392928ae.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/0a4973a60bea93ff4bf48b91ec9a1a65.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/7e6803d9555c354e4cebca7dfeaff3d1.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/e060f0afe40d0238a3dd4a3a0da73d2d.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/916982f53c4d1d3b0bb1ac0c881575a2.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/dde6d8c2d57f32f212b0a668eb78ed58.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/843258dbf6fd0e25d895f59b42f78d84.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/6dcbe1b3c43992021654c989b4a084ea.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/def62c1ceb370d5c1a2bde92e0292900.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/f87177366b25bc23e18f8c85827daf65.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/8aed8387d6dc8284ee354e7937d05969.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/e12ce147ba24ec924aac51ad87edd5d4.jpeg">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/beffb09fc2c22dfd75cc55de3c49c7ad.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/8fac0d3ca4fc97ddcdd0d9ab50dac2c5.jpeg">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/36428c71e225aabfeb4baeef69f60ce0.jpeg">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/0293065afa7eb9f30301c180b6847a61.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/5a0dc24d57c843e0482165f919a7cd35.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/f27ffcdaeb79ddcd00070bed7bb601c5.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/ca50985d71c14dd84307ce7bf112169a.jpeg">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/4b254bbb7a81fb68a06c32c93596a0d7.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/5d55e596625f4e2a53c876617c639e15.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/2127537daff879fd483285e4db6a83aa.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/8d033614ddc559cff01dc3e6392928ae.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/0a4973a60bea93ff4bf48b91ec9a1a65.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/7e6803d9555c354e4cebca7dfeaff3d1.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/e060f0afe40d0238a3dd4a3a0da73d2d.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/916982f53c4d1d3b0bb1ac0c881575a2.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/dde6d8c2d57f32f212b0a668eb78ed58.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/843258dbf6fd0e25d895f59b42f78d84.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/6dcbe1b3c43992021654c989b4a084ea.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/def62c1ceb370d5c1a2bde92e0292900.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/f87177366b25bc23e18f8c85827daf65.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/8aed8387d6dc8284ee354e7937d05969.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/e12ce147ba24ec924aac51ad87edd5d4.jpeg">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/beffb09fc2c22dfd75cc55de3c49c7ad.png">
 <meta property="article:published_time" content="2022-11-17T07:50:39.000Z">
 <meta property="article:modified_time" content="2022-11-18T02:21:50.394Z">
 <meta property="article:author" content="yangxiaofeng">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="调试">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://xiao_feng_yang993.gitee.io/images/2022/11/17/8fac0d3ca4fc97ddcdd0d9ab50dac2c5.jpeg">
+<meta name="twitter:image" content="https://yang-xiaofeng1101.github.io/images/2022/11/17/8fac0d3ca4fc97ddcdd0d9ab50dac2c5.jpeg">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -746,9 +746,9 @@
             <div class="post-copyright">
     <div class="content">
         <p>最后更新： 2022年11月18日 10:21</p>
-        <p>原始链接： <a class="post-url" href="/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/" title="如何调试真机上的 OS">https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/</a></p>
+        <p>原始链接： <a class="post-url" href="/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/" title="如何调试真机上的 OS">https://yang-xiaofeng1101.github.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/</a></p>
         <footer>
-            <a href="https://xiao_feng_yang993.gitee.io">
+            <a href="https://yang-xiaofeng1101.github.io">
                 <img src="/images/logo.jpg" alt="yangxiaofeng">
                 yangxiaofeng
             </a>
@@ -803,7 +803,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/&title=《如何调试真机上的 OS》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://yang-xiaofeng1101.github.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/&title=《如何调试真机上的 OS》 — yangxiaofeng的博客&pic=https://yang-xiaofeng1101.github.ioimages/logo.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -813,22 +813,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/&title=《如何调试真机上的 OS》 — yangxiaofeng的博客&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yang-xiaofeng1101.github.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/&title=《如何调试真机上的 OS》 — yangxiaofeng的博客&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://yang-xiaofeng1101.github.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《如何调试真机上的 OS》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《如何调试真机上的 OS》 — yangxiaofeng的博客&url=https://yang-xiaofeng1101.github.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/&via=https://yang-xiaofeng1101.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://yang-xiaofeng1101.github.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -838,7 +838,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://yang-xiaofeng1101.github.io/2022/11/17/%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84-OS/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -954,7 +954,7 @@
 <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script>
   var mihoConfig = {
-      root: "https://xiao_feng_yang993.gitee.io",
+      root: "https://yang-xiaofeng1101.github.io",
       animate: true,
       isHome: false,
       share: true,

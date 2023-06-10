@@ -11,17 +11,17 @@
   <meta name="description" content="1. 背景随着项目规模扩大，个人计算机已经无法满足测试需求，需要在服务器上运行项目程序。当需要对源码进行修改的时候，就非常麻烦，先下载再上传或者使用vim直接编辑，许多功能都没有。一次偶然发现了code-server这个软件，将它部署在服务器上，就可以直接在本地编辑远程文件了，而且具有vscode的所有功能。 2. 安装常见的安装方法见链接：知乎  文中提到需要下载code-server二进制包，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="code-server 远程编辑">
-<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/index.html">
+<meta property="og:url" content="https://yang-xiaofeng1101.github.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/index.html">
 <meta property="og:site_name" content="yangxiaofeng的博客">
 <meta property="og:description" content="1. 背景随着项目规模扩大，个人计算机已经无法满足测试需求，需要在服务器上运行项目程序。当需要对源码进行修改的时候，就非常麻烦，先下载再上传或者使用vim直接编辑，许多功能都没有。一次偶然发现了code-server这个软件，将它部署在服务器上，就可以直接在本地编辑远程文件了，而且具有vscode的所有功能。 2. 安装常见的安装方法见链接：知乎  文中提到需要下载code-server二进制包，">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2020/03/08/7aff3ba0-611b-11ea-a0f6-2761b1af4254.PNG">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2020/03/08/f8b050d0-611a-11ea-a0f6-2761b1af4254.PNG">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2020/03/08/7aff3ba0-611b-11ea-a0f6-2761b1af4254.PNG">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2020/03/08/f8b050d0-611a-11ea-a0f6-2761b1af4254.PNG">
 <meta property="article:published_time" content="2020-05-13T10:11:42.000Z">
 <meta property="article:modified_time" content="2020-06-15T07:42:16.313Z">
 <meta property="article:author" content="yangxiaofeng">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://xiao_feng_yang993.gitee.io/images/2020/03/08/7aff3ba0-611b-11ea-a0f6-2761b1af4254.PNG">
+<meta name="twitter:image" content="https://yang-xiaofeng1101.github.io/images/2020/03/08/7aff3ba0-611b-11ea-a0f6-2761b1af4254.PNG">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -185,9 +185,9 @@
             <div class="post-copyright">
     <div class="content">
         <p>最后更新： 2020年06月15日 15:42</p>
-        <p>原始链接： <a class="post-url" href="/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" title="code-server 远程编辑">https://xiao_feng_yang993.gitee.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/</a></p>
+        <p>原始链接： <a class="post-url" href="/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" title="code-server 远程编辑">https://yang-xiaofeng1101.github.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/</a></p>
         <footer>
-            <a href="https://xiao_feng_yang993.gitee.io">
+            <a href="https://yang-xiaofeng1101.github.io">
                 <img src="/images/logo.jpg" alt="yangxiaofeng">
                 yangxiaofeng
             </a>
@@ -242,7 +242,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/&title=《code-server 远程编辑》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://yang-xiaofeng1101.github.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/&title=《code-server 远程编辑》 — yangxiaofeng的博客&pic=https://yang-xiaofeng1101.github.ioimages/logo.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -252,22 +252,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/&title=《code-server 远程编辑》 — yangxiaofeng的博客&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yang-xiaofeng1101.github.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/&title=《code-server 远程编辑》 — yangxiaofeng的博客&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://yang-xiaofeng1101.github.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《code-server 远程编辑》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《code-server 远程编辑》 — yangxiaofeng的博客&url=https://yang-xiaofeng1101.github.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/&via=https://yang-xiaofeng1101.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://yang-xiaofeng1101.github.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -277,7 +277,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://yang-xiaofeng1101.github.io/2020/05/13/code-server-%E8%BF%9C%E7%A8%8B%E7%BC%96%E8%BE%91/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -391,7 +391,7 @@
 <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script>
   var mihoConfig = {
-      root: "https://xiao_feng_yang993.gitee.io",
+      root: "https://yang-xiaofeng1101.github.io",
       animate: true,
       isHome: false,
       share: true,

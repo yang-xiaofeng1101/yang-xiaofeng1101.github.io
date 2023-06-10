@@ -11,26 +11,26 @@
   <meta name="description" content="一．概述实现 loader 实现了汇编准备和跳转到 C 程序 EL 等级切换，sp 栈指针，bss 段清理，异常向量和跳转到 C 程序 实现了串口显示 实现了屏幕显示 实现了 sd 读写 实现了 fat32 文件系统及其读取 实现了 mmu 初始化，建立了 2 份页表 加载了 kernel.img 镜像文件，并跳转到 kernel 执  二．具体实现loader 汇编部分树莓派 3 默认从 0x8">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MiniOS-Arm64 bootloader设计实现">
-<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:url" content="https://yang-xiaofeng1101.github.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/index.html">
 <meta property="og:site_name" content="yangxiaofeng的博客">
 <meta property="og:description" content="一．概述实现 loader 实现了汇编准备和跳转到 C 程序 EL 等级切换，sp 栈指针，bss 段清理，异常向量和跳转到 C 程序 实现了串口显示 实现了屏幕显示 实现了 sd 读写 实现了 fat32 文件系统及其读取 实现了 mmu 初始化，建立了 2 份页表 加载了 kernel.img 镜像文件，并跳转到 kernel 执  二．具体实现loader 汇编部分树莓派 3 默认从 0x8">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/b790dde5-fcf3-4692-82df-d901b5a832d1.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/3cd0094d-0d51-47c2-980c-639354f253bf.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/c4466dc0-e220-441d-acd3-bd864a8aebd0.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/913db56c-4244-4261-b05b-5aba30c0e242.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/14f0f4bb-a5f5-4f86-a7f6-dbae4bbe1408.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/00c89e6f-fdd3-4c74-9459-620a0860ae61.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/bc0d1603-1ab1-4a76-9695-395a2bac2903.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/e7bf6600-53d9-4cae-be30-66c229bd736c.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/44dda5a6-4623-4a38-aa02-6bfed0d62dc1.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/625743bd-f1e4-4334-8c90-8f0b2ba4034c.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/53ecc3d2-a5c4-49f4-a3aa-c0c494805943.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/7a1b0eeb-2796-476d-827f-0c74aadd65fc.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/31ac6c4c-db24-483b-a985-b232b741d791.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/eacb7626-af99-4ab4-b6fb-754373fd10fc.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/5c6d56f9-1bb0-4275-8aae-c3ff0eca2ffb.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/f1d5795c-020d-4060-bad5-773631ab0fe9.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/c1ceb1fa-e071-42c5-b1e9-a9b8470da7bb.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/b790dde5-fcf3-4692-82df-d901b5a832d1.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/3cd0094d-0d51-47c2-980c-639354f253bf.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/c4466dc0-e220-441d-acd3-bd864a8aebd0.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/913db56c-4244-4261-b05b-5aba30c0e242.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/14f0f4bb-a5f5-4f86-a7f6-dbae4bbe1408.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/00c89e6f-fdd3-4c74-9459-620a0860ae61.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/bc0d1603-1ab1-4a76-9695-395a2bac2903.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/e7bf6600-53d9-4cae-be30-66c229bd736c.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/44dda5a6-4623-4a38-aa02-6bfed0d62dc1.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/625743bd-f1e4-4334-8c90-8f0b2ba4034c.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/53ecc3d2-a5c4-49f4-a3aa-c0c494805943.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/7a1b0eeb-2796-476d-827f-0c74aadd65fc.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/31ac6c4c-db24-483b-a985-b232b741d791.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/eacb7626-af99-4ab4-b6fb-754373fd10fc.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/5c6d56f9-1bb0-4275-8aae-c3ff0eca2ffb.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/f1d5795c-020d-4060-bad5-773631ab0fe9.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/c1ceb1fa-e071-42c5-b1e9-a9b8470da7bb.png">
 <meta property="article:published_time" content="2023-06-10T05:59:36.000Z">
 <meta property="article:modified_time" content="2023-06-10T10:42:34.036Z">
 <meta property="article:author" content="yangxiaofeng">
@@ -38,7 +38,7 @@
 <meta property="article:tag" content="树莓派">
 <meta property="article:tag" content="汇编">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://xiao_feng_yang993.gitee.io/images/2023/06/10/b790dde5-fcf3-4692-82df-d901b5a832d1.png">
+<meta name="twitter:image" content="https://yang-xiaofeng1101.github.io/images/2023/06/10/b790dde5-fcf3-4692-82df-d901b5a832d1.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -338,9 +338,9 @@
             <div class="post-copyright">
     <div class="content">
         <p>最后更新： 2023年06月10日 18:42</p>
-        <p>原始链接： <a class="post-url" href="/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/" title="MiniOS-Arm64 bootloader设计实现">https://xiao_feng_yang993.gitee.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/</a></p>
+        <p>原始链接： <a class="post-url" href="/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/" title="MiniOS-Arm64 bootloader设计实现">https://yang-xiaofeng1101.github.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/</a></p>
         <footer>
-            <a href="https://xiao_feng_yang993.gitee.io">
+            <a href="https://yang-xiaofeng1101.github.io">
                 <img src="/images/logo.jpg" alt="yangxiaofeng">
                 yangxiaofeng
             </a>
@@ -395,7 +395,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/&title=《MiniOS-Arm64 bootloader设计实现》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://yang-xiaofeng1101.github.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/&title=《MiniOS-Arm64 bootloader设计实现》 — yangxiaofeng的博客&pic=https://yang-xiaofeng1101.github.ioimages/logo.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -405,22 +405,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/&title=《MiniOS-Arm64 bootloader设计实现》 — yangxiaofeng的博客&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yang-xiaofeng1101.github.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/&title=《MiniOS-Arm64 bootloader设计实现》 — yangxiaofeng的博客&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://yang-xiaofeng1101.github.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《MiniOS-Arm64 bootloader设计实现》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《MiniOS-Arm64 bootloader设计实现》 — yangxiaofeng的博客&url=https://yang-xiaofeng1101.github.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/&via=https://yang-xiaofeng1101.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://yang-xiaofeng1101.github.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -430,7 +430,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://yang-xiaofeng1101.github.io/2023/06/10/MiniOS-Arm64-bootloader%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -538,7 +538,7 @@
 <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script>
   var mihoConfig = {
-      root: "https://xiao_feng_yang993.gitee.io",
+      root: "https://yang-xiaofeng1101.github.io",
       animate: true,
       isHome: false,
       share: true,

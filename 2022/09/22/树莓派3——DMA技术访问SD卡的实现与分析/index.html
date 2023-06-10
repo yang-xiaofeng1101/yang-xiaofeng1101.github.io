@@ -11,34 +11,34 @@
   <meta name="description" content="概述在SD卡读写和framebuffer拷贝功能上用DMA实现  添加了dma.c和dma.h源码文件，定义了dma接口和实现 在sd.c的sd_readblock和sd_writeblock函数中添加了DMA相关函数调用实现数据传输。  树莓派dma简介概述BCM2835 中的大多数硬件流水线和外设都是总线主控器，使它们能够有效地满足自己的数据需求。这降低了 DMA 控制器对块到块内存传输的要求">
 <meta property="og:type" content="article">
 <meta property="og:title" content="树莓派3——DMA技术访问SD卡的实现与分析">
-<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/index.html">
+<meta property="og:url" content="https://yang-xiaofeng1101.github.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="yangxiaofeng的博客">
 <meta property="og:description" content="概述在SD卡读写和framebuffer拷贝功能上用DMA实现  添加了dma.c和dma.h源码文件，定义了dma接口和实现 在sd.c的sd_readblock和sd_writeblock函数中添加了DMA相关函数调用实现数据传输。  树莓派dma简介概述BCM2835 中的大多数硬件流水线和外设都是总线主控器，使它们能够有效地满足自己的数据需求。这降低了 DMA 控制器对块到块内存传输的要求">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/487ebf58-0eda-4227-be89-b38eb369c2dd.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/afc3249f-6b5f-4e6f-9a05-8930fc71ed54.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/a01c7fe3-8ec9-42f2-9bb2-bf0ec0efa07d.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/ac883c12-0844-45b4-9792-6f4a84961fef.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/09abbb74-62bc-47c6-aa66-eb952b753024.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/263baaaa-df9b-4ec3-b355-78e259fdfb69.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/86e6187d-093a-42b7-8fd1-3d79b129fab0.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/b52cc65e-026c-445f-8fa3-9327f52800eb.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/86d9dfc8-a105-440b-aefb-d4cc87972a62.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/5d989131-76ab-40a6-a491-a76b49666feb.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/ee7d6357-c40d-42de-bc76-232ab0e93b4a.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/0b18786f-77eb-4539-bba9-aa9d7b5d8090.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/592ff41c-5a9b-4450-81ce-c0b3b8a5af94.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/1f03220b-5c01-4efa-a5d8-1f89bc6bff92.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/6b006e66-caa5-4a27-a46a-a930f5da7b27.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/f2a3e806-f325-4f31-99a2-aaa59aec01e3.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/c2d8d73a-edcf-440a-99e4-aad6a437266f.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/44d808de-f0b9-4178-8250-618f55eb4d3e.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/1cb34ab5-7f94-4e02-b56b-3df92a53c8b8.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/810897ea-1c07-4583-8b20-8c22486955fb.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/f56ecf78-82d1-4183-bfbb-9d15b98d8e8a.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/f877e688-cb4c-45d3-af3e-dc624e2319ee.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/521088d1-47f6-4c07-9a2f-af502e1c9ea7.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/b513464a-719d-43e6-948e-0124418a4ebf.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/762d7004-c38a-4a09-855d-d59e10190efd.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/487ebf58-0eda-4227-be89-b38eb369c2dd.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/afc3249f-6b5f-4e6f-9a05-8930fc71ed54.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/a01c7fe3-8ec9-42f2-9bb2-bf0ec0efa07d.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/ac883c12-0844-45b4-9792-6f4a84961fef.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/09abbb74-62bc-47c6-aa66-eb952b753024.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/263baaaa-df9b-4ec3-b355-78e259fdfb69.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/86e6187d-093a-42b7-8fd1-3d79b129fab0.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/b52cc65e-026c-445f-8fa3-9327f52800eb.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/86d9dfc8-a105-440b-aefb-d4cc87972a62.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/5d989131-76ab-40a6-a491-a76b49666feb.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/ee7d6357-c40d-42de-bc76-232ab0e93b4a.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/0b18786f-77eb-4539-bba9-aa9d7b5d8090.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/592ff41c-5a9b-4450-81ce-c0b3b8a5af94.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/1f03220b-5c01-4efa-a5d8-1f89bc6bff92.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/6b006e66-caa5-4a27-a46a-a930f5da7b27.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/f2a3e806-f325-4f31-99a2-aaa59aec01e3.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/c2d8d73a-edcf-440a-99e4-aad6a437266f.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/44d808de-f0b9-4178-8250-618f55eb4d3e.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/1cb34ab5-7f94-4e02-b56b-3df92a53c8b8.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/810897ea-1c07-4583-8b20-8c22486955fb.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/f56ecf78-82d1-4183-bfbb-9d15b98d8e8a.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/f877e688-cb4c-45d3-af3e-dc624e2319ee.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/521088d1-47f6-4c07-9a2f-af502e1c9ea7.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/b513464a-719d-43e6-948e-0124418a4ebf.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/762d7004-c38a-4a09-855d-d59e10190efd.png">
 <meta property="article:published_time" content="2022-09-22T12:44:32.000Z">
 <meta property="article:modified_time" content="2022-09-29T11:37:32.408Z">
 <meta property="article:author" content="yangxiaofeng">
@@ -47,7 +47,7 @@
 <meta property="article:tag" content="EMMC">
 <meta property="article:tag" content="DMA">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://xiao_feng_yang993.gitee.io/images/2022/09/22/487ebf58-0eda-4227-be89-b38eb369c2dd.png">
+<meta name="twitter:image" content="https://yang-xiaofeng1101.github.io/images/2022/09/22/487ebf58-0eda-4227-be89-b38eb369c2dd.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -237,9 +237,9 @@
             <div class="post-copyright">
     <div class="content">
         <p>最后更新： 2022年09月29日 19:37</p>
-        <p>原始链接： <a class="post-url" href="/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" title="树莓派3——DMA技术访问SD卡的实现与分析">https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/</a></p>
+        <p>原始链接： <a class="post-url" href="/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" title="树莓派3——DMA技术访问SD卡的实现与分析">https://yang-xiaofeng1101.github.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/</a></p>
         <footer>
-            <a href="https://xiao_feng_yang993.gitee.io">
+            <a href="https://yang-xiaofeng1101.github.io">
                 <img src="/images/logo.jpg" alt="yangxiaofeng">
                 yangxiaofeng
             </a>
@@ -294,7 +294,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/&title=《树莓派3——DMA技术访问SD卡的实现与分析》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://yang-xiaofeng1101.github.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/&title=《树莓派3——DMA技术访问SD卡的实现与分析》 — yangxiaofeng的博客&pic=https://yang-xiaofeng1101.github.ioimages/logo.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -304,22 +304,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/&title=《树莓派3——DMA技术访问SD卡的实现与分析》 — yangxiaofeng的博客&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yang-xiaofeng1101.github.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/&title=《树莓派3——DMA技术访问SD卡的实现与分析》 — yangxiaofeng的博客&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://yang-xiaofeng1101.github.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《树莓派3——DMA技术访问SD卡的实现与分析》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《树莓派3——DMA技术访问SD卡的实现与分析》 — yangxiaofeng的博客&url=https://yang-xiaofeng1101.github.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/&via=https://yang-xiaofeng1101.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://yang-xiaofeng1101.github.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -329,7 +329,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://yang-xiaofeng1101.github.io/2022/09/22/%E6%A0%91%E8%8E%93%E6%B4%BE3%E2%80%94%E2%80%94DMA%E6%8A%80%E6%9C%AF%E8%AE%BF%E9%97%AESD%E5%8D%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%88%86%E6%9E%90/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -449,7 +449,7 @@
 <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script>
   var mihoConfig = {
-      root: "https://xiao_feng_yang993.gitee.io",
+      root: "https://yang-xiaofeng1101.github.io",
       animate: true,
       isHome: false,
       share: true,

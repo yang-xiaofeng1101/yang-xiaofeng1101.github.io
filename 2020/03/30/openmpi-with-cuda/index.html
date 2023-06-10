@@ -11,18 +11,18 @@
   <meta name="description" content="openMPI 1.7之后的版本才支持CUDA 1.对于1.7~2.0的版本， 配置和编译、安装如下：123sudo .&#x2F;configure --prefix&#x3D;&lt;用户指定的openMPI的安装目录&gt;  --with-cuda&#x3D;&lt;cuda的include目录&gt; --with-cuda-libdir&#x3D;&lt;cuda的lib64目录&gt;sudo make all insta">
 <meta property="og:type" content="article">
 <meta property="og:title" content="openmpi with cuda">
-<meta property="og:url" content="https://xiao_feng_yang993.gitee.io/2020/03/30/openmpi-with-cuda/index.html">
+<meta property="og:url" content="https://yang-xiaofeng1101.github.io/2020/03/30/openmpi-with-cuda/index.html">
 <meta property="og:site_name" content="yangxiaofeng的博客">
 <meta property="og:description" content="openMPI 1.7之后的版本才支持CUDA 1.对于1.7~2.0的版本， 配置和编译、安装如下：123sudo .&#x2F;configure --prefix&#x3D;&lt;用户指定的openMPI的安装目录&gt;  --with-cuda&#x3D;&lt;cuda的include目录&gt; --with-cuda-libdir&#x3D;&lt;cuda的lib64目录&gt;sudo make all insta">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2020/03/30/ada163c0-7265-11ea-8037-8139a2a0fbbb.png">
-<meta property="og:image" content="https://xiao_feng_yang993.gitee.io/images/2020/03/30/bb12de90-7269-11ea-8ac6-2dde3af873f9.PNG">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2020/03/30/ada163c0-7265-11ea-8037-8139a2a0fbbb.png">
+<meta property="og:image" content="https://yang-xiaofeng1101.github.io/images/2020/03/30/bb12de90-7269-11ea-8ac6-2dde3af873f9.PNG">
 <meta property="article:published_time" content="2020-03-30T09:10:12.000Z">
 <meta property="article:modified_time" content="2020-05-03T14:05:50.831Z">
 <meta property="article:author" content="yangxiaofeng">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="cuda">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://xiao_feng_yang993.gitee.io/images/2020/03/30/ada163c0-7265-11ea-8037-8139a2a0fbbb.png">
+<meta name="twitter:image" content="https://yang-xiaofeng1101.github.io/images/2020/03/30/ada163c0-7265-11ea-8037-8139a2a0fbbb.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -157,7 +157,7 @@
 <h3 id="1-对于1-7-2-0的版本，-配置和编译、安装如下："><a href="#1-对于1-7-2-0的版本，-配置和编译、安装如下：" class="headerlink" title="1.对于1.7~2.0的版本， 配置和编译、安装如下："></a>1.对于1.7~2.0的版本， 配置和编译、安装如下：</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo ./configure --prefix=&lt;用户指定的openMPI的安装目录&gt;  --with-cuda=&lt;cuda的include目录&gt; --with-cuda-libdir=&lt;cuda的lib64目录&gt;</span><br><span class="line"></span><br><span class="line">sudo make all install</span><br></pre></td></tr></table></figure>
 
 <h3 id="2-openmpi-2-0以及以上版本"><a href="#2-openmpi-2-0以及以上版本" class="headerlink" title="2.openmpi-2.0以及以上版本"></a>2.openmpi-2.0以及以上版本</h3><p>建议安装ucx+gdrcopy来获取新的mpi功能和更好的性能</p>
-<p>首先安装gdrcopy，这里建议安装gdrcopy-1.3版本。因为2.0版本会出现如下错误：<br><img src="/images/2020/03/30/ada163c0-7265-11ea-8037-8139a2a0fbbb.png" alt="TIM图片20200330170544.png"><br>安装gdrcopy需要四个依赖：check，check-devel，subunit，subunit-devel，注意下载可执行文件，而不是源码；下载源——<a href="http://rpmfind.net/" target="_blank" rel="noopener">RPM</a>，遇到的问题见博客 《<a href="https://xiao_feng_yang993.gitee.io/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/">linux rpm 错误</a>》</p>
+<p>首先安装gdrcopy，这里建议安装gdrcopy-1.3版本。因为2.0版本会出现如下错误：<br><img src="/images/2020/03/30/ada163c0-7265-11ea-8037-8139a2a0fbbb.png" alt="TIM图片20200330170544.png"><br>安装gdrcopy需要四个依赖：check，check-devel，subunit，subunit-devel，注意下载可执行文件，而不是源码；下载源——<a href="http://rpmfind.net/" target="_blank" rel="noopener">RPM</a>，遇到的问题见博客 《<a href="https://xiao_feng_yang993.gitee.io/2020/03/29/linux-rpm-%E9%94%99%E8%AF%AF/" target="_blank" rel="noopener">linux rpm 错误</a>》</p>
 <ol>
 <li>编译gdrcopy<br>执行如下命令<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make PREFIX=/public/home/asc02/yangxf/<span class="built_in">local</span>/gdrcopy-1.3  all install</span><br><span class="line">./insmod.sh <span class="comment">#root</span></span><br></pre></td></tr></table></figure>
 这里不需要指定CUDA=XXX，因为makefile里的路径本身是正确的，指定了反而出现找不见cuda.h的错误。<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">PREFIX ?= /usr/local</span><br><span class="line">DESTLIB ?= <span class="variable">$(PREFIX)</span>/lib64</span><br><span class="line">CUDA ?= /usr/local/cuda</span><br><span class="line"></span><br><span class="line">GDRAPI_ARCH := <span class="variable">$(<span class="built_in">shell</span> ./config_arch)</span></span><br><span class="line"></span><br><span class="line">CUDA_LIB := -L <span class="variable">$(CUDA)</span>/lib64 -L <span class="variable">$(CUDA)</span>/lib -L /usr/lib64/nvidia -L /usr/lib/nvidia</span><br><span class="line">CUDA_INC += -I <span class="variable">$(CUDA)</span>/<span class="keyword">include</span></span><br><span class="line"></span><br><span class="line">CPPFLAGS := <span class="variable">$(CUDA_INC)</span> -I gdrdrv/ -I <span class="variable">$(CUDA)</span>/<span class="keyword">include</span> -D GDRAPI_ARCH=<span class="variable">$(GDRAPI_ARCH)</span></span><br><span class="line">LDFLAGS  := <span class="variable">$(CUDA_LIB)</span> -L <span class="variable">$(CUDA)</span>/lib64</span><br><span class="line">COMMONCFLAGS := -O2</span><br><span class="line">CFLAGS   += <span class="variable">$(COMMONCFLAGS)</span></span><br><span class="line">CXXFLAGS += <span class="variable">$(COMMONCFLAGS)</span></span><br><span class="line">LIBS     := -lcudart -lcuda -lpthread -ldl</span><br></pre></td></tr></table></figure>
@@ -171,9 +171,9 @@
             <div class="post-copyright">
     <div class="content">
         <p>最后更新： 2020年05月03日 22:05</p>
-        <p>原始链接： <a class="post-url" href="/2020/03/30/openmpi-with-cuda/" title="openmpi with cuda">https://xiao_feng_yang993.gitee.io/2020/03/30/openmpi-with-cuda/</a></p>
+        <p>原始链接： <a class="post-url" href="/2020/03/30/openmpi-with-cuda/" title="openmpi with cuda">https://yang-xiaofeng1101.github.io/2020/03/30/openmpi-with-cuda/</a></p>
         <footer>
-            <a href="https://xiao_feng_yang993.gitee.io">
+            <a href="https://yang-xiaofeng1101.github.io">
                 <img src="/images/logo.jpg" alt="yangxiaofeng">
                 yangxiaofeng
             </a>
@@ -228,7 +228,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://xiao_feng_yang993.gitee.io/2020/03/30/openmpi-with-cuda/&title=《openmpi with cuda》 — yangxiaofeng的博客&pic=https://xiao_feng_yang993.gitee.ioimages/logo.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://yang-xiaofeng1101.github.io/2020/03/30/openmpi-with-cuda/&title=《openmpi with cuda》 — yangxiaofeng的博客&pic=https://yang-xiaofeng1101.github.ioimages/logo.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -238,22 +238,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://xiao_feng_yang993.gitee.io/2020/03/30/openmpi-with-cuda/&title=《openmpi with cuda》 — yangxiaofeng的博客&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yang-xiaofeng1101.github.io/2020/03/30/openmpi-with-cuda/&title=《openmpi with cuda》 — yangxiaofeng的博客&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://xiao_feng_yang993.gitee.io/2020/03/30/openmpi-with-cuda/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://yang-xiaofeng1101.github.io/2020/03/30/openmpi-with-cuda/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《openmpi with cuda》 — yangxiaofeng的博客&url=https://xiao_feng_yang993.gitee.io/2020/03/30/openmpi-with-cuda/&via=https://xiao_feng_yang993.gitee.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《openmpi with cuda》 — yangxiaofeng的博客&url=https://yang-xiaofeng1101.github.io/2020/03/30/openmpi-with-cuda/&via=https://yang-xiaofeng1101.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://xiao_feng_yang993.gitee.io/2020/03/30/openmpi-with-cuda/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://yang-xiaofeng1101.github.io/2020/03/30/openmpi-with-cuda/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -263,7 +263,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://xiao_feng_yang993.gitee.io/2020/03/30/openmpi-with-cuda/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://yang-xiaofeng1101.github.io/2020/03/30/openmpi-with-cuda/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -379,7 +379,7 @@
 <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script>
   var mihoConfig = {
-      root: "https://xiao_feng_yang993.gitee.io",
+      root: "https://yang-xiaofeng1101.github.io",
       animate: true,
       isHome: false,
       share: true,
